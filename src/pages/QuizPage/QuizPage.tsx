@@ -34,6 +34,8 @@ import { MOCK_KNOWLEDGE } from '@/data/knowledge';
 import { useQuizRecords } from '@/hooks/use-storage';
 import { DIRECTION_LABELS, DIRECTION_COLORS, formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { getUnlockedBatchCount, isBatchUnlocked, getNextBatchDate, getTimeUntilNextBatch, formatDateCN } from '@/lib/quiz-updater';
+import { RefreshCw, Lock, Unlock, Sparkles } from 'lucide-react';
 
 type QuizMode = 'select' | 'random' | 'wrong' | null;
 
@@ -47,21 +49,35 @@ export default function QuizPage() {
   const [submittedMap, setSubmittedMap] = useState<Record<string, boolean>>({});
   const [showWrongBook, setShowWrongBook] = useState(false);
   const [selectedDirection, setSelectedDirection] = useState<string>('all');
+  const [updateCheckTime, setUpdateCheckTime] = useState<number>(Date.now());
+
+  const unlockedQuizzes = useMemo(() => MOCK_QUIZZES.filter((q) => !q.batch || isBatchUnlocked(q.batch)), [updateCheckTime]);
+  const totalCount = MOCK_QUIZZES.length;
+  const unlockedCount = unlockedQuizzes.length;
+  const lockedCount = totalCount - unlockedCount;
+  const nextBatchDate = getNextBatchDate();
+  const timeUntilNext = getTimeUntilNextBatch();
+  const handleCheckUpdate = () => {
+    setUpdateCheckTime(Date.now());
+    const n = MOCK_QUIZZES.filter((q) => !q.batch || isBatchUnlocked(q.batch)).length;
+    if (n > unlockedCount) toast.success(`发现新题目！已解锁 ${n - unlockedCount} 道新题`);
+    else toast.info('当前已是最新题库，下一批新题将自动解锁');
+  };
 
   // 当前模式的题目列表
   const questions = useMemo(() => {
     if (mode === 'random') {
-      return [...MOCK_QUIZZES].sort(() => Math.random() - 0.5);
+      return [...unlockedQuizzes].sort(() => Math.random() - 0.5);
     }
     if (mode === 'wrong') {
-      return MOCK_QUIZZES.filter((q) => records.wrongIds.includes(q.id));
+      return unlockedQuizzes.filter((q) => records.wrongIds.includes(q.id));
     }
     if (mode === 'select') {
-      if (selectedDirection === 'all') return MOCK_QUIZZES;
-      return MOCK_QUIZZES.filter((q) => q.direction === selectedDirection);
+      if (selectedDirection === 'all') return unlockedQuizzes;
+      return unlockedQuizzes.filter((q) => q.direction === selectedDirection);
     }
     return [];
-  }, [mode, records.wrongIds, selectedDirection]);
+  }, [mode, records.wrongIds, selectedDirection, unlockedQuizzes]);
 
   const currentQuestion = questions[currentIndex];
   const isSubmitted = currentQuestion
