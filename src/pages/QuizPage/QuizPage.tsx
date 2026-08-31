@@ -168,7 +168,7 @@ export default function QuizPage() {
   // 模式选择页
   if (!mode) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground font-mono-data">
             选择练习模式
@@ -210,7 +210,7 @@ export default function QuizPage() {
                         );
                       })}
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {wrongQuestions.map((q, i) => (
                         <Card key={q.id} className="border-rose-500/10">
                           <CardContent className="pt-4">
@@ -455,7 +455,7 @@ export default function QuizPage() {
       : '判断题';
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* 顶部：返回 + 进度 */}
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" onClick={handleBack} className="text-muted-foreground hover:text-foreground">

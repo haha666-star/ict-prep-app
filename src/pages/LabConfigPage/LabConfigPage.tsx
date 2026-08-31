@@ -67,7 +67,7 @@ export default function LabConfigPage() {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* 搜索 + 分类筛选 */}
       <Card className="border-cyan-500/10">
         <CardContent className="pt-4 space-y-3">

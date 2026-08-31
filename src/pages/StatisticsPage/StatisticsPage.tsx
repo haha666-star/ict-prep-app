@@ -423,7 +423,7 @@ export default function StatisticsPage() {
       : 0;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground font-mono-data">
           学习数据分析

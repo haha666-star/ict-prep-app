@@ -21,7 +21,7 @@ export function Layout() {
   const title = PAGE_TITLES[pathname] ?? 'ICT 备考';
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050914] cyber-grid-dense overflow-hidden">
+    <div className="relative h-screen w-full bg-[#050914] cyber-grid-dense overflow-hidden">
       {/* 启动画面 */}
       <SplashScreen />
       {/* 背景光晕装饰 */}
@@ -29,7 +29,7 @@ export function Layout() {
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
 
       {/* 手机外壳容器 */}
-      <div className="relative mx-auto w-full max-w-[420px] min-h-screen bg-background/60 backdrop-blur-sm flex flex-col">
+      <div className="relative mx-auto w-full max-w-[420px] h-screen bg-background/60 backdrop-blur-sm flex flex-col overflow-hidden">
         {/* 顶部状态栏（模拟手机状态栏） */}
         <div className="sticky top-0 z-50 flex items-center justify-between h-10 px-5 bg-background/80 backdrop-blur-xl border-b border-cyan-500/10">
           <span className="text-[11px] font-mono-data text-foreground/70 font-semibold tabular-nums">
@@ -72,7 +72,7 @@ export function Layout() {
         </header>
 
         {/* 主内容区 - 独立滚动 */}
-        <main className="flex-1 w-full overflow-y-auto px-3 py-4 pb-20 cyber-scroll">
+        <main className="flex-1 w-full overflow-y-auto px-2 py-2 pb-16 cyber-scroll">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

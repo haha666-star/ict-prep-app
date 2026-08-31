@@ -228,7 +228,7 @@ export default function KnowledgePage() {
   const colors = DIRECTION_COLORS[activeDirection];
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <Tabs value={activeDirection} onValueChange={handleTabChange}>
         <TabsList className="grid grid-cols-4 w-full max-w-md bg-muted/30">
           {DIRECTIONS.map((d) => (

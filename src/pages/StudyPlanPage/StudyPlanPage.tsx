@@ -170,7 +170,7 @@ export default function StudyPlanPage() {
 
   if (!plan) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-2">
 
         <Card className="max-w-lg mx-auto border-cyan-500/10 bg-gradient-to-br from-cyan-500/5 via-card to-transparent relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -252,7 +252,7 @@ export default function StudyPlanPage() {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* 进度总览 + 操作 */}
       <Card className="border-cyan-500/10 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-20 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />

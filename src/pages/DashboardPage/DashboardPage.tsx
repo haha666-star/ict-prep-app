@@ -119,9 +119,9 @@ export default function DashboardPage() {
       : 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* 顶部概览卡片 */}
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 gap-2">
         {/* 倒计时卡片 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -131,27 +131,27 @@ export default function DashboardPage() {
           <Card className="h-full relative overflow-hidden border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 via-card to-transparent">
             <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-            <CardHeader className="pb-2 relative">
-              <CardTitle className="text-sm font-medium flex items-center gap-2 text-cyan-300">
-                <Radio className="size-4 neon-pulse" />
+            <CardHeader className="pb-1 pt-3 relative">
+              <CardTitle className="text-xs font-medium flex items-center gap-2 text-cyan-300">
+                <Radio className="size-3.5 neon-pulse" />
                 比赛倒计时
-                <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/70">
+                <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/70">
                   COUNTDOWN
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative">
+            <CardContent className="relative pb-3 pt-1">
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-black text-cyan-400 tabular-nums tracking-tight font-mono-data text-glow-cyan">
+                <span className="text-4xl font-black text-cyan-400 tabular-nums tracking-tight font-mono-data text-glow-cyan">
                   {countdown.days}
                 </span>
-                <span className="text-lg font-medium text-muted-foreground">
+                <span className="text-sm font-medium text-muted-foreground">
                   天
                 </span>
-                <span className="text-2xl font-bold text-foreground tabular-nums ml-2 font-mono-data">
+                <span className="text-xl font-bold text-foreground tabular-nums ml-2 font-mono-data">
                   {countdown.hours.toString().padStart(2, '0')}
                 </span>
-                <span className="text-sm text-muted-foreground">h</span>
+                <span className="text-xs text-muted-foreground">h</span>
               </div>
               <div className="mt-3 flex items-center justify-between">
                 <span className="text-xs text-muted-foreground font-mono-data">
@@ -202,39 +202,39 @@ export default function DashboardPage() {
         >
           <Card className="h-full relative overflow-hidden border-purple-500/20">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-            <CardHeader className="pb-2 relative">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Target className="size-4 text-purple-400" />
+            <CardHeader className="pb-1 pt-3 relative">
+              <CardTitle className="text-xs font-medium flex items-center gap-2">
+                <Target className="size-3.5 text-purple-400" />
                 整体掌握度
-                <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/70">
+                <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/70">
                   MASTERY
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative">
-              <div className="flex items-center gap-4">
-                <div className="relative w-20 h-20 shrink-0">
-                  <svg className="w-20 h-20 -rotate-90">
+            <CardContent className="relative pb-3 pt-1">
+              <div className="flex items-center gap-3">
+                <div className="relative w-16 h-16 shrink-0">
+                  <svg className="w-16 h-16 -rotate-90">
                     <circle
-                      cx="40"
-                      cy="40"
-                      r="32"
+                      cx="32"
+                      cy="32"
+                      r="26"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="6"
+                      strokeWidth="5"
                       className="text-muted/50"
                     />
                     <circle
-                      cx="40"
-                      cy="40"
-                      r="32"
+                      cx="32"
+                      cy="32"
+                      r="26"
                       fill="none"
                       stroke="url(#ringGradient)"
-                      strokeWidth="6"
+                      strokeWidth="5"
                       strokeLinecap="round"
-                      strokeDasharray={2 * Math.PI * 32}
+                      strokeDasharray={2 * Math.PI * 26}
                       strokeDashoffset={
-                        2 * Math.PI * 32 * (1 - overallProgress / 100)
+                        2 * Math.PI * 26 * (1 - overallProgress / 100)
                       }
                       className="transition-all duration-700"
                       style={{ filter: 'drop-shadow(0 0 6px rgba(181, 123, 255, 0.6))' }}
@@ -247,13 +247,13 @@ export default function DashboardPage() {
                     </defs>
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-xl font-bold text-foreground tabular-nums font-mono-data">
+                    <span className="text-lg font-bold text-foreground tabular-nums font-mono-data">
                       {overallProgress}%
                     </span>
                   </div>
                 </div>
                 <div className="flex-1 space-y-1">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     已掌握{' '}
                     <span className="text-foreground font-medium">
                       {
@@ -291,34 +291,34 @@ export default function DashboardPage() {
         >
           <Card className="h-full relative overflow-hidden border-emerald-500/20">
             <div className="absolute bottom-0 right-0 w-28 h-28 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-            <CardHeader className="pb-2 relative">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Flame className="size-4 text-emerald-400" />
+            <CardHeader className="pb-1 pt-3 relative">
+              <CardTitle className="text-xs font-medium flex items-center gap-2">
+                <Flame className="size-3.5 text-emerald-400" />
                 刷题概览
-                <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/70">
+                <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/70">
                   QUIZ
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative">
+            <CardContent className="relative pb-3 pt-1">
               <div className="grid grid-cols-3 gap-2">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-foreground tabular-nums font-mono-data">
+                  <div className="text-xl font-bold text-foreground tabular-nums font-mono-data">
                     {records.totalCount}
                   </div>
-                  <div className="text-xs text-muted-foreground">累计题数</div>
+                  <div className="text-[10px] text-muted-foreground">累计题数</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-emerald-400 tabular-nums font-mono-data">
+                  <div className="text-xl font-bold text-emerald-400 tabular-nums font-mono-data">
                     {accuracy}%
                   </div>
-                  <div className="text-xs text-muted-foreground">正确率</div>
+                  <div className="text-[10px] text-muted-foreground">正确率</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-rose-400 tabular-nums font-mono-data">
+                  <div className="text-xl font-bold text-rose-400 tabular-nums font-mono-data">
                     {records.wrongIds.length}
                   </div>
-                  <div className="text-xs text-muted-foreground">错题</div>
+                  <div className="text-[10px] text-muted-foreground">错题</div>
                 </div>
               </div>
               <Button
@@ -336,18 +336,18 @@ export default function DashboardPage() {
       </div>
 
       {/* 各模块掌握度 */}
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 gap-2">
         <Card className="border-cyan-500/10">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <BookOpen className="size-4 text-cyan-400" />
+          <CardHeader className="pb-1 pt-3">
+            <CardTitle className="text-xs flex items-center gap-2">
+              <BookOpen className="size-3.5 text-cyan-400" />
               各模块掌握度
-              <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/60">
+              <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/60">
                 MODULE MASTERY
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-1.5 pb-3 pt-1">
               {directionProgress.map((item, i) => {
                 const colors = DIRECTION_COLORS[item.direction];
                 return (
@@ -358,7 +358,7 @@ export default function DashboardPage() {
                      transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
                    >
                      <div
-                       className={`cursor-pointer rounded-lg border p-3 transition-all active:scale-[0.98] ${colors.bg} border-border/50 relative overflow-hidden`}
+                       className={`cursor-pointer rounded-lg border p-2 transition-all active:scale-[0.98] ${colors.bg} border-border/50 relative overflow-hidden`}
                       onClick={() => navigate('/knowledge')}
                     >
                       <div className="absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: item.direction === 'datacom' ? 'rgba(0,229,255,0.2)' : item.direction === 'dcn' ? 'rgba(181,123,255,0.2)' : item.direction === 'security' ? 'rgba(255,92,122,0.2)' : 'rgba(46,230,166,0.2)' }} />
@@ -399,19 +399,19 @@ export default function DashboardPage() {
 
       {/* 今日任务 */}
       <Card className="border-purple-500/10">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <CheckCircle2 className="size-5 text-purple-400" />
+          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3">
+            <CardTitle className="text-xs flex items-center gap-2">
+              <CheckCircle2 className="size-4 text-purple-400" />
               今日任务
-              <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/60">
+              <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/60">
                 TODAY
               </span>
             </CardTitle>
-            <Badge variant="outline" className="text-xs border-purple-500/30 text-purple-400">
+            <Badge variant="outline" className="text-[10px] border-purple-500/30 text-purple-400">
               {completedToday}/{todayTasks.length}
             </Badge>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-3 pt-1">
             {todayTasks.length === 0 ? (
               <div className="text-center py-8">
                 <AlertCircle className="size-8 mx-auto text-muted-foreground/50 mb-2" />
@@ -470,17 +470,17 @@ export default function DashboardPage() {
 
         {/* 高频考点 */}
         <Card className="border-cyan-500/10">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Award className="size-5 text-cyan-400" />
+          <CardHeader className="pb-1 pt-3">
+            <CardTitle className="text-xs flex items-center gap-2">
+              <Award className="size-4 text-cyan-400" />
               高频考点
-              <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/60">
+              <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/60">
                 HOT TOPICS
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
+          <CardContent className="pb-3 pt-1">
+            <div className="space-y-0.5">
               {[
                 'OSPF状态转换与多区域配置',
                 'STP端口属性与选举规则',
@@ -509,17 +509,17 @@ export default function DashboardPage() {
 
         {/* 常用设备 */}
         <Card className="border-purple-500/10">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Clock className="size-5 text-purple-400" />
+          <CardHeader className="pb-1 pt-3">
+            <CardTitle className="text-xs flex items-center gap-2">
+              <Clock className="size-4 text-purple-400" />
               常用设备
-              <span className="ml-auto text-[10px] font-mono-data text-muted-foreground/60">
+              <span className="ml-auto text-[9px] font-mono-data text-muted-foreground/60">
                 EQUIPMENT
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-3">
+          <CardContent className="pb-3 pt-1">
+            <div className="grid grid-cols-2 gap-2">
               {[
                 { name: 'AR2220', desc: '路由器' },
                 { name: 'S5700', desc: '三层交换机' },
