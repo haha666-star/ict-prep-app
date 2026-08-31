@@ -1,0 +1,419 @@
+:root {
+  --button-outline: rgba(0, 240, 255, .25);
+  --badge-outline: rgba(0, 240, 255, .15);
+
+  /* Automatic computation of border around primary / danger buttons */
+  --opaque-button-border-intensity: 20; /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(0, 240, 255, .08);
+  --elevate-2: rgba(0, 240, 255, .18);
+
+  /* ===== Sci-Fi Cyberpunk Theme ===== */
+  --background: hsl(225 40% 6%);
+  --foreground: hsl(180 15% 90%);
+  --card: hsl(225 35% 10% / 0.7);
+  --card-foreground: hsl(180 15% 90%);
+  --popover: hsl(225 35% 10% / 0.95);
+  --popover-foreground: hsl(180 15% 90%);
+  --primary: hsl(185 100% 55%);
+  --primary-foreground: hsl(225 40% 8%);
+  --secondary: hsl(260 90% 65%);
+  --secondary-foreground: hsl(260 20% 98%);
+  --muted: hsl(225 25% 14%);
+  --muted-foreground: hsl(215 10% 55%);
+  --accent: hsl(195 90% 40%);
+  --accent-foreground: hsl(180 20% 95%);
+  --info: hsl(200 100% 60%);
+  --info-foreground: hsl(225 40% 10%);
+  --destructive: hsl(340 90% 60%);
+  --destructive-foreground: hsl(340 20% 98%);
+  --success: hsl(155 80% 55%);
+  --success-foreground: hsl(155 20% 10%);
+  --warning: hsl(40 100% 60%);
+  --warning-foreground: hsl(40 20% 10%);
+  --border: hsl(220 30% 22%);
+  --input: hsl(225 25% 14%);
+  --ring: hsl(185 100% 60%);
+  --chart-1: hsl(185 100% 55%);
+  --chart-2: hsl(270 90% 70%);
+  --chart-3: hsl(320 90% 65%);
+  --chart-4: hsl(155 80% 55%);
+  --chart-5: hsl(40 100% 60%);
+  --sidebar: hsl(225 45% 8% / 0.85);
+  --sidebar-foreground: hsl(180 15% 85%);
+  --sidebar-primary: hsl(185 100% 55%);
+  --sidebar-primary-foreground: hsl(225 40% 8%);
+  --sidebar-accent: hsl(225 30% 16%);
+  --sidebar-accent-foreground: hsl(185 100% 70%);
+  --sidebar-border: hsl(220 30% 18%);
+  --sidebar-ring: hsl(185 100% 60%);
+
+  /* Computed borders using hsl relative color syntax */
+  --primary-border: hsl(from hsl(185 100% 55%) h s calc(l + var(--opaque-button-border-intensity)));
+  --secondary-border: hsl(from hsl(260 90% 65%) h s calc(l + var(--opaque-button-border-intensity) - 10));
+  --destructive-border: hsl(from hsl(340 90% 60%) h s calc(l + var(--opaque-button-border-intensity)));
+  --accent-border: hsl(from hsl(195 90% 40%) h s calc(l + var(--opaque-button-border-intensity)));
+  --muted-border: hsl(from hsl(225 25% 14%) h s calc(l + var(--opaque-button-border-intensity)));
+  --font-sans:
+    'Noto Sans SC', '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', 'Tahoma',
+    'PingFang SC', 'Microsoft Yahei', 'Arial', 'Hiragino Sans GB', 'sans-serif',
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-serif:
+    'Geist', 'Geist Fallback', ui-serif, Georgia, Cambria, 'Times New Roman',
+    Times, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', ui-monospace, monospace;
+  --radius: 0.375rem;
+
+  /* ===== Sci-Fi Neon Shadows ===== */
+  --shadow-x: 0px;
+  --shadow-y: 0px;
+  --shadow-blur: 20px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.3;
+  --shadow-color: #00e5ff;
+  --shadow-2xs: 0 0 4px hsl(185 100% 55% / 0.15);
+  --shadow-xs: 0 0 8px hsl(185 100% 55% / 0.2);
+  --shadow-sm:
+    0 0 12px hsl(185 100% 55% / 0.15), 0 2px 8px hsl(0 0% 0% / 0.3);
+  --shadow:
+    0 0 16px hsl(185 100% 55% / 0.2), 0 4px 12px hsl(0 0% 0% / 0.4);
+  --shadow-md:
+    0 0 24px hsl(185 100% 55% / 0.25), 0 8px 20px hsl(0 0% 0% / 0.5);
+  --shadow-lg:
+    0 0 32px hsl(185 100% 55% / 0.3), 0 12px 28px hsl(0 0% 0% / 0.5);
+  --shadow-xl:
+    0 0 48px hsl(185 100% 55% / 0.35), 0 16px 40px hsl(0 0% 0% / 0.6);
+  --shadow-2xl: 0 0 64px hsl(185 100% 55% / 0.4);
+
+  /* ===== Custom Sci-Fi Tokens ===== */
+  --neon-cyan: hsl(185 100% 55%);
+  --neon-purple: hsl(270 90% 70%);
+  --neon-pink: hsl(320 90% 65%);
+  --neon-green: hsl(155 80% 55%);
+  --neon-yellow: hsl(40 100% 60%);
+  --grid-line: hsl(185 100% 55% / 0.06);
+  --scanline: hsl(185 100% 55% / 0.03);
+
+  --tracking-normal: 0.02em;
+  --spacing: 0.25rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;;
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+}
+
+/**
+ * Using the elevate system.
+ * Automatic contrast adjustment.
+ */
+@layer utilities {
+  /* Hide ugly search cancel button in Chrome until we can style it properly */
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+
+  /* Placeholder styling for contentEditable div */
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+
+  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch */
+  .no-default-hover-elevate {}
+  .no-default-active-elevate {}
+
+
+  /**
+   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
+   */
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's borders */
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+
+  /* Does not work on elements with overflow:hidden! */
+  :where(.hover-elevate:not(.no-default-hover-elevate)),
+  :where(.active-elevate:not(.no-default-active-elevate)),
+  :where(.hover-elevate-2:not(.no-default-hover-elevate)),
+  :where(.active-elevate-2:not(.no-default-active-elevate)) {
+    position: relative;
+    z-index: 0;
+  }
+
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: 999;
+  }
+
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset */
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
+    inset: -1px;
+  }
+
+  /* ===== Sci-Fi / Cyberpunk Utilities ===== */
+
+  /* Cyber grid background */
+  .cyber-grid {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .cyber-grid-dense {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Scanlines overlay */
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      var(--scanline) 2px,
+      var(--scanline) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Glassmorphism card */
+  .glass-card {
+    background: hsl(225 35% 10% / 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(185 100% 55% / 0.15);
+  }
+
+  .glass-card-strong {
+    background: hsl(225 40% 12% / 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(185 100% 55% / 0.2);
+  }
+
+  /* Neon glow text */
+  .text-glow-cyan {
+    text-shadow: 0 0 8px hsl(185 100% 65% / 0.8), 0 0 20px hsl(185 100% 55% / 0.5);
+  }
+
+  .text-glow-purple {
+    text-shadow: 0 0 8px hsl(270 90% 75% / 0.8), 0 0 20px hsl(270 90% 65% / 0.5);
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 8px hsl(155 80% 65% / 0.8), 0 0 20px hsl(155 80% 55% / 0.5);
+  }
+
+  /* Neon border glow */
+  .border-glow-cyan {
+    box-shadow:
+      0 0 0 1px hsl(185 100% 55% / 0.5),
+      0 0 12px hsl(185 100% 55% / 0.3),
+      inset 0 0 12px hsl(185 100% 55% / 0.05);
+  }
+
+  .border-glow-purple {
+    box-shadow:
+      0 0 0 1px hsl(270 90% 70% / 0.5),
+      0 0 12px hsl(270 90% 70% / 0.3),
+      inset 0 0 12px hsl(270 90% 70% / 0.05);
+  }
+
+  /* Flowing gradient progress bar */
+  @keyframes flow-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .flow-gradient {
+    background: linear-gradient(
+      90deg,
+      hsl(185 100% 55%),
+      hsl(270 90% 70%),
+      hsl(320 90% 65%),
+      hsl(270 90% 70%),
+      hsl(185 100% 55%)
+    );
+    background-size: 300% 100%;
+    animation: flow-gradient 3s ease-in-out infinite;
+  }
+
+  /* Corner brackets (cyber HUD style) */
+  .corner-brackets {
+    position: relative;
+  }
+
+  .corner-brackets::before,
+  .corner-brackets::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: hsl(185 100% 55% / 0.6);
+    border-style: solid;
+  }
+
+  .corner-brackets::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+  }
+
+  .corner-brackets::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 1px 1px 0;
+  }
+
+  /* Pulse ring animation */
+  @keyframes neon-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .neon-pulse {
+    animation: neon-pulse 2s ease-in-out infinite;
+  }
+
+  /* Data stream / terminal flicker */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.6; }
+    94% { opacity: 1; }
+    96% { opacity: 0.8; }
+    97% { opacity: 1; }
+  }
+
+  .flicker {
+    animation: flicker 4s linear infinite;
+  }
+
+  /* Radial glow bg spot */
+  .glow-spot-cyan {
+    background: radial-gradient(ellipse at center, hsl(185 100% 55% / 0.12) 0%, transparent 60%);
+  }
+
+  .glow-spot-purple {
+    background: radial-gradient(ellipse at center, hsl(270 90% 70% / 0.1) 0%, transparent 60%);
+  }
+
+  /* Custom scrollbar (cyber) */
+  .cyber-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cyber-scroll::-webkit-scrollbar-track {
+    background: hsl(225 30% 10%);
+  }
+
+  .cyber-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(185 100% 55% / 0.5), hsl(270 90% 70% / 0.5));
+    border-radius: 4px;
+  }
+
+  .cyber-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(185 100% 65% / 0.7), hsl(270 90% 80% / 0.7));
+  }
+}

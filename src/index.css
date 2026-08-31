@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./tailwind-theme.css";
+@import "./typography.css";
+
+/* ===== Global Sci-Fi Cyberpunk Base ===== */
+
+html, body {
+  background-color: hsl(225 40% 6%);
+  color: hsl(180 15% 90%);
+}
+
+/* Global cyber scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(225 35% 8%);
+  border-left: 1px solid hsl(220 30% 15%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    hsl(185 100% 55% / 0.5),
+    hsl(270 90% 70% / 0.5)
+  );
+  border-radius: 5px;
+  border: 2px solid hsl(225 35% 8%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    hsl(185 100% 65% / 0.7),
+    hsl(270 90% 80% / 0.7)
+  );
+}
+
+::-webkit-scrollbar-corner {
+  background: hsl(225 35% 8%);
+}
+
+/* Selection */
+::selection {
+  background: hsl(185 100% 55% / 0.3);
+  color: hsl(180 15% 95%);
+}
+
+/* Global body cyber grid overlay (subtle) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(hsl(185 100% 55% / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(185 100% 55% / 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content sits above grid */
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* Font for tech/display text */
+.font-tech {
+  font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+/* Data/mono font */
+.font-mono-data {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Mobile App 适配 ===== */
+
+/* 禁用 iOS 橡皮筋效果 */
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* PWA standalone 模式铺满屏幕 */
+@media (display-mode: standalone) {
+  html,
+  body,
+  #root {
+    height: 100%;
+    min-height: 100%;
+  }
+}
+
+/* 安全区适配 */
+.pt-safe-top {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* 隐藏滚动条但保留滚动功能（移动端常用） */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 启动画面动画 */
+@keyframes splash-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes splash-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.splash-pulse {
+  animation: splash-pulse 2s ease-in-out infinite;
+}
+
+.splash-spin {
+  animation: splash-spin 3s linear infinite;
+}
+
+/* 防止横向滚动 */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* 移动端输入框放大问题修复（字体>=16px不自动放大） */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
