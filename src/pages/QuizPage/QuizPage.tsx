@@ -34,8 +34,6 @@ import { MOCK_KNOWLEDGE } from '@/data/knowledge';
 import { useQuizRecords } from '@/hooks/use-storage';
 import { DIRECTION_LABELS, DIRECTION_COLORS, formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
-import { getUnlockedBatchCount, isBatchUnlocked, getNextBatchDate, getTimeUntilNextBatch, formatDateCN } from '@/lib/quiz-updater';
-import { RefreshCw, Lock, Unlock, Sparkles } from 'lucide-react';
 
 type QuizMode = 'select' | 'random' | 'wrong' | null;
 
@@ -49,35 +47,23 @@ export default function QuizPage() {
   const [submittedMap, setSubmittedMap] = useState<Record<string, boolean>>({});
   const [showWrongBook, setShowWrongBook] = useState(false);
   const [selectedDirection, setSelectedDirection] = useState<string>('all');
-  const [updateCheckTime, setUpdateCheckTime] = useState<number>(Date.now());
 
-  const unlockedQuizzes = useMemo(() => MOCK_QUIZZES.filter((q) => !q.batch || isBatchUnlocked(q.batch)), [updateCheckTime]);
   const totalCount = MOCK_QUIZZES.length;
-  const unlockedCount = unlockedQuizzes.length;
-  const lockedCount = totalCount - unlockedCount;
-  const nextBatchDate = getNextBatchDate();
-  const timeUntilNext = getTimeUntilNextBatch();
-  const handleCheckUpdate = () => {
-    setUpdateCheckTime(Date.now());
-    const n = MOCK_QUIZZES.filter((q) => !q.batch || isBatchUnlocked(q.batch)).length;
-    if (n > unlockedCount) toast.success(`发现新题目！已解锁 ${n - unlockedCount} 道新题`);
-    else toast.info('当前已是最新题库，下一批新题将自动解锁');
-  };
 
   // 当前模式的题目列表
   const questions = useMemo(() => {
     if (mode === 'random') {
-      return [...unlockedQuizzes].sort(() => Math.random() - 0.5);
+      return [...MOCK_QUIZZES].sort(() => Math.random() - 0.5);
     }
     if (mode === 'wrong') {
-      return unlockedQuizzes.filter((q) => records.wrongIds.includes(q.id));
+      return MOCK_QUIZZES.filter((q) => records.wrongIds.includes(q.id));
     }
     if (mode === 'select') {
-      if (selectedDirection === 'all') return unlockedQuizzes;
-      return unlockedQuizzes.filter((q) => q.direction === selectedDirection);
+      if (selectedDirection === 'all') return MOCK_QUIZZES;
+      return MOCK_QUIZZES.filter((q) => q.direction === selectedDirection);
     }
     return [];
-  }, [mode, records.wrongIds, selectedDirection, unlockedQuizzes]);
+  }, [mode, records.wrongIds, selectedDirection, MOCK_QUIZZES]);
 
   const currentQuestion = questions[currentIndex];
   const isSubmitted = currentQuestion
@@ -185,41 +171,6 @@ export default function QuizPage() {
   if (!mode) {
     return (
       <div className="space-y-2">
-        {/* 题库自动更新进度 */}
-        <Card className="border-cyan-500/20 bg-gradient-to-r from-cyan-500/5 to-transparent overflow-hidden">
-          <CardContent className="pt-3 pb-3">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Sparkles className="size-4 text-cyan-400" />
-                <span className="text-xs font-tech text-cyan-300">题库自动更新</span>
-              </div>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-2" onClick={handleCheckUpdate}>
-                <RefreshCw className="size-3 mr-1" />
-                检查更新
-              </Button>
-            </div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Unlock className="size-3 text-emerald-400" />
-              <span className="text-sm font-mono-data text-emerald-300">{unlockedCount}</span>
-              <span className="text-xs text-muted-foreground">已解锁</span>
-              <span className="text-muted-foreground">/</span>
-              <span className="text-sm font-mono-data">{totalCount}</span>
-              <span className="text-xs text-muted-foreground">总题数</span>
-              {lockedCount > 0 && (
-                <span className="text-xs text-amber-300 ml-auto">
-                  <Lock className="size-3 inline mr-0.5" />{lockedCount}题待解锁
-                </span>
-              )}
-            </div>
-            <Progress value={(unlockedCount / totalCount) * 100} className="h-1.5 bg-cyan-950/50" />
-            {nextBatchDate && (
-              <p className="text-xs text-muted-foreground mt-1.5 font-mono-data">
-                下一批 {timeUntilNext} 解锁 · {formatDateCN(nextBatchDate)}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground font-mono-data">
             选择练习模式
