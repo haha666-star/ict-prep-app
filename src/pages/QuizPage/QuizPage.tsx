@@ -185,6 +185,41 @@ export default function QuizPage() {
   if (!mode) {
     return (
       <div className="space-y-2">
+        {/* 题库自动更新进度 */}
+        <Card className="border-cyan-500/20 bg-gradient-to-r from-cyan-500/5 to-transparent overflow-hidden">
+          <CardContent className="pt-3 pb-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="size-4 text-cyan-400" />
+                <span className="text-xs font-tech text-cyan-300">题库自动更新</span>
+              </div>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-2" onClick={handleCheckUpdate}>
+                <RefreshCw className="size-3 mr-1" />
+                检查更新
+              </Button>
+            </div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <Unlock className="size-3 text-emerald-400" />
+              <span className="text-sm font-mono-data text-emerald-300">{unlockedCount}</span>
+              <span className="text-xs text-muted-foreground">已解锁</span>
+              <span className="text-muted-foreground">/</span>
+              <span className="text-sm font-mono-data">{totalCount}</span>
+              <span className="text-xs text-muted-foreground">总题数</span>
+              {lockedCount > 0 && (
+                <span className="text-xs text-amber-300 ml-auto">
+                  <Lock className="size-3 inline mr-0.5" />{lockedCount}题待解锁
+                </span>
+              )}
+            </div>
+            <Progress value={(unlockedCount / totalCount) * 100} className="h-1.5 bg-cyan-950/50" />
+            {nextBatchDate && (
+              <p className="text-xs text-muted-foreground mt-1.5 font-mono-data">
+                下一批 {timeUntilNext} 解锁 · {formatDateCN(nextBatchDate)}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground font-mono-data">
             选择练习模式
