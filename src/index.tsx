@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import App from "./app";
 import "./index.css";
@@ -27,10 +27,10 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <App />
       </ErrorBoundary>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 );
