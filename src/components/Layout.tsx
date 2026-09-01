@@ -30,34 +30,8 @@ export function Layout() {
 
       {/* 手机外壳容器 */}
       <div className="relative mx-auto w-full max-w-[420px] h-screen bg-background/60 backdrop-blur-sm flex flex-col overflow-hidden">
-        {/* 顶部状态栏（模拟手机状态栏） */}
-        <div className="sticky top-0 z-50 flex items-center justify-between h-10 px-5 bg-background/80 backdrop-blur-xl border-b border-cyan-500/10">
-          <span className="text-[11px] font-mono-data text-foreground/70 font-semibold tabular-nums">
-            9:41
-          </span>
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-end gap-0.5 h-3">
-              <span className="w-0.5 h-1.5 bg-foreground/70 rounded-sm" />
-              <span className="w-0.5 h-2 bg-foreground/70 rounded-sm" />
-              <span className="w-0.5 h-2.5 bg-foreground/70 rounded-sm" />
-              <span className="w-0.5 h-3 bg-foreground/70 rounded-sm" />
-            </div>
-            {/* WiFi图标 */}
-            <svg className="w-3.5 h-3.5 text-foreground/70" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 18.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM5.9 11.9a9 9 0 0 1 12.2 0l-1.4 1.4a7 7 0 0 0-9.4 0L5.9 11.9zM2.6 8.6a14 14 0 0 1 18.8 0l-1.4 1.4a12 12 0 0 0-16 0L2.6 8.6z" />
-            </svg>
-            {/* 电池 */}
-            <div className="flex items-center">
-              <div className="w-6 h-3 border border-foreground/70 rounded-[2px] relative">
-                <div className="absolute inset-0.5 bg-cyan-400 rounded-[1px] w-[75%]" />
-              </div>
-              <div className="w-0.5 h-1.5 bg-foreground/70 rounded-r-sm" />
-            </div>
-          </div>
-        </div>
-
         {/* App标题栏 */}
-        <header className="sticky top-10 z-40 h-12 flex items-center px-4 bg-background/70 backdrop-blur-xl border-b border-cyan-500/10">
+        <header className="sticky top-0 z-40 h-12 flex items-center px-4 bg-background/70 backdrop-blur-xl border-b border-cyan-500/10">
           <h1 className="text-sm font-semibold text-foreground font-tech tracking-wider flex items-center gap-2">
             <span className="text-cyan-400 text-glow-cyan">▌</span>
             {title}
