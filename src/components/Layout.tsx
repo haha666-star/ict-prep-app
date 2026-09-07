@@ -1,9 +1,10 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from '@/components/ui/sonner';
 import BottomTabBar from '@/components/BottomTabBar';
 import SplashScreen from '@/components/SplashScreen';
 import { useStudyTimer } from '@/hooks/use-study-timer';
+import { Settings } from 'lucide-react';
 
 const PAGE_TITLES: Record<string, string> = {
   '/': '备考总览',
@@ -11,7 +12,9 @@ const PAGE_TITLES: Record<string, string> = {
   '/lab-config': '实验速查',
   '/study-plan': '学习计划',
   '/quiz': '刷题练习',
+  '/exam': '限时模考',
   '/statistics': '进度统计',
+  '/settings': '设置与备份',
 };
 
 export function Layout() {

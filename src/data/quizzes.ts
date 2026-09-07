@@ -1,4 +1,9 @@
 // EXPORTS: IQuizQuestion, MOCK_QUIZZES
+import { EXTRA_QUIZZES_A } from './quizzes-extra-a'
+import { EXTRA_QUIZZES_B } from './quizzes-extra-b'
+
+export type QuizDifficulty = 'IA' | 'IP' | 'IE'
+
 export interface IQuizQuestion {
   id: string
   type: 'single' | 'multiple' | 'judge'
@@ -9,6 +14,8 @@ export interface IQuizQuestion {
   knowledgeId: string
   direction: 'datacom' | 'dcn' | 'security' | 'wlan'
   batch?: number // 批次号，无此字段表示基础题库立即可用；batch 1 起始日后2天解锁，batch 2 4天后，以此类推
+  /** 难度分级：IA=HCIA（省初赛为主）、IP=HCIP（省复赛）、IE=HCIE（全国赛实验储备）。缺省视为 IA */
+  difficulty?: QuizDifficulty
 }
 
 export const MOCK_QUIZZES: IQuizQuestion[] = [
@@ -23,7 +30,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '网络层',
     explanation: '路由器根据IP地址转发数据包，工作在网络层（第三层）。交换机工作在数据链路层，集线器工作在物理层。',
     knowledgeId: 'datacom-osi-tcpip',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-002',
@@ -33,7 +40,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '4层',
     explanation: 'TCP/IP模型分为4层：网络接口层、网际层（网络层）、传输层、应用层。OSI模型是7层。',
     knowledgeId: 'datacom-osi-tcpip',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-003',
@@ -43,7 +50,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '172.16.1.1',
     explanation: 'B类地址范围128.0.0.0-191.255.255.255，172.16.1.1属于B类。10.x是A类私有，192.168.x是C类私有，224.x是D类组播。',
     knowledgeId: 'datacom-ip-subnet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-004',
@@ -53,7 +60,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '192.168.1.15',
     explanation: '/28掩码，块大小16，网段0-15，广播地址是网段最后一个地址192.168.1.15。可用主机地址192.168.1.1-192.168.1.14共14个。',
     knowledgeId: 'datacom-ip-subnet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-005',
@@ -63,7 +70,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['10.0.0.1', '172.31.255.254', '192.168.0.1'],
     explanation: '私有地址范围：A类10.0.0.0/8，B类172.16.0.0/12（172.16-172.31），C类192.168.0.0/16。172.15不在私有范围内。',
     knowledgeId: 'datacom-ip-subnet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-006',
@@ -73,7 +80,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'ARP请求是广播（目标MAC全F），询问谁拥有某个IP；ARP响应是单播，直接回复给请求者，告知自己的MAC地址。',
     knowledgeId: 'datacom-arp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-007',
@@ -83,7 +90,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'display arp',
     explanation: '华为VRP系统查看ARP表用display arp，查看MAC地址表用display mac-address，查看路由表用display ip routing-table。show是思科命令。',
     knowledgeId: 'datacom-arp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
 
   // --- 以太网与交换 ---
@@ -95,7 +102,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '差错校验',
     explanation: 'FCS（帧校验序列）4字节，使用CRC循环冗余校验，用于检测帧在传输过程中是否出错。类型字段标识上层协议。',
     knowledgeId: 'datacom-ethernet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-009',
@@ -105,7 +112,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '泛洪（除接收端口外所有端口发送）',
     explanation: '交换机对未知单播帧进行泛洪处理（除接收端口外的所有端口发送），同时学习源MAC地址。广播帧和组播帧也会泛洪。',
     knowledgeId: 'datacom-ethernet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-010',
@@ -115,7 +122,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '12比特',
     explanation: '802.1Q标签4字节：TPID(2字节，0x8100)+TCI(2字节)，TCI中优先级3比特+CFI1比特+VLAN ID12比特。VLAN ID范围1-4094。',
     knowledgeId: 'datacom-vlan',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-011',
@@ -125,7 +132,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'VLAN 1（默认VLAN/PVID）',
     explanation: 'Trunk端口默认允许VLAN1通过且不打标签（PVID对应的VLAN），其他允许通过的VLAN都打802.1Q标签。可通过port trunk pvid vlan修改PVID。',
     knowledgeId: 'datacom-vlan',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-012',
@@ -135,7 +142,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['单臂路由（路由器子接口）', '三层交换机SVI接口', 'VLAN聚合Super VLAN'],
     explanation: 'VLAN间通信需要三层设备：单臂路由（路由器子接口封装802.1Q）、三层交换机SVI（VLANIF接口）、VLAN聚合（Super VLAN的VLANIF接口实现Sub VLAN间通信）。二层交换机无法实现VLAN间路由。',
     knowledgeId: 'datacom-vlan',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-013',
@@ -145,7 +152,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'Hybrid是华为设备特有的端口模式，可通过untagged和tagged列表灵活配置哪些VLAN发送时不打标签、哪些打标签，比Access和Trunk更灵活。',
     knowledgeId: 'datacom-vlan',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-014',
@@ -155,7 +162,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '指定端口',
     explanation: '根桥上的所有端口都是指定端口（Designated Port），因为根桥到所有网段的路径开销最小。根端口只存在于非根桥上，是到根桥路径开销最小的端口。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-015',
@@ -165,7 +172,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '桥优先级+MAC地址',
     explanation: '桥ID（Bridge ID）8字节=桥优先级（2字节，默认32768）+MAC地址（6字节）。选举时先比较优先级，值小者优先；优先级相同则比较MAC地址，小者优先。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-016',
@@ -175,7 +182,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '替代端口和备份端口',
     explanation: 'RSTP新增替代端口（Alternate Port，根端口的备份）和备份端口（Backup Port，指定端口的备份）。边缘端口是RSTP的概念但不是端口角色，STP也有阻塞端口。RSTP将端口状态简化为Discarding/Learning/Forwarding三种。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-017',
@@ -185,7 +192,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'MSTP（多生成树协议）支持多实例，可将不同VLAN映射到不同的MSTI实例，每个实例独立计算生成树，从而实现VLAN间的流量负载分担，同时兼容STP/RSTP。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-018',
@@ -195,7 +202,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '丧失边缘端口属性，参与STP计算',
     explanation: '边缘端口（Edge Port）直接连接终端，不参与STP计算，可快速进入转发状态。但一旦收到BPDU，就会丧失边缘端口属性，变为普通端口参与STP计算，防止非法交换机接入。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-019',
@@ -205,7 +212,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '接口优先级（小者优先）',
     explanation: 'LACP模式下，先确定主动端（系统优先级小者），然后由主动端根据接口优先级（默认32768，值小者优先）选择活动接口，优先级相同则选接口编号小的。活动接口上限可配置。',
     knowledgeId: 'datacom-eth-trunk',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-020',
@@ -215,7 +222,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '错误',
     explanation: 'Eth-Trunk成员接口必须具有相同的速率、双工模式、VLAN配置等，否则无法加入Eth-Trunk。链路聚合要求成员接口参数一致，以保证负载分担的公平性和可靠性。',
     knowledgeId: 'datacom-eth-trunk',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-021',
@@ -225,7 +232,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '堆叠优先级大者优先',
     explanation: 'iStack主交换机选举：先比较堆叠优先级（默认100，值大者优先），优先级相同则比较MAC地址（小者优先），再相同则比较启动时间（早者优先）。主交换机负责管理整个堆叠系统。',
     knowledgeId: 'datacom-stack',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
 
   // --- 路由协议 ---
@@ -237,7 +244,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '60',
     explanation: '华为VRP路由优先级：直连路由0、OSPF 10、IS-IS 15、静态路由60、RIP 100、OSPF ASE/ NSSA 150、IBGP 255、EBGP 255。优先级值越小越优先。',
     knowledgeId: 'datacom-static-route',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-023',
@@ -247,7 +254,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '0.0.0.0 0.0.0.0',
     explanation: '默认路由是0.0.0.0 0.0.0.0，匹配所有目标网络。当路由表中没有更精确的匹配路由时，使用默认路由转发。华为配置命令：ip route-static 0.0.0.0 0.0.0.0 下一跳。',
     knowledgeId: 'datacom-static-route',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-024',
@@ -257,7 +264,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '链路状态算法（SPF）',
     explanation: 'OSPF是链路状态路由协议，基于SPF（最短路径优先）算法（Dijkstra算法），每台路由器维护完整的链路状态数据库，独立计算最短路径树。RIP是距离矢量，BGP是路径矢量。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-025',
@@ -267,7 +274,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '2-Way状态',
     explanation: 'OSPF邻居状态机：Down→Init→2-Way→ExStart→Exchange→Loading→Full。在2-Way状态后，广播和NBMA网络会进行DR/BDR选举。DR/BDR选举基于接口优先级和Router ID，值大者优先。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-026',
@@ -277,7 +284,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'ABR',
     explanation: 'Type3 Summary LSA由ABR（区域边界路由器）生成，用于在区域间通告路由。Type1/2在区域内传播，Type3跨区域传播，Type4通告ASBR位置，Type5通告外部路由，Type7在NSSA区域内传播外部路由。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-027',
@@ -287,7 +294,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['Stub区域', 'Totally Stub区域', 'NSSA区域'],
     explanation: 'Stub、Totally Stub、NSSA区域都不接收Type5外部LSA。Stub允许Type3区域间路由；Totally Stub只允许默认路由（Type3默认）；NSSA允许Type7外部路由（在区域内传播，到ABR转换为Type5）。标准区域接收所有类型LSA。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-028',
@@ -297,7 +304,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '手动配置>最大环回口IP>最大物理口IP',
     explanation: 'OSPF Router ID选举：优先手动配置（router-id命令），否则选最大环回接口IP，没有环回口则选最大物理接口IP。Router ID是32位，格式类似IP地址，在OSPF域内唯一。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-029',
@@ -307,7 +314,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'OSPF要求骨干区域Area 0必须连续，所有非骨干区域必须直接连接骨干区域（通过ABR）。如果骨干区域不连续，可通过虚链路（Virtual Link）逻辑连接。这是OSPF区域设计的基本原则，防止路由环路。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-030',
@@ -317,7 +324,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '交换完整的链路状态数据库',
     explanation: 'Hello报文用于发现邻居、维护邻居关系（Keepalive）、选举DR/BDR、协商参数（如区域ID、认证、掩码等）。交换完整链路状态数据库是DD（数据库描述）、LSR、LSU、LSAck报文的功能，不是Hello的作用。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-031',
@@ -327,7 +334,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '仅同区域的Level-1和Level-1-2',
     explanation: 'Level-1路由器只能与同一区域内的Level-1或Level-1-2路由器建立邻居。Level-2路由器可与任意区域的Level-2或Level-1-2建立邻居（构成骨干）。Level-1-2可同时与Level-1和Level-2建立邻居。',
     knowledgeId: 'datacom-isis',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-032',
@@ -337,7 +344,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '优先级0也参与选举，可抢占',
     explanation: 'IS-IS的DIS选举与OSPF的DR不同：DIS优先级默认64，优先级0也参与选举（OSPF优先级0不参与DR选举）；DIS可抢占（新加入的高优先级路由器会抢占成为DIS）；没有BDR概念，DIS故障后重新选举。',
     knowledgeId: 'datacom-isis',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-033',
@@ -347,7 +354,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'TCP 179',
     explanation: 'BGP使用TCP 179端口建立连接，TCP提供可靠传输，BGP不需要自己实现重传和确认机制。RIP使用UDP 520，OSPF协议号89，IS-IS协议号124。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-034',
@@ -357,7 +364,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Weight（华为私有）',
     explanation: 'BGP路由优选顺序：1.Weight（华为私有，越大越优，仅本地有效）→2.Local_Pref（本地优先级，越大越优）→3.本地始发路由→4.AS_Path（越短越优）→5.Origin（IGP>EGP>Incomplete）→6.MED（越小越优）→7.EBGP优于IBGP→8.最近IGP下一跳→9.Cluster List→10.Originator ID→11.Router ID。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-035',
@@ -367,7 +374,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '从IBGP学到的路由不再发给其他IBGP邻居',
     explanation: 'IBGP水平分割：从IBGP邻居学到的路由不再通告给其他IBGP邻居，防止AS内路由环路。这导致IBGP邻居需要全互联（Full Mesh），规模大时可用路由反射器（RR）或联盟（Confederation）解决。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-036',
@@ -377,7 +384,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['Origin', 'AS_Path', 'Next_Hop'],
     explanation: 'BGP公认必遵属性：Origin（起源）、AS_Path（AS路径）、Next_Hop（下一跳），所有BGP更新必须包含这些属性。Local_Pref是公认自由决定属性（Well-known Discretionary），可选但所有BGP路由器都能识别。MED是可选过渡属性。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-037',
@@ -387,7 +394,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'BGP邻居状态机：Idle（空闲）→Connect（TCP连接中）→Active（主动尝试TCP连接，Connect失败后进入）→OpenSent（已发Open报文）→OpenConfirm（已收到Open确认）→Established（已建立，可交换Update）。Active状态表示TCP连接失败，正在重试。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-038',
@@ -397,7 +404,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '定义匹配条件',
     explanation: 'Route-Policy由多个节点组成，每个节点包含if-match（定义匹配条件，如ACL、前缀列表、AS路径、团体属性等）和apply（修改路由属性，如下一跳、开销、优先级、团体属性等）。匹配模式有permit和deny。',
     knowledgeId: 'datacom-route-policy',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-039',
@@ -407,7 +414,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '可同时匹配前缀和掩码范围，更精确',
     explanation: 'IP-Prefix（地址前缀列表）可同时匹配IP前缀和掩码长度范围（如greater-equal和less-equal），比ACL更精确灵活，专门用于路由过滤。ACL基于通配符掩码，主要用于数据包过滤，路由过滤时不够精确。',
     knowledgeId: 'datacom-route-policy',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
 
   // --- IPv6 ---
@@ -419,7 +426,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'FE80::/10',
     explanation: 'IPv6地址类型：全球单播2000::/3，链路本地FE80::/10（仅本地链路有效，用于邻居发现和路由协议邻居），唯一本地FC00::/7（类似IPv4私有地址），组播FF00::/8。环回地址::1/128，未指定::/128。',
     knowledgeId: 'datacom-ipv6-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-041',
@@ -429,7 +436,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '路由器通告RA',
     explanation: 'SLAAC过程：主机发送RS（路由器请求）→路由器回复RA（路由器通告，包含前缀信息）→主机根据前缀+EUI-64接口标识生成IPv6地址→DAD重复地址检测。RA是ICMPv6报文类型134，RS是类型133。',
     knowledgeId: 'datacom-ipv6-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-042',
@@ -439,7 +446,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'IPv6取消了广播地址，所有需要广播的功能都用组播实现，如ARP用邻居发现（NS/NA组播），DHCP用组播。IPv6组播地址FF00::/8，如FF02::1是所有节点组播，FF02::2是所有路由器组播。',
     knowledgeId: 'datacom-ipv6-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-043',
@@ -449,7 +456,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'FF FE',
     explanation: 'EUI-64生成方法：将48位MAC地址从中间分为两部分（24位+24位），中间插入FF FE（16位），形成64位接口标识符，同时将MAC地址第7位（U/L位）翻转（0变1，1变0）。例如MAC 00-11-22-33-44-55生成0211:22FF:FE33:4455。',
     knowledgeId: 'datacom-ipv6-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-044',
@@ -459,7 +466,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'OSPFv3不支持区域划分',
     explanation: 'OSPFv3仍支持区域划分（骨干区域Area 0等），机制与OSPFv2基本相同。区别在于：基于链路运行（同一链路可多个实例）、使用链路本地地址通信、Router ID仍32位需手动配置、LSA类型变化（新增Type8 Link LSA和Type9 Intra-Area-Prefix LSA）、认证用IPv6 AH/ESP。',
     knowledgeId: 'datacom-ospfv3',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
 
   // --- 网络服务与安全 ---
@@ -471,7 +478,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '3000-3999',
     explanation: '华为ACL编号：基本ACL 2000-2999（仅匹配源IP），高级ACL 3000-3999（匹配源/目的IP、协议、端口等），二层ACL 4000-4999（匹配MAC等二层信息），用户自定义ACL 5000-5999。高级ACL功能更强大，推荐使用。',
     knowledgeId: 'datacom-acl',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-046',
@@ -481,7 +488,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'ACL默认最后隐含一条deny any（拒绝所有），所有未被前面规则匹配的数据包都会被拒绝。如果需要允许其他所有流量，必须在ACL末尾显式配置permit any。ACL匹配顺序是按规则ID从小到大，匹配到即停止。',
     knowledgeId: 'datacom-acl',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-047',
@@ -491,7 +498,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '多对一地址复用（通过端口区分）',
     explanation: 'NAPT（PAT）是多对一的NAT，多个内网私有地址共享一个或少数公网IP，通过不同的源端口号区分不同主机的会话，大大节省公网IP地址。静态NAT是一对一，动态NAT是地址池动态分配但不转换端口。',
     knowledgeId: 'datacom-nat',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-048',
@@ -501,7 +508,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '外网用户访问内网服务器',
     explanation: 'NAT Server（目的NAT/端口映射）将公网IP+端口映射到内网服务器IP+端口，使外网用户可以通过公网地址访问内网服务器，常用于Web服务器、邮件服务器等对外提供服务的场景。配置命令：nat server protocol tcp global 公网IP 端口 inside 内网IP 端口。',
     knowledgeId: 'datacom-nat',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-049',
@@ -511,7 +518,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'NAT修改IP地址和端口，会破坏IPsec AH协议的完整性认证（AH认证整个IP头），ESP只认证载荷不认证外部IP头，隧道模式ESP可与NAT共存但需NAT-T（NAT穿越，将ESP封装在UDP 4500报文中）。NAT的缺点包括破坏端到端模型、不支持端到端IPsec、某些应用层协议需ALG支持。',
     knowledgeId: 'datacom-nat',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-050',
@@ -521,7 +528,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '00-00-5E-00-01',
     explanation: 'VRRP虚拟MAC地址格式：00-00-5E-00-01-{VRID}，前缀00-00-5E-00-01，最后一个字节是VRID（虚拟路由器ID，1-255）。例如VRID为1时虚拟MAC是00-00-5E-00-01-01。HSRP的虚拟MAC前缀是00-00-0C-07-AC。',
     knowledgeId: 'datacom-vrrp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-051',
@@ -531,7 +538,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '1秒',
     explanation: 'VRRP Master默认每1秒发送一次通告报文（Advertisement），组播地址224.0.0.18，协议号112。Backup在Master_Down_Interval（默认3倍通告间隔=3秒，可配置）内未收到通告则认为Master故障，切换为Master。抢占模式默认开启。',
     knowledgeId: 'datacom-vrrp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-052',
@@ -541,7 +548,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'VRRP优先级范围1-254，默认100，值大者优先成为Master。如果路由器接口IP与虚拟IP相同（IP地址拥有者），优先级自动为255，直接成为Master，且不可被抢占（即使其他路由器优先级更高也无法抢占）。优先级0表示Master主动退出。',
     knowledgeId: 'datacom-vrrp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-053',
@@ -551,7 +558,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Discover→Offer→Request→ACK',
     explanation: 'DHCP四步工作过程：1.Discover（客户端广播发现DHCP服务器）→2.Offer（服务器提供IP地址等参数）→3.Request（客户端请求确认选中的地址）→4.ACK（服务器确认分配）。客户端端口68，服务器端口67，基于UDP。租期到50%时单播续租，87.5%时广播续租。',
     knowledgeId: 'datacom-dhcp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-054',
@@ -561,7 +568,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '防止非法DHCP服务器，建立绑定表',
     explanation: 'DHCP Snooping是交换机上的安全特性，通过信任端口（连接合法DHCP服务器）和非信任端口（连接用户）防止非法DHCP服务器。非信任端口收到的DHCP服务器报文（Offer/ACK等）会被丢弃。同时建立DHCP Snooping绑定表（IP-MAC-接口-VLAN映射），可用于DAI（动态ARP检测）和IP Source Guard。',
     knowledgeId: 'datacom-dhcp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-055',
@@ -571,7 +578,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Option 43',
     explanation: 'AP发现AC的方式：1.广播方式（同二层网络）2.DHCP Option43（DHCP服务器在Option43字段中携带AC IP地址列表）3.DNS方式（AP通过域名解析AC地址，默认域名hwac.com）4.静态配置（AP上手动配置AC IP）。Option43是WLAN中AP跨三层发现AC的常用方式。',
     knowledgeId: 'datacom-dhcp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
 
   // --- MPLS与VPN ---
@@ -583,7 +590,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '20比特',
     explanation: 'MPLS标签32位=Label（标签值，20位）+Exp（实验位，3位，用于QoS）+S（栈底标识，1位，1表示是栈底标签）+TTL（生存时间，8位）。标签值0-15保留（0显式空标签、1路由器告警、3隐式空标签），16及以上动态分配。VNI是VXLAN的概念占24位，不要混淆。',
     knowledgeId: 'datacom-mpls-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-057',
@@ -593,7 +600,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['减少Ingress PE的处理负担', '减少Egress PE的处理负担，提高转发效率', '增加标签层数', '加密数据'],
     explanation: 'PHP（Penultimate Hop Popping，倒数第二跳弹出）：Egress PE分配隐式空标签（标签值3）给倒数第二跳LSR，倒数第二跳在转发到Egress PE前弹出标签，直接将IP报文发给Egress PE，Egress PE无需处理标签直接查路由表转发，减少Egress PE的处理负担，提高转发效率。',
     knowledgeId: 'datacom-mpls-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-058',
@@ -603,7 +610,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '使不同VPN的相同IP地址在BGP中唯一',
     explanation: 'RD（Route Distinguisher，路由区分符）8字节，添加在IPv4前缀前形成VPN-IPv4地址（12字节），确保不同VPN使用相同IP地址时在BGP路由表中不冲突。RD仅用于区分，不控制路由导入导出。控制导入导出的是RT（Route Target，路由目标，BGP扩展团体属性）。',
     knowledgeId: 'datacom-mpls-vpn',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-059',
@@ -613,7 +620,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '2层',
     explanation: 'MPLS VPN（BGP/MPLS IP VPN）数据转发时，Ingress PE压入两层标签：外层标签（公网标签，标识到Egress PE的LSP路径，在公网传输中被LSR交换），内层标签（VPN标签，标识目标VPN或CE，由Egress PE分配，通过BGP传递给Ingress PE）。倒数第二跳弹出外层标签（PHP），Egress PE弹出内层标签后转发给CE。',
     knowledgeId: 'datacom-mpls-vpn',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-060',
@@ -623,7 +630,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['连接CE路由器', '维护VRF路由表', 'MPLS标签封装/解封装'],
     explanation: 'PE（Provider Edge，运营商边缘路由器）连接CE（用户边缘），维护每个VPN的VRF（VPN路由转发实例）独立路由表，负责MPLS标签的封装（Ingress PE）和解封装（Egress PE）。P（Provider，运营商核心路由器）仅做MPLS标签交换，不维护VPN路由，不感知VPN。',
     knowledgeId: 'datacom-mpls-vpn',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-061',
@@ -633,7 +640,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '47',
     explanation: 'GRE（通用路由封装）协议号47，在任意网络层协议上封装任意网络层协议，建立虚拟隧道。ESP协议号50，AH协议号51，OSPF协议号89。GRE本身不提供加密和认证，通常与IPSec结合使用（GRE over IPSec）。',
     knowledgeId: 'datacom-gre-l2tp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-062',
@@ -643,7 +650,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '企业侧隧道终结设备',
     explanation: 'L2TP（第二层隧道协议）角色：LAC（L2TP Access Concentrator，L2TP访问集中器，用户侧，发起隧道建立，通常是NAS或路由器），LNS（L2TP Network Server，L2TP网络服务器，企业侧，终结L2TP隧道，对用户进行认证和分配地址）。L2TP基于UDP 1701端口，本身不加密，常与IPSec结合（L2TP over IPSec）。',
     knowledgeId: 'datacom-gre-l2tp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
 
   // --- QoS ---
@@ -655,7 +662,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '46',
     explanation: 'DSCP（差分服务代码点）6位，常用值：DF默认转发0，EF加速转发46（低延迟、低丢包、低抖动，用于语音），AF确保转发（AF1=8/10/12，AF2=16/18/20，AF3=24/26/28，AF4=32/34/36，每类3个丢弃优先级），CS类选择器（CS1=8,CS2=16,CS3=24,CS4=32,CS5=40,CS6=48,CS7=56，兼容IP优先级）。EF=46用于语音等实时业务。',
     knowledgeId: 'datacom-qos-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-064',
@@ -665,7 +672,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '避免TCP全局同步，高优先级流量丢弃概率低',
     explanation: 'WRED（Weighted Random Early Detection，加权随机早期检测）在队列满之前随机丢弃部分数据包，避免尾部丢弃导致的TCP全局同步（所有TCP连接同时降速又同时提速，造成网络震荡）。WRED基于IP优先级/DSCP设置不同的丢弃阈值和概率，高优先级流量丢弃概率低，实现差分服务。',
     knowledgeId: 'datacom-qos-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-065',
@@ -675,7 +682,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'CAR丢弃超出流量，GTS缓存超出流量',
     explanation: 'CAR（Committed Access Rate，承诺接入速率，流量监管）：限制流量速率，超出部分直接丢弃或重标记，用于入方向，减少延迟但可能丢包。GTS（Generic Traffic Shaping，通用流量整形，流量整形）：限制流量速率，超出部分缓存到缓冲区，等令牌充足时再发送，用于出方向，减少丢包但增加延迟。两者都基于令牌桶算法。',
     knowledgeId: 'datacom-qos-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-066',
@@ -685,7 +692,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['PQ（优先队列）'],
     explanation: 'PQ（Priority Queue，优先队列）严格按优先级从高到低调度，高优先级队列始终优先转发，如果高优先级流量持续存在，低优先级队列可能永远得不到服务，导致"饿死"。WRR和WFQ通过加权轮询保证每个队列都能获得服务，FIFO先入先出不区分优先级。实际部署常用PQ+WFQ组合，既保证关键业务又避免饿死。',
     knowledgeId: 'datacom-qos-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
 
   // ==================== 安全方向（40题） ====================
@@ -699,7 +706,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '可追溯性',
     explanation: '信息安全三要素CIA：Confidentiality（机密性，防止信息泄露给未授权者）、Integrity（完整性，防止信息被未授权篡改）、Availability（可用性，确保授权用户可正常访问信息和系统）。可追溯性（Accountability/Non-repudiation）是安全属性但不属于CIA三要素。',
     knowledgeId: 'security-concept',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-002',
@@ -709,7 +716,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'TCP三次握手建立半连接队列',
     explanation: 'SYN Flood攻击：攻击者发送大量伪造源IP的SYN包，目标服务器回复SYN-ACK后等待ACK（三次握手第三步），这些半连接占用服务器的半连接队列（SYN队列），队列满后无法接受新的正常连接。防御方法：SYN Cookie（不建立半连接，用Cookie验证）、SYN Proxy（防火墙代理三次握手）、限制SYN速率。',
     knowledgeId: 'security-concept',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-003',
@@ -719,7 +726,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '流量分析',
     explanation: '被动攻击不修改数据，仅窃听或观察，包括窃听（Eavesdropping）和流量分析（Traffic Analysis，通过分析通信模式、流量大小、通信频率获取信息，即使内容已加密）。主动攻击会修改或破坏数据，包括篡改、伪造、重放、拒绝服务等。被动攻击难以检测，重在预防（加密）；主动攻击可检测，重在检测和响应。',
     knowledgeId: 'security-concept',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-004',
@@ -729,7 +736,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['RSA', 'ECC'],
     explanation: '非对称加密（公钥加密）使用公钥和私钥对，包括RSA、DH（密钥交换）、ECC（椭圆曲线加密）、SM2（国密非对称）。对称加密使用同一密钥，包括DES、3DES、AES、SM4（国密对称）、Blowfish、RC4等。非对称加密速度慢，适合密钥交换和数字签名；对称加密速度快，适合大数据量加密。',
     knowledgeId: 'security-crypto',
-    direction: 'security',
+    direction: 'security', difficulty: 'IE',
   },
   {
     id: 'sec-005',
@@ -739,7 +746,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '机密性',
     explanation: '数字签名：发送方用私钥对数据哈希值加密（签名），接收方用公钥验证。提供：1.身份认证（验证发送者身份，因为只有发送者拥有私钥）2.完整性（验证数据是否被篡改，因为哈希值随数据变化）3.不可否认性（发送者不能否认发送过，因为私钥只有发送者有）。数字签名不提供机密性（数据本身不加密，任何人都可读取），机密性由加密提供。',
     knowledgeId: 'security-crypto',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-006',
@@ -749,7 +756,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'SHA-256',
     explanation: 'MD5（128位）和SHA-1（160位）已被破解，存在碰撞攻击，不推荐用于安全场景。SHA-2（SHA-224/256/384/512）目前是安全的，SHA-256最常用。SHA-3是最新标准。SM3是中国国密哈希算法（256位），也是安全的。CRC32是校验和，不是加密哈希，仅用于差错检测，不具备抗碰撞性。',
     knowledgeId: 'security-crypto',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
 
   // --- 防火墙 ---
@@ -761,7 +768,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Local',
     explanation: '华为防火墙默认安全区域优先级：Local（100，防火墙自身接口和数据）>Trust（85，内网可信区域）>DMZ（50，非军事区，服务器区）>Untrust（5，外网不可信区域）。优先级数值越大越可信。高优先级到低优先级默认允许（取决于安全策略），低到高默认拒绝。可自定义安全区域。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-008',
@@ -771,7 +778,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '直接匹配会话表转发',
     explanation: '状态检测防火墙维护会话表（五元组+状态），只对每个会话的首包进行安全策略匹配，匹配允许则建立会话表项，后续数据包直接匹配会话表转发，无需重新匹配策略，提高转发效率。会话表项有老化时间，超时后删除。状态检测还能检测应用层协议状态（如FTP的动态端口），防止应用层攻击。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-009',
@@ -781,7 +788,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '主备设备间会话表和配置同步',
     explanation: 'HRP（Huawei Redundancy Protocol，华为冗余协议）是华为防火墙双机热备的私有协议，用于主备设备之间同步会话表、配置命令、动态表项等，确保主设备故障时备设备能无缝接管，不中断现有业务。HRP通过心跳线（直连或网络）传输同步信息。双机热备模式：主备模式（Active/Standby，主设备转发，备设备备份）和负载分担模式（Active/Active，两台同时转发，互为主备）。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-010',
@@ -791,7 +798,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: '防火墙工作模式：1.路由模式（三层模式，接口配置IP地址，像路由器一样转发，支持NAT、VPN等三层功能）2.透明模式（二层模式，接口不配置IP地址，像二层交换机一样转发，对用户透明，不改变网络拓扑，适合在线部署，但不支持NAT等三层功能）3.混合模式（同时有三层接口和二层接口）。透明模式常用于不希望改变现有网络拓扑的场景。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-011',
@@ -801,7 +808,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '按规则ID从小到大，匹配到即停止',
     explanation: '防火墙安全策略按规则ID（序号）从小到大顺序匹配，数据包匹配到第一条规则后即停止匹配，执行该规则的动作（允许/拒绝/日志等）。因此精确的规则应放在前面，宽泛的规则放在后面。安全策略匹配条件包括：源安全区域、目的安全区域、源IP地址、目的IP地址、用户、服务/应用、时间等。display security-policy查看安全策略配置。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-012',
@@ -811,7 +818,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '直接使用出接口IP地址做PAT',
     explanation: '防火墙源NAT类型：1.No-PAT（一对一，不转换端口，需要地址池有足够地址）2.PAT（多对一，转换端口，地址池或出接口IP）3.Easy-IP（直接使用出接口IP地址做PAT，无需配置地址池，适合拨号上网或出口IP动态获取的场景）。NAT Server是目的NAT，用于外网访问内网服务器。',
     knowledgeId: 'security-nat',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
 
   // --- 攻击防御 ---
@@ -823,7 +830,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '发送源IP和目的IP都是目标IP、源端口和目的端口相同的SYN包',
     explanation: 'Land攻击：攻击者发送源IP地址和目的IP地址都是目标主机IP、源端口和目的端口相同的SYN数据包，目标主机收到后向自己回复SYN-ACK，建立到自己的TCP连接，大量这样的连接耗尽系统资源导致崩溃。防御：防火墙检测并丢弃源IP=目的IP的数据包。Smurf攻击是发送源IP为目标、目的为广播的ICMP请求。Ping of Death是发送超大ICMP包。Teardrop是发送分片偏移重叠的包。',
     knowledgeId: 'security-attack-defense',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-014',
@@ -833,7 +840,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'ICMP广播回复',
     explanation: 'Smurf攻击：攻击者发送源IP为目标主机、目的IP为广播地址的ICMP Echo Request（ping）包，广播域内所有主机收到后都向目标主机回复ICMP Echo Reply，大量回复流量耗尽目标带宽和资源。Fraggle攻击类似但使用UDP Echo（7端口）。防御：禁止网络定向广播、主机不响应广播ICMP请求、防火墙检测Smurf特征。',
     knowledgeId: 'security-attack-defense',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-015',
@@ -843,7 +850,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'SYN扫描（半开扫描）',
     explanation: 'SYN扫描（半开扫描）：攻击者发送SYN包，目标回复SYN-ACK表示端口开放，攻击者不回复ACK（不建立完整连接），而是发送RST断开，因此不会在目标系统留下完整连接记录，隐蔽性较高。Connect扫描建立完整TCP连接，会在目标系统留下日志，隐蔽性低。Ping扫描用ICMP探测主机是否存活。UDP扫描发送UDP包，根据ICMP端口不可达判断端口状态。',
     knowledgeId: 'security-attack-defense',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-016',
@@ -853,7 +860,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '错误',
     explanation: 'IPS（入侵防御系统）是串接（在线）部署，实时检测并主动阻断攻击行为，是IDS的升级。IDS（入侵检测系统）是旁路部署，仅检测和告警，不阻断流量。IPS部署在网络关键路径上，所有流量经过IPS，检测到攻击时可执行丢弃、重置连接、限流、隔离等动作。IPS误报可能影响正常业务，需精细调优。',
     knowledgeId: 'security-ips-ids',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-017',
@@ -863,7 +870,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'SYN Flood',
     explanation: 'WAF（Web应用防火墙）专门防护Web应用层攻击，包括SQL注入、XSS跨站脚本、CSRF跨站请求伪造、文件上传漏洞、命令注入、目录遍历、Webshell、CC攻击（HTTP Flood）等。SYN Flood是网络层DoS攻击，由抗DDoS设备或防火墙的DDoS防护功能处理，不是WAF的主要防护对象。WAF工作在应用层，能理解HTTP协议内容。',
     knowledgeId: 'security-ips-ids',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
 
   // --- VPN ---
@@ -875,7 +882,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '50',
     explanation: 'IPSec安全协议：AH（认证头，协议号51，仅提供数据源认证和完整性校验，不加密，因不支持NAT已少用）；ESP（封装安全载荷，协议号50，提供加密+认证，是主流）。GRE协议号47，UDP协议号17，TCP协议号6，ICMP协议号1。ESP传输模式保护传输层，隧道模式保护整个IP包（新增外部IP头）。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-019',
@@ -885,7 +892,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '建立IKE SA，为阶段二协商提供安全通道',
     explanation: 'IKE（互联网密钥交换）分两阶段：阶段一（Phase 1）协商并建立IKE SA（安全联盟），为阶段二的协商提供安全的加密通道，主模式6条消息或野蛮模式3条消息。阶段二（Phase 2）快速模式3条消息，协商IPSec SA参数（加密/认证算法、感兴趣流等），建立IPSec SA用于加密用户数据。IKE SA是双向的，IPSec SA是单向的（入和出各一个）。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-020',
@@ -895,7 +902,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'UDP 4500',
     explanation: 'NAT-T（NAT穿越）解决IPSec流量经过NAT设备的问题：ESP协议号50无法被NAT设备转换（NAT只能处理TCP/UDP/ICMP），因此将ESP报文封装在UDP 4500端口中传输。IKE协商初始使用UDP 500端口，检测到NAT后切换到UDP 4500端口。NAT-T在IKE协商中通过NAT-D载荷检测路径中是否存在NAT设备。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-021',
@@ -905,7 +912,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['传输模式', '隧道模式'],
     explanation: 'IPSec工作模式：1.传输模式（Transport Mode）：保护传输层数据，原IP头不变，ESP/AH头插在原IP头和传输层头之间，用于主机到主机通信，节省开销。2.隧道模式（Tunnel Mode）：保护整个IP数据包，新增外部IP头，原IP包被封装，用于网关到网关VPN（站点到站点），安全性更高但开销大。路由模式和透明模式是防火墙的工作模式，不是IPSec的模式。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-022',
@@ -915,7 +922,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'IPSec通过感兴趣流（Interesting Traffic，由ACL定义）确定哪些流量需要IPSec保护：匹配ACL的流量进入IPSec处理（封装加密后通过隧道转发），不匹配的流量按普通路由方式转发。感兴趣流在IPSec策略视图下通过security acl命令引用。一个IPSec隧道可配置多条感兴趣流。注意感兴趣流的方向（源和目的）要正确。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-023',
@@ -925,7 +932,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '无需客户端，浏览器即可接入，穿越NAT方便',
     explanation: 'SSL VPN基于SSL/TLS协议（HTTPS 443端口），主要优势：1.无需安装专用客户端，Web浏览器即可接入（Web代理、文件共享、端口转发模式），全网络访问模式需轻量级客户端2.基于443端口，可穿越大多数防火墙和NAT设备3.细粒度访问控制（按用户/用户组/资源权限）4.终端安全检查（操作系统/补丁/杀毒软件状态）5.适合远程移动办公用户。IPSec VPN适合站点到站点（网对网），性能更好，需客户端。',
     knowledgeId: 'security-ssl-vpn',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-024',
@@ -935,7 +942,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '网络扩展（Network Extension）',
     explanation: 'SSL VPN接入方式：1.Web代理（Web化，浏览器直接访问Web资源，无需客户端）2.文件共享（访问CIFS/FTP文件服务器，浏览器即可）3.端口转发（访问TCP应用，需浏览器Java控件或小插件）4.网络扩展（Network Extension，全网络访问，类似IPSec，需安装专用客户端软件，分配虚拟IP，可访问所有网络资源）。网络扩展功能最强大但需客户端，Web代理最方便但只能访问Web资源。',
     knowledgeId: 'security-ssl-vpn',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
 
   // --- 认证准入 ---
@@ -947,7 +954,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '交换机或AP',
     explanation: '802.1X体系三元素：1.客户端（Supplicant，用户终端，需安装802.1X客户端软件）2.认证设备（Authenticator，交换机或无线AP，控制端口的接入权限，转发认证信息）3.认证服务器（Authentication Server，RADIUS服务器，存储用户信息，进行认证和授权）。认证设备在用户认证通过前只允许EAPoL报文通过，认证通过后开放端口允许正常流量。',
     knowledgeId: 'security-8021x',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-026',
@@ -957,7 +964,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'EAP-TLS',
     explanation: '802.1X EAP认证方式：1.EAP-MD5（仅认证客户端，不安全，已少用）2.PEAP（受保护EAP，先建立TLS隧道再在隧道内认证客户端，主流，服务器需证书）3.EAP-TTLS（隧道传输认证，类似PEAP）4.EAP-TLS（双向证书认证，客户端和服务器都需证书，安全性最高，管理成本高）。EAP-TLS安全性最高但需为每个客户端分发和管理证书，PEAP安全性较高且只需服务器证书，是企业常用方案。',
     knowledgeId: 'security-8021x',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-027',
@@ -967,7 +974,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'UDP 1812/1813',
     explanation: 'RADIUS（远程认证拨号用户服务）使用UDP协议：认证端口1812（旧标准1645），计费端口1813（旧标准1646）。RADIUS客户端（NAS/交换机/AP）与RADIUS服务器之间通过共享密钥加密认证信息。RADIUS结合认证、授权、计费（AAA）功能。TACACS+使用TCP 49端口，是另一种AAA协议，将认证、授权、计费分离，更安全但为思科私有。',
     knowledgeId: 'security-8021x',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-028',
@@ -977,7 +984,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'Portal认证（Web认证）：用户连接网络后访问任意网页，被重定向到Portal认证页面，输入用户名密码，认证通过后即可访问网络。优点：无需安装客户端软件，使用方便，适合访客和公共WiFi场景；缺点：安全性较低（账号密码可能被窃听，需HTTPS），无法做终端安全检查。通常配合开放SSID使用。802.1X需客户端但安全性高，MAC认证无需客户端但安全性低（MAC可伪造）。',
     knowledgeId: 'security-8021x',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
 
   // --- 内容安全 ---
@@ -989,7 +996,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '基于行为特征分析，可检测未知病毒，可能误报',
     explanation: '反病毒检测技术：1.特征码检测（基于已知病毒特征签名，准确率高，速度快，但无法检测未知病毒/变种，需频繁更新特征库）2.启发式检测（基于行为特征分析，如可疑的API调用、文件感染行为、自我复制等，可检测未知病毒和变种，但误报率较高）3.云查杀（利用云端庞大特征库，本地轻量客户端）4.虚拟机/沙箱检测（在隔离环境中运行观察行为）。实际产品多技术结合。',
     knowledgeId: 'security-antivirus',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-030',
@@ -999,7 +1006,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '监控和防止敏感数据外泄',
     explanation: 'DLP（Data Loss Prevention，数据防泄漏）通过识别、监控和保护敏感数据，防止敏感信息（如身份证号、银行卡号、机密文档、知识产权等）通过网络（邮件、Web、即时通讯）、存储设备（U盘、移动硬盘）、打印等渠道外泄。DLP可基于内容识别（关键字、正则表达式、文档指纹）和上下文（用户、位置、设备）进行检测和控制（阻断、告警、加密、审批）。是企业数据安全的重要技术。',
     knowledgeId: 'security-antivirus',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
 
   // ==================== WLAN方向（30题） ====================
@@ -1013,7 +1020,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '802.11ax',
     explanation: 'Wi-Fi标准对应：Wi-Fi 4=802.11n（2.4/5G，MIMO，最高600Mbps），Wi-Fi 5=802.11ac（5G，MU-MIMO下行，最高1Gbps+），Wi-Fi 6=802.11ax（2.4/5G，OFDMA，MU-MIMO上下行，1024-QAM，最高9.6Gbps），Wi-Fi 6E=802.11ax扩展到6GHz频段，Wi-Fi 7=802.11be（320MHz带宽，4096-QAM，多链路操作）。Wi-Fi 6是当前主流。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-002',
@@ -1023,7 +1030,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '1、6、11',
     explanation: '2.4GHz频段中国支持信道1-13（共13个），每个信道带宽22MHz（802.11b/g）或20MHz（802.11n），信道间有重叠。互不重叠的信道组合：1、6、11（间隔5个信道，最常用），或1、5、9、13（间隔4个信道，4个信道不重叠但干扰稍大）。5GHz频段信道多，带宽大（20/40/80/160MHz），干扰少。信道规划是WLAN部署的关键。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-003',
@@ -1033,7 +1040,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '将信道划分为子载波同时服务多用户，提高效率降低延迟',
     explanation: 'OFDMA（正交频分多址）是Wi-Fi 6的核心技术之一，将信道划分为多个子载波组（RU资源单元），可同时分配给多个用户传输数据，替代传统的OFDM（整个信道同时只服务一个用户）。优势：1.多用户同时传输，提高信道利用率2.降低延迟（尤其是小包和密集用户场景）3.减少冲突4.支持上下行MU-MIMO。OFDMA类似蜂窝通信的多用户调度，是Wi-Fi 6性能提升的关键。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-004',
@@ -1043,7 +1050,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '5GHz部分信道检测到雷达信号后自动切换信道，避免干扰雷达',
     explanation: 'DFS（Dynamic Frequency Selection，动态频率选择）：5GHz频段中部分信道（如52-64信道）与雷达系统（气象雷达、军用雷达等）共用频率，AP使用这些信道时必须检测雷达信号，一旦检测到雷达信号必须在规定时间内（通常10秒内）停止使用该信道并切换到其他信道，避免干扰雷达系统。DFS信道启动时需先监听1分钟（CAC信道可用性检查）确认无雷达才能使用。中国5GHz非DFS信道主要是149-165。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-005',
@@ -1053,7 +1060,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '错误',
     explanation: '频率越高，波长越短，穿透能力越弱，覆盖范围越小。2.4GHz频率低，波长长，穿透能力强（可穿透墙壁），覆盖范围大，但干扰多（蓝牙、微波炉、邻居WiFi），信道少，带宽小。5GHz频率高，波长短，穿透能力弱（难穿透墙壁和障碍物），覆盖范围小，但干扰少，信道多，带宽大（支持80/160MHz），速率高。实际部署中2.4G用于覆盖，5G用于高速接入。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-006',
@@ -1063,7 +1070,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '多天线同时收发，提高速率和可靠性',
     explanation: 'MIMO（多输入多输出）：使用多根天线同时收发数据，通过空间复用（SM，多根天线传输不同数据流，提高吞吐量）和发射分集（SD，多根天线传输相同数据，提高可靠性）两种方式提升无线性能。802.11n引入MIMO（Wi-Fi 4），802.11ac支持下行MU-MIMO（多用户多输入多输出，同时向多个用户传输），802.11ax（Wi-Fi 6）支持上下行MU-MIMO。MIMO是WiFi速率提升的关键技术。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
 
   // --- WLAN架构 ---
@@ -1075,7 +1082,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'FAT AP独立工作，FIT AP由AC统一管理',
     explanation: 'FAT AP（胖AP）：自主完成射频管理、用户接入、数据转发、安全策略等所有功能，每台AP独立配置管理，适合小型网络（家庭、小型办公室）。优点：结构简单，无需AC，成本低。缺点：管理困难（每台单独配置），漫游差，无法集中管理，不适合大规模部署。FIT AP（瘦AP）：由AC（接入控制器）统一管理控制，AP只负责射频接入和数据加密转发，配置由AC统一下发，适合中大型网络。优点：集中管理、统一射频优化、快速漫游、易于扩展。缺点：需AC，成本较高。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-008',
@@ -1085,7 +1092,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'UDP 5246（控制）和5247（数据）',
     explanation: 'CAPWAP（Control And Provisioning of Wireless Access Points，无线接入点控制和配置协议）用于AC和FIT AP之间的通信，基于UDP：控制端口5246（传输控制报文，如配置下发、状态上报、AP上线等，DTLS加密），数据端口5247（传输用户数据，隧道转发模式下使用，可选加密）。CAPWAP隧道包括控制隧道（必须）和数据隧道（可选，直接转发模式不使用数据隧道）。AP通过CAPWAP发现AC并建立隧道，完成上线和配置获取。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-009',
@@ -1095,7 +1102,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '获取IP→发现AC→建立CAPWAP隧道→下载版本配置→正常工作',
     explanation: 'FIT AP上线流程：1.AP获取IP地址（DHCP获取或静态配置）2.AP发现AC（广播方式同二层、DHCP Option43携带AC IP、DNS方式解析域名、静态配置AC IP）3.AP与AC建立CAPWAP控制隧道（DTLS加密）4.AP下载软件版本（如AP版本与AC要求不一致则升级）5.AP下载配置（SSID、安全、射频等配置）6.AP正常工作，提供无线接入。整个过程AP状态依次为：idle→discovering→downloading→config→normal。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-010',
@@ -1105,7 +1112,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['广播方式', 'DHCP Option43', 'DNS方式', '静态配置'],
     explanation: 'AP发现AC的方式：1.广播方式（AP发送广播Discover报文，同二层网络的AC回应，适合AC和AP在同一网段）2.DHCP Option43（DHCP服务器在Option43字段中携带AC IP地址列表，AP从DHCP获取IP时同时获取AC地址，适合跨三层部署，最常用）3.DNS方式（AP通过解析特定域名如hwac.com获取AC IP，需DNS服务器配置对应记录）4.静态配置（在AP上手动配置AC IP地址，适合固定环境）。多种方式可同时配置，AP按优先级尝试。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-011',
@@ -1115,7 +1122,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'AP直接转发用户数据，不经过AC，性能好',
     explanation: 'WLAN数据转发模式：1.直接转发（本地转发，Direct Forwarding）：AP直接将用户数据转发到有线网络，不经过AC，控制报文仍通过CAPWAP控制隧道到AC。优点：性能好（数据不经过AC，AC无瓶颈），网络拓扑简单。缺点：安全策略分散，数据加密需在AP上配置。2.隧道转发（集中转发，Tunnel Forwarding）：用户数据通过CAPWAP数据隧道封装到AC，由AC统一转发。优点：集中控制，安全策略统一，便于集中管理。缺点：AC可能成为性能瓶颈，延迟稍高。直接转发是主流模式。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-012',
@@ -1125,7 +1132,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '错误',
     explanation: 'AC旁挂组网：AC旁挂在核心交换机上，不串接在数据转发路径中，仅通过CAPWAP控制隧道管理AP，用户数据采用直接转发模式由AP直接转发，不经过AC。AC旁挂的优点是不改变现有网络拓扑，不影响数据转发，AC故障不影响用户数据转发（仅影响管理和新用户接入）。AC直连组网（串接）时用户数据可经过AC转发（隧道转发模式），但AC成为瓶颈和单点故障。实际部署中AC旁挂+直接转发是主流方案。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
 
   // --- WLAN服务与安全 ---
@@ -1137,7 +1144,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '一个物理AP创建多个虚拟AP，每个有独立SSID和安全策略',
     explanation: 'VAP（Virtual Access Point，虚拟AP）：一个物理AP可创建多个虚拟AP（通常最多16个或更多），每个VAP对应一个SSID，有独立的安全策略（加密方式、认证方式）、VLAN、转发模式等。通过VAP可在一个物理AP上同时提供多个无线网络（如员工SSID、访客SSID、IoT SSID），实现业务隔离和差异化服务。VAP在AC上通过VAP模板配置，应用到AP组或特定AP。每个VAP有独立的BSSID（通常是AP射频MAC地址+偏移量）。',
     knowledgeId: 'wlan-vap',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-014',
@@ -1147,7 +1154,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '使用RC4加密算法',
     explanation: 'WEP（有线等效保密）使用RC4加密算法和静态密钥，存在严重安全漏洞（IV重用、密钥恢复攻击），已被破解。WPA（Wi-Fi保护访问）是过渡方案，使用TKIP（临时密钥完整性协议，仍基于RC4但改进了密钥管理和MIC校验）。WPA2基于802.11i标准，使用CCMP（基于AES的加密模式，更安全），支持PSK个人版和802.1X企业版。WPA3进一步使用SAE（同时认证对等体）替代PSK，防离线字典攻击。RC4是WEP的算法，不是WPA2的。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-015',
@@ -1157,7 +1164,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '使用SAE替代PSK，防离线字典攻击',
     explanation: 'WPA3（Wi-Fi Protected Access 3）主要安全改进：1.SAE（Simultaneous Authentication of Equals，同时认证对等体）替代PSK（预共享密钥），防止离线字典攻击（攻击者无法通过抓包离线破解密码，必须在线尝试，可被检测和锁定）2.192位安全套件（企业级，更高加密强度）3.前向保密（即使长期密钥泄露，过去的通信仍安全）4.管理帧保护（PMF，防止欺骗解除认证攻击，WPA3强制要求）5.简化公共WiFi安全（OWE机会无线加密，开放网络也加密）。SAE是WPA3最核心的改进。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-016',
@@ -1167,7 +1174,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '同一SSID下用户之间不能互相访问，防止用户间攻击',
     explanation: '用户隔离（User Isolation，也叫用户二层隔离）：同一SSID下的无线用户之间不能直接通信（二层隔离），所有用户流量必须经过上层设备（网关/防火墙）转发，防止用户之间的ARP欺骗、端口扫描、恶意攻击等。适用于公共WiFi、酒店、商场等场景，提高网络安全性。用户隔离分为二层隔离（同VLAN内用户隔离）和三层隔离（跨VLAN用户隔离）。可在SSID模板或VAP模板中开启用户隔离功能。注意开启后用户间共享文件、打印机等功能会受影响。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-017',
@@ -1177,7 +1184,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '检测和防御无线攻击（非法AP、非法客户端、泛洪攻击等）',
     explanation: 'WIDS（Wireless Intrusion Detection System，无线入侵检测系统）/WIPS（Wireless Intrusion Prevention System，无线入侵防御系统）：通过AP的空口扫描检测无线网络中的攻击和异常行为，包括：1.非法AP检测（未授权的AP接入，钓鱼AP）2.非法客户端检测（未授权终端接入）3.Ad-hoc网络检测（用户私自建立点对点网络）4.泛洪攻击检测（认证泛洪、关联泛洪、解除认证泛洪等）5.弱IV检测（WEP加密的弱初始化向量）6.暴力破解检测等。WIDS仅检测告警，WIPS可主动反制（如发送解除认证帧踢掉非法用户，干扰非法AP）。是企业WLAN安全的重要功能。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-018',
@@ -1187,7 +1194,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'SSID隐藏（不广播SSID）：AP不发送包含SSID的Beacon帧，用户扫描不到该无线网络，必须手动输入SSID名称才能连接。这在一定程度上提高了安全性（防止普通用户发现和尝试连接），但SSID隐藏并非真正的安全措施：1.通过抓包分析Probe Request/Response帧仍可获取SSID 2.有专门的工具可检测隐藏SSID 3.不影响专业攻击者。SSID隐藏应配合强加密（WPA2/WPA3）和MAC过滤等措施使用，不能仅依赖SSID隐藏保证安全。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
 
   // --- WLAN漫游与QoS ---
@@ -1199,7 +1206,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '减少漫游时认证时间，实现毫秒级快速切换',
     explanation: '802.11r（Fast BSS Transition，快速BSS切换）：用户在同一AC管理的AP间漫游时，通过预认证（在漫游前与目标AP预认证）和密钥缓存（PMKID缓存），减少漫游时的认证时间，实现毫秒级快速切换（传统漫游需重新完整认证，耗时数百毫秒，可能导致语音通话中断）。802.11r特别适合语音、视频等实时业务。802.11k（无线资源测量）帮助终端快速发现邻居AP，802.11v（无线网络管理）指导终端漫游到更优AP。三者结合（kvr）实现智能快速漫游，是企业WLAN的重要功能。',
     knowledgeId: 'wlan-roaming',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-020',
@@ -1209,7 +1216,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '必须使用相同信道',
     explanation: 'WLAN漫游前提：1.相同SSID（用户在同一ESS内漫游）2.相同安全策略（加密方式、认证方式相同，否则无法无缝漫游）3.AP覆盖区域有重叠（建议15-20%重叠，确保用户在离开当前AP前能发现并关联目标AP）4.AC内或AC间漫游（同一AC管理的AP间漫游更简单，跨AC漫游需配置漫游组和隧道）。漫游时AP可以使用不同信道（实际上为了减少同频干扰，相邻AP应使用不同信道，如1、6、11蜂窝部署），用户漫游时会自动切换到目标AP的信道。因此"必须使用相同信道"是错误的。',
     knowledgeId: 'wlan-roaming',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-021',
@@ -1219,7 +1226,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'AC_VO（语音）',
     explanation: 'WMM（Wi-Fi Multimedia，Wi-Fi多媒体）基于802.11e标准，将无线流量分为4个接入类别（Access Category，AC），优先级从高到低：AC_VO（Voice，语音，最高优先级，低延迟低丢包，如VoWiFi电话）→AC_VI（Video，视频，次高优先级，如视频会议、流媒体）→AC_BE（Best Effort，尽力而为，默认，如网页浏览、文件下载）→AC_BK（Background，背景，最低优先级，如后台下载、软件更新）。WMM通过不同的AIFS（仲裁帧间间隔）、ECWmin/ECWmax（竞争窗口）、TXOP（传输机会）参数实现差异化服务，高优先级AC优先获得信道访问权。语音业务映射到AC_VO。',
     knowledgeId: 'wlan-qos',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-022',
@@ -1229,7 +1236,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '提高组播传输可靠性，将组播转为单播发给每个用户',
     explanation: '组播转单播（Multicast to Unicast，也叫组播转单播M2U）：WLAN中组播报文（如视频直播、IPTV）以最低速率（通常1Mbps或6Mbps）发送，可靠性差（无线组播没有ACK确认机制，丢包不重传），且占用大量空口资源。组播转单播功能将组播报文转换为单播报文，分别发送给每个组成员用户，单播有ACK确认和重传机制，可靠性高，且可根据用户的实际速率发送，提高传输效率和质量。适用于视频组播、在线直播等场景。但用户多时会增加AP处理负担，需根据实际场景开启。',
     knowledgeId: 'wlan-qos',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-023',
@@ -1239,7 +1246,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'RRM（Radio Resource Management，射频资源管理）是AC的智能射频优化功能，包括：1.DCA（Dynamic Channel Assignment，动态信道调整）：AC实时监测各AP的信道干扰情况，自动为AP调整最优信道，避免同频干扰，无需人工规划和调整。2.TPC（Transmit Power Control，动态功率调整）：AC根据AP的邻居和覆盖情况，自动调整AP发射功率，在保证覆盖的前提下减少干扰和功耗。3.覆盖盲区检测和补偿。RRM可大幅减少WLAN部署和运维的人工工作量，提高网络质量。DCA和TPC可配置调整周期和触发条件，避免频繁调整影响用户。',
     knowledgeId: 'wlan-qos',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
 
   // --- WLAN其他 ---
@@ -1251,7 +1258,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'display ap all',
     explanation: '华为AC上查看AP信息的常用命令：display ap all（查看所有AP的状态，包括AP ID、MAC、类型、状态、IP等），display ap by-ssid（查看指定SSID的AP），display ap-group（查看AP组），display vap（查看VAP信息），display station all（查看在线用户），display radio all（查看射频信息），display wlan wmm（查看WMM配置）。AP状态：nor（正常）、fault（故障）、download（下载版本）、config（配置中）、idle（空闲）。display ap all是最常用的查看AP上线状态的命令。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-025',
@@ -1261,7 +1268,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '每个机架顶部放置交换机，服务器直接接入本机架交换机',
     explanation: '数据中心服务器接入方式：1.ToR（Top of Rack，机架顶接入）：每个机架顶部放置一台ToR交换机，本机架内的服务器直接接入本机架的ToR交换机，ToR交换机上联到汇聚/Spine交换机。优点：布线短（机架内布线），管理灵活，扩展性好。缺点：交换机数量多，端口利用率可能低。2.EoR（End of Row，列末接入）：每列末端集中放置交换机，本列所有机架的服务器通过长布线接入列末交换机。优点：交换机数量少，端口利用率高。缺点：布线复杂，管理不便。3.MoR（Middle of Row，列中接入）：折中方案。ToR是当前数据中心主流接入方式，配合Spine-Leaf架构。',
     knowledgeId: 'dcn-arch',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
 
   // ==================== DCN方向（20题） ====================
@@ -1273,7 +1280,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '东西向流量只需两跳，延迟低且可预测，无阻塞，水平扩展',
     explanation: 'Spine-Leaf（叶脊）架构是数据中心主流架构：Leaf（叶节点，接入交换机，连接服务器）和Spine（脊节点，核心交换，所有Leaf都连接到所有Spine）。优势：1.东西向流量（服务器间通信）只需两跳（Leaf→Spine→Leaf），延迟低且可预测2.无阻塞架构（任意两台服务器间带宽等于接入带宽，通过ECMP多路径负载分担）3.水平扩展（增加Leaf扩展接入端口，增加Spine扩展东西向带宽）4.高可靠（多路径冗余，单条链路故障不影响）。传统三层架构（核心-汇聚-接入）东西向流量需经过核心，延迟高，核心易成瓶颈。Spine-Leaf是云计算和大数据时代数据中心的标准架构。',
     knowledgeId: 'dcn-arch',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-002',
@@ -1283,7 +1290,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '24比特',
     explanation: 'VXLAN（Virtual Extensible LAN，虚拟可扩展局域网）：VNI（VXLAN Network Identifier，VXLAN网络标识符）占24比特，最多支持约1600万个VXLAN网段（2^24=16,777,216），远多于VLAN的4094个。VXLAN通过MAC-in-UDP封装（在原始以太网帧外封装VXLAN头+UDP头+外层IP头），在三层IP网络上构建大二层虚拟网络，解决VLAN数量不足和大二层扩展问题。VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）负责封装和解封装，通常是数据中心交换机或vSwitch。VNI类似VLAN ID，标识一个VXLAN网段，不同VNI之间二层隔离。',
     knowledgeId: 'dcn-vxlan-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-003',
@@ -1293,7 +1300,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'VTEP将广播/未知单播/组播报文复制多份单播发送给所有同VNI的VTEP',
     explanation: 'VXLAN头端复制（Head End Replication，HER）：当VTEP收到广播、未知单播、组播报文（BUM流量）时，将报文复制多份，分别单播发送给所有属于同一VNI的远端VTEP，模拟二层广播泛洪。优点：简单，无需underlay组播支持。缺点：VTEP数量多时复制开销大，带宽浪费。另一种方式是underlay组播（利用底层IP网络的组播树分发BUM流量，效率高但需underlay支持组播，配置复杂）。头端复制是小规模VXLAN部署的常用方式，大规模部署推荐用EVPN控制面+头端复制或组播。EVPN可通过ARP代理减少广播流量。',
     knowledgeId: 'dcn-vxlan-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-004',
@@ -1303,7 +1310,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '每个Leaf都是三层网关，东西向流量本地转发，只需两跳，性能好',
     explanation: 'VXLAN网关类型：1.集中式网关：所有三层流量集中到网关设备（Spine或专用网关）转发，配置简单但网关可能成为性能瓶颈和单点故障，东西向流量需经过网关（三跳）。2.分布式网关：每个Leaf都是三层网关，主机网关IP是Anycast IP（所有Leaf相同），主机发送网关ARP时本地Leaf直接响应，三层流量本地转发，东西向流量只需两跳（Leaf→Spine→Leaf），性能好，无瓶颈，是主流方案。分布式网关需EVPN控制面支持（通过EVPN Type2/Type5路由同步主机MAC/IP和外部前缀）。Anycast网关：所有Leaf配置相同的网关IP和MAC，虚拟机迁移时无需更改网关。',
     knowledgeId: 'dcn-vxlan-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-005',
@@ -1313,7 +1320,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '通告主机MAC和IP地址',
     explanation: 'EVPN（Ethernet VPN，以太网VPN）是BGP的扩展（AFI=25, SAFI=70），作为VXLAN的控制面，自动发现VTEP、同步主机MAC/IP/路由信息，替代数据面泛洪学习。EVPN路由类型：Type1（以太网自动发现路由，ES成员发现）、Type2（MAC/IP地址通告路由，同步主机MAC和IP，最常用）、Type3（集成多播路由，VTEP发现和头端复制列表）、Type4（以太网段路由，DF指定转发者选举）、Type5（IP前缀路由，通告外部路由，用于分布式网关）。Type2路由携带主机的MAC地址、IP地址、VNI、VTEP IP等信息，其他VTEP收到后直接安装MAC表项，无需数据面学习，减少广播泛洪。',
     knowledgeId: 'dcn-evpn',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-006',
@@ -1323,7 +1330,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'EVPN环境下，VTEP通过Type2路由学习到所有主机的IP-MAC映射关系，当主机发送ARP请求时，本地VTEP可直接代理ARP响应（ARP Proxy），告知请求主机目标IP对应的MAC地址，无需将ARP请求泛洪到所有VTEP，大大减少广播流量，提高网络效率。这是EVPN相比传统VXLAN（数据面学习）的重要优势之一。EVPN还支持ARP抑制（ARP Suppression），在VTEP上维护ARP表，直接响应ARP请求。EVPN+VXLAN是当前数据中心大二层网络的标准方案，被称为"IP Fabric+EVPN/VXLAN"架构。',
     knowledgeId: 'dcn-evpn',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-007',
@@ -1333,7 +1340,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '硬件定制化',
     explanation: 'SDN（Software Defined Network，软件定义网络）核心特征：1.控制与转发分离（控制平面集中到控制器，数据平面在交换机上，简化交换机硬件）2.集中控制（控制器拥有全局网络视图，统一决策，优化网络）3.开放接口（控制器与应用间通过北向API（RESTful等）交互，控制器与交换机间通过南向协议（OpenFlow、NETCONF、BGP-LS等）通信）4.网络可编程（应用可通过控制器编程控制网络行为，实现自动化和智能化）。SDN不要求硬件定制化，反而推动通用化白盒交换机（White Box）发展，降低硬件成本。SDN应用场景包括数据中心网络（VXLAN/EVPN自动化）、SD-WAN（智能选路）、园区网络等。',
     knowledgeId: 'dcn-sdn-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-008',
@@ -1343,7 +1350,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '上报控制器（Packet-in），等待控制器下发流表',
     explanation: 'OpenFlow是SDN控制器与交换机之间的通信标准协议。工作流程：数据包到达OpenFlow交换机→查找流表（Flow Table）匹配→匹配则执行对应动作（转发/丢弃/修改字段等）→不匹配则将数据包上报控制器（Packet-in消息）→控制器分析数据包，决策转发路径，向交换机下发流表（Flow-mod消息）→交换机按新流表转发数据包，同时缓存流表，后续同流数据包直接匹配流表转发。OpenFlow流表包含匹配字段（入端口、源/目的MAC、源/目的IP、协议、端口等）、动作（转发、丢弃、修改、泛洪等）、计数器、优先级、超时时间等。OpenFlow是SDN早期的主流南向协议，现在NETCONF/YANG和BGP EVPN也广泛使用。',
     knowledgeId: 'dcn-sdn-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-009',
@@ -1353,7 +1360,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '传输延迟更低（物理距离更短）',
     explanation: 'SD-WAN（Software Defined Wide Area Network，软件定义广域网）优势：1.智能选路（根据应用的SLA要求（延迟、丢包、抖动）和链路质量，动态选择最优链路，关键应用走高质量链路，普通应用走Internet）2.降低成本（可使用廉价的Internet链路替代昂贵的MPLS专线，混合链路）3.集中管理（云管平台统一配置和监控，零接触部署ZTP）4.应用优化（应用识别、QoS、TCP优化、缓存等）5.安全集成（集成防火墙、IPS、URL过滤等）。SD-WAN不改变物理距离，传输延迟取决于物理距离和链路质量，Internet链路延迟可能高于MPLS，但SD-WAN通过智能选路和优化保证关键应用体验。SD-WAN是当前企业广域网改造的主流方案。',
     knowledgeId: 'dcn-sdn-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-010',
@@ -1363,7 +1370,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'VXLAN封装格式：外层以太网头（14字节）+外层IP头（20字节）+外层UDP头（8字节）+VXLAN头（8字节）+原始以太网帧（14字节+载荷+FCS 4字节），封装开销约50字节（不含原始FCS的话约46-50字节）。如果原始数据包MTU=1500，封装后超过1500，在underlay网络中会被分片（IP分片），降低性能甚至被丢弃。因此VXLAN网络建议：1.underlay网络设备MTU设置为1550或更大（支持巨帧Jumbo Frame，如9000字节）2.或在VTEP上配置TCP MSS调整（TCP MSS=1460-50=1410），避免分片。VXLAN封装开销是设计VXLAN网络时必须考虑的因素。',
     knowledgeId: 'dcn-vxlan-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
 
   // ==================== 基础题库扩充（立即可用） ====================
@@ -1373,7 +1380,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Type 1 Router LSA', 'Type 2 Network LSA', 'Type 3 Summary LSA', 'Type 5 AS External LSA'],
     answer: 'Type 2 Network LSA',
     explanation: 'Type 2 Network LSA（网络LSA）由DR（指定路由器）生成，描述连接到该广播/NBMA网络的所有路由器（包括DR自己）。Type 2 LSA仅在本区域内泛洪，不跨区域。Type 1 Router LSA由每台路由器生成，描述自己的链路状态。Type 3 Summary LSA由ABR生成，描述区域间路由。Type 5 AS External LSA由ASBR生成，描述外部路由。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-102', type: 'single',
@@ -1381,7 +1388,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Type 1 和 Type 2', 'Type 3（除默认路由外）、Type 4、Type 5', '仅Type 5', '仅Type 7'],
     answer: 'Type 3（除默认路由外）、Type 4、Type 5',
     explanation: 'Totally Stub（完全末梢区域）是最严格的OSPF区域类型，不接收：Type 3 Summary LSA（除ABR生成的默认路由0.0.0.0/0外）、Type 4 Summary LSA（ASBR位置）、Type 5 AS External LSA。Totally Stub区域内只有Type 1、Type 2和一条默认路由（Type 3），大幅减少路由表规模和LSA数量。Stub区域不接收Type 4和Type 5，但接收Type 3区域间路由。NSSA不接收Type 5但允许Type 7。Totally NSSA不接收Type 3（除默认外）、Type 4、Type 5，允许Type 7。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-103', type: 'judge',
@@ -1389,7 +1396,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '错误',
     explanation: 'ASBR（Autonomous System Boundary Router，自治系统边界路由器）是引入外部路由（如其他协议路由、静态路由）的OSPF路由器。ASBR可以存在于标准区域、NSSA区域中，但不能存在于Stub区域或Totally Stub区域中，因为Stub/Totally Stub区域不接收Type 5外部LSA，也不允许ASBR存在（如果ASBR在Stub区域，它生成的Type 5 LSA无法在区域内传播）。NSSA区域允许ASBR存在，外部路由以Type 7 LSA形式在NSSA区域内传播，到ABR后转换为Type 5 LSA传播到其他区域。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-104', type: 'single',
@@ -1397,7 +1404,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['MED', 'Local_Pref', 'AS_Path', 'Community'],
     answer: 'Local_Pref',
     explanation: 'Local_Pref（本地优先级，Local Preference）是BGP公认自由决定属性，用于在AS内部影响出站流量选择，值越大越优先。Local_Pref仅在本AS内传播，不会传递给EBGP邻居（传给EBGP时会被剥离）。MED（多出口鉴别符）用于影响相邻AS的入站流量选择，值越小越优先，可传递给相邻AS。AS_Path是AS路径，用于防环和路由优选，可跨AS传播。Community是团体属性，用于标记路由组，可跨AS传播（可选过渡）。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-105', type: 'single',
@@ -1405,7 +1412,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['明细路由一定被抑制', '聚合路由的AS_Path为空', '可选择是否抑制明细路由，聚合路由的Origin属性可能变为Incomplete', '聚合路由不能携带Community属性'],
     answer: '可选择是否抑制明细路由，聚合路由的Origin属性可能变为Incomplete',
     explanation: 'BGP路由聚合（Aggregation/Summary）：1.可选择是否抑制明细路由（suppress-policy或detail-suppressed），默认抑制明细，也可同时发布聚合和明细2.聚合路由的AS_Path默认只包含本AS号（如果用as-set选项则包含所有明细的AS_Path集合）3.聚合路由的Origin属性可能变为Incomplete（因为聚合路由是手动生成的，不是从IGP/EGP学习的），除非用attribute-policy指定4.聚合路由可携带Community等属性。BGP聚合可以减少路由表规模，隐藏明细路由变化，提高稳定性。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-106', type: 'multiple',
@@ -1413,7 +1420,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['TCP连接建立失败', '对端没有配置邻居', 'AS号配置错误', '源IP地址不匹配'],
     answer: ['TCP连接建立失败', '对端没有配置邻居', 'AS号配置错误', '源IP地址不匹配'],
     explanation: 'BGP邻居状态停留在Active表示TCP连接建立失败或BGP连接被拒绝。常见原因：1.TCP连接建立失败（网络不通、ACL拒绝TCP 179端口、对端不可达）2.对端没有配置本端为邻居（对端收到连接请求后拒绝）3.AS号配置错误（Open报文中的AS号与对端配置不一致）4.源IP地址不匹配（对端配置的neighbor地址与本端发送报文的源IP不一致，EBGP多跳或更新源配置问题）5.认证失败（密码不匹配）。Active状态下BGP会持续尝试建立TCP连接。Idle状态表示未开始或被禁用，Connect表示TCP连接中，OpenSent表示已发Open报文，OpenConfirm表示已收到Open确认，Established表示连接建立成功。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-107', type: 'single',
@@ -1421,7 +1428,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Area ID（区域ID）', 'System ID（系统ID）', 'NSEL（网络选择器，值为00）', 'IP地址'],
     answer: 'IP地址',
     explanation: 'NET（Network Entity Title，网络实体标题）是IS-IS中路由器的网络层地址，长度8-20字节，格式为：Area ID（区域ID，1-13字节）+ System ID（系统ID，固定6字节）+ NSEL（网络选择器，1字节，值为00表示是路由器本身）。NET不包含IP地址，IS-IS最初为CLNP设计，不依赖IP地址。System ID通常由IP地址转换而来（如192.168.001.001→1921.6800.1001），但NET本身不直接包含IP地址。Area ID标识区域，同一Level-1区域内Area ID必须相同。NSEL=00表示该NET对应路由器本身，类似IP协议号。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-108', type: 'judge',
@@ -1429,7 +1436,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '错误',
     explanation: 'IS-IS的Level-1路由器只能与同一区域内的Level-1或Level-1-2路由器建立邻居，不能与其他区域的Level-1路由器建立邻居（因为Level-1 IIH报文中携带Area ID，Area ID不同则拒绝建立邻居）。Level-2路由器可与任意区域的Level-2或Level-1-2路由器建立邻居（Level-2 IIH不检查Area ID），构成IS-IS骨干。Level-1-2路由器同时参与Level-1和Level-2，可与同区域Level-1和任意区域Level-2建立邻居。Level-1路由器访问其他区域时，通过本区域的Level-1-2路由器转发（类似OSPF的默认路由）。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-109', type: 'single',
@@ -1437,7 +1444,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['到根桥路径开销最小的交换机端口', 'MAC地址最小的端口', '端口编号最小的端口', '优先级最高的端口'],
     answer: '到根桥路径开销最小的交换机端口',
     explanation: 'STP指定端口（Designated Port，DP）选举：在每个网段（冲突域/广播域）上，选举一台到根桥路径开销（Root Path Cost，RPC）最小的交换机，该交换机连接到该网段的端口就是指定端口。如果路径开销相同，则比较桥ID（Bridge ID），桥ID小的交换机上的端口为指定端口；如果桥ID也相同（同一台交换机），则比较端口ID（Port ID），端口ID小的为指定端口。指定端口负责向该网段转发流量，所有网段上都有且只有一个指定端口。根桥上的所有端口都是指定端口（因为根桥到所有网段的路径开销最小）。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-110', type: 'single',
@@ -1445,7 +1452,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['保持边缘端口属性，继续快速转发', '立即关闭端口', '丧失边缘端口属性，变为普通端口参与STP计算', '忽略BPDU，继续转发'],
     answer: '丧失边缘端口属性，变为普通端口参与STP计算',
     explanation: 'RSTP边缘端口（Edge Port）直接连接终端设备（PC、服务器等），不参与STP计算，可直接从Discarding进入Forwarding状态（无需等待30秒），实现快速收敛。但边缘端口一旦收到BPDU（说明连接了交换机或其他运行STP的设备），就会立即丧失边缘端口属性，变为普通端口参与STP计算，防止非法交换机接入导致环路。边缘端口的配置通常在连接终端的端口上，可配合BPDU保护（BPDU Protection）使用：开启BPDU保护后，边缘端口收到BPDU会直接关闭（error-down），而不是变为普通端口，进一步提高安全性。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-111', type: 'multiple',
@@ -1453,7 +1460,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['支持多生成树实例，实现VLAN负载分担', '兼容STP和RSTP', '减少VLAN场景下的端口阻塞，提高链路利用率', '不需要配置区域参数'],
     answer: ['支持多生成树实例，实现VLAN负载分担', '兼容STP和RSTP', '减少VLAN场景下的端口阻塞，提高链路利用率'],
     explanation: 'MSTP（多生成树协议）相比RSTP的优势：1.支持多生成树实例（MSTI），可将不同VLAN映射到不同实例，每个实例独立计算生成树，实现VLAN间流量负载分担（RSTP只有一棵生成树，所有VLAN共享，部分链路被阻塞浪费带宽）2.兼容STP和RSTP（MSTP区域边界对外表现为RSTP，可与STP/RSTP互通）3.减少VLAN场景下的端口阻塞，提高链路利用率（不同VLAN走不同生成树，充分利用冗余链路）。MSTP需要配置区域参数（域名、修订级别、VLAN-实例映射），且同一MST域内参数必须一致，这是MSTP的配置复杂度，不是优势。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-112', type: 'single',
@@ -1461,7 +1468,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['只能属于一个VLAN', '允许多个VLAN通过，可灵活配置哪些VLAN打标签、哪些不打标签', '仅用于交换机之间互联', '不支持配置PVID'],
     answer: '允许多个VLAN通过，可灵活配置哪些VLAN打标签、哪些不打标签',
     explanation: 'Hybrid端口是华为设备特有的端口类型，特点：1.允许多个VLAN通过（类似Trunk）2.可灵活配置哪些VLAN发送时打标签（tagged）、哪些VLAN发送时不打标签（untagged），比Access和Trunk更灵活3.可配置PVID（默认VLAN ID），接收无标签帧时打上PVID标签4.可用于交换机之间互联，也可用于连接终端（如PC、IP电话+PC混合接入场景）。Access端口只能属于一个VLAN，发送时剥离标签。Trunk端口允许多个VLAN通过，默认VLAN（PVID）不打标签，其他VLAN打标签。Hybrid端口在复杂VLAN场景（如一个端口连接多个VLAN的终端、需要灵活控制标签）下非常有用。',
-    knowledgeId: 'datacom-vlan', direction: 'datacom',
+    knowledgeId: 'datacom-vlan', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-113', type: 'single',
@@ -1469,7 +1476,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['增加VLAN数量', '多个Sub VLAN共享一个三层接口，节省IP地址', '提高VLAN安全性', '加快VLAN转发速度'],
     answer: '多个Sub VLAN共享一个三层接口，节省IP地址',
     explanation: 'VLAN聚合（VLAN Aggregation，也叫Super VLAN）：将多个Sub VLAN（子VLAN，二层隔离）聚合到一个Super VLAN（父VLAN），Super VLAN配置三层接口（VLANIF），所有Sub VLAN共享同一个三层接口和IP网段，Sub VLAN之间通过Proxy ARP（代理ARP）实现三层互通。主要作用：1.节省IP地址（多个VLAN共享一个网段，不需要每个VLAN单独分配网段和网关地址）2.减少三层接口数量3.灵活的二层隔离和三层互通。Super VLAN不包含物理端口，物理端口加入Sub VLAN。Sub VLAN之间默认二层隔离，三层通过Super VLAN的Proxy ARP互通。',
-    knowledgeId: 'datacom-vlan', direction: 'datacom',
+    knowledgeId: 'datacom-vlan', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-114', type: 'judge',
@@ -1477,7 +1484,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '错误',
     explanation: 'Eth-Trunk模式：1.手工负载分担模式（Manual Load Balancing）：所有加入Eth-Trunk的成员接口都是活动接口，都参与数据转发，平均分配流量，不支持活动接口上限/下限配置，配置简单但不够灵活。2.LACP模式（基于IEEE 802.3ad，Link Aggregation Control Protocol）：通过LACPDU协商聚合，支持配置活动接口上限（max active-linknumber）和下限（min active-linknumber），部分链路故障时自动切换，可实现主备模式（部分活动部分备用），更灵活可靠。LACP模式又分为静态LACP（手动指定成员，LACP协商）和动态LACP（自动发现成员）。因此只有LACP模式支持活动接口上限配置，手工模式不支持。',
-    knowledgeId: 'datacom-eth-trunk', direction: 'datacom',
+    knowledgeId: 'datacom-eth-trunk', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-115', type: 'single',
@@ -1485,7 +1492,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['配置不同的目的地址', '配置更高的优先级（preference），主路由故障时生效', '配置不同的出接口', '配置不同的度量值'],
     answer: '配置更高的优先级（preference），主路由故障时生效',
     explanation: '浮动静态路由（Floating Static Route）：配置两条到达同一目的网络的静态路由，主路由配置正常优先级（默认60），备用路由配置更高的优先级（如100，数值越大优先级越低）。正常情况下主路由优先级高，被加入路由表并使用；当主路由故障（出接口down或下一跳不可达）时，主路由从路由表中撤销，备用路由（浮动路由）自动加入路由表生效，实现路由备份。主路由恢复后，由于优先级更高，会重新抢占路由表，备用路由回到浮动状态（不生效）。浮动静态路由是简单的路由冗余方案，不需要动态路由协议，适合小型网络或特定场景。',
-    knowledgeId: 'datacom-static-route', direction: 'datacom',
+    knowledgeId: 'datacom-static-route', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-116', type: 'single',
@@ -1493,7 +1500,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['2000::/3', 'FE80::/10', 'FC00::/7', 'FF00::/8'],
     answer: 'FC00::/7',
     explanation: 'IPv6地址类型：1.全球单播地址（Global Unicast）：2000::/3，可在Internet上路由，类似IPv4公网地址2.链路本地地址（Link-Local）：FE80::/10，仅在本地链路有效，用于邻居发现、路由协议邻居建立，自动生成3.唯一本地地址（Unique Local Address，ULA）：FC00::/7（实际使用FD00::/8，FC00::/8保留），类似IPv4私有地址（10/8、172.16/12、192.168/16），仅在企业/家庭内部使用，不可在Internet上路由，全局唯一（设计上）4.组播地址：FF00::/85.环回地址：::1/1286.未指定地址：::/128。ULA的特点是全局唯一（前缀包含40位随机生成的全局ID），可在多个站点间VPN使用，不会与其他网络冲突。',
-    knowledgeId: 'datacom-ipv6-basic', direction: 'datacom',
+    knowledgeId: 'datacom-ipv6-basic', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-117', type: 'multiple',
@@ -1501,7 +1508,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['双栈（Dual Stack）', '隧道（6to4、ISATAP、GRE）', 'NAT64', 'MPLS'],
     answer: ['双栈（Dual Stack）', '隧道（6to4、ISATAP、GRE）', 'NAT64'],
     explanation: 'IPv6过渡技术：1.双栈（Dual Stack）：网络设备同时运行IPv4和IPv6协议栈，根据目的地址类型选择使用IPv4或IPv6，是最直接的过渡技术，但需要设备支持双栈和双份地址2.隧道（Tunnel）：将IPv6报文封装在IPv4报文中（或反过来），通过IPv4网络传输IPv6数据，包括6to4（自动隧道，基于IPv4地址生成IPv6前缀）、ISATAP（站内自动隧道寻址协议，用于IPv4网络内的IPv6主机通信）、GRE隧道（通用路由封装，手动配置）、6rd等3.翻译技术（Translation）：NAT64（IPv6到IPv4的网络地址转换，让IPv6主机访问IPv4服务器）、DNS64（配合NAT64，将IPv4 DNS记录转换为IPv6记录）、SIIT（无状态IP/ICMP翻译）等。MPLS是多协议标签交换，不是IPv6过渡技术（虽然可承载IPv6）。',
-    knowledgeId: 'datacom-ipv6-basic', direction: 'datacom',
+    knowledgeId: 'datacom-ipv6-basic', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-118', type: 'single',
@@ -1509,7 +1516,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['源IP地址和目的IP地址', 'IP协议号（TCP/UDP/ICMP等）', 'TCP/UDP源端口和目的端口', '应用层URL地址'],
     answer: '应用层URL地址',
     explanation: '高级ACL（Advanced ACL，编号3000-3999）可匹配：1.源IP地址和目的IP地址（3层）2.IP协议号（TCP、UDP、ICMP、IGMP等）3.TCP/UDP源端口和目的端口（4层）4.TCP标志位（SYN、ACK、FIN、RST、PSH、URG）5.ICMP类型和代码6.IP优先级/DSCP7.时间段等。高级ACL不能匹配应用层内容（如HTTP URL、FTP文件名、邮件内容等），应用层识别需要DPI（深度包检测）或应用层网关（ALG）。基本ACL（2000-2999）仅匹配源IP地址。二层ACL（4000-4999）匹配源/目的MAC、以太网类型等二层信息。用户自定义ACL（5000-5999）可匹配报文任意位置的字节。',
-    knowledgeId: 'datacom-acl', direction: 'datacom',
+    knowledgeId: 'datacom-acl', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-119', type: 'judge',
@@ -1517,7 +1524,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: 'ALG（Application Layer Gateway，应用层网关）：某些应用层协议（如FTP、SIP、RTSP、DNS、QQ等）在载荷（Payload）中携带IP地址和端口信息（如FTP的PORT/PASV命令、SIP的Contact/Via头），NAT只转换IP头和TCP/UDP头中的地址端口，不转换应用层载荷中的地址端口，导致这些协议在NAT环境下无法正常工作。ALG的作用是识别这些应用层协议，解析并转换载荷中的IP地址和端口信息，同时动态开放相关端口（如FTP的数据连接端口），确保这些协议在NAT环境下正常工作。华为防火墙支持多种ALG：FTP、SIP、RTSP、DNS、QQ、MSN、H.323等。ALG是NAT的重要补充，解决了NAT与应用层协议的兼容性问题。',
-    knowledgeId: 'datacom-nat', direction: 'datacom',
+    knowledgeId: 'datacom-nat', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-120', type: 'single',
@@ -1525,7 +1532,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Backup优先级高于Master且抢占模式开启', 'Master发送通告报文', 'Backup收到更低优先级的通告', 'Master上行接口故障且配置了跟踪'],
     answer: 'Backup优先级高于Master且抢占模式开启',
     explanation: 'VRRP抢占（Preemption）：默认开启抢占模式。当Backup路由器收到Master的通告报文，发现自己的优先级高于Master时，会抢占成为新的Master（发送更高优先级的通告，原Master收到后降级为Backup）。抢占的条件：1.Backup优先级 > Master优先级2.抢占模式开启（默认开启，可配置preempt disable关闭）3.可配置抢占延迟（preempt delay），避免频繁切换。选项D（Master上行接口故障且配置了跟踪）会导致Master优先级降低，当降低后低于Backup时，Backup会抢占，但直接原因是优先级变化，不是跟踪本身。选项C（收到更低优先级的通告）是正常情况，Backup不会抢占（Master优先级更低说明自己应该是Master，但通常是因为自己优先级更高才会收到更低的，这时候会抢占）。最准确的答案是A。',
-    knowledgeId: 'datacom-vrrp', direction: 'datacom',
+    knowledgeId: 'datacom-vrrp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-121', type: 'single',
@@ -1533,7 +1540,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['IP地址', 'MAC地址', '端口号', '用户密码'],
     answer: '用户密码',
     explanation: 'DHCP Snooping绑定表（DHCP Snooping Binding Table）记录通过DHCP获取IP地址的客户端信息，包括：1.IP地址（客户端获取的IP）2.MAC地址（客户端MAC）3.端口号（客户端连接的交换机端口）4.VLAN ID（客户端所在VLAN）5.租期（IP地址租用剩余时间）6.绑定类型（静态或动态）。绑定表用于：1.DAI（Dynamic ARP Inspection，动态ARP检测）：验证ARP报文中的IP-MAC映射是否与绑定表一致，防止ARP欺骗2.IP Source Guard（IP源防护）：限制端口上只能使用绑定表中的IP地址发送数据，防止IP地址伪造3.防止非法DHCP服务器。用户密码是认证信息，不记录在DHCP Snooping绑定表中（DHCP本身不涉及用户密码认证）。',
-    knowledgeId: 'datacom-dhcp', direction: 'datacom',
+    knowledgeId: 'datacom-dhcp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-122', type: 'single',
@@ -1541,7 +1548,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['加密MPLS数据', '在LSR之间分发标签，建立LSP', '路由计算', '用户认证'],
     answer: '在LSR之间分发标签，建立LSP',
     explanation: 'LDP（Label Distribution Protocol，标签分发协议）是MPLS的信令协议，用于在LSR（标签交换路由器）之间分发FEC（转发等价类）与标签的映射关系，建立LSP（标签交换路径）。LDP基于TCP 646端口（发现用UDP 646），工作过程：1.发现（Discovery）：LSR发送Hello报文发现邻居2.会话建立（Session Establishment）：建立TCP连接，协商LDP会话参数3.会话维护（Session Maintenance）：通过Keepalive维护会话，分发标签映射（Label Mapping）4.会话撤销（Session Teardown）：发送Notification关闭会话。LDP标签分发方式：DU（下游自主分发，默认）、DoD（下游按需分发）；标签控制方式：独立控制、有序控制；标签保持方式：自由保持、保守保持。MPLS数据转发基于标签，不涉及加密（加密需要IPSec等）。路由计算由IGP（OSPF/IS-IS）完成。',
-    knowledgeId: 'datacom-mpls-basic', direction: 'datacom',
+    knowledgeId: 'datacom-mpls-basic', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-123', type: 'judge',
@@ -1549,7 +1556,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: 'MPLS VPN（BGP/MPLS IP VPN）支持地址重叠（Overlapping VPN）：不同VPN（或同一VPN的不同站点）可以使用相同的IP地址段，不会冲突。原因：1.PE上为每个VPN创建独立的VRF（VPN路由转发实例），不同VPN的路由表完全隔离，即使地址相同也不冲突2.RD（Route Distinguisher，路由区分符）添加在IPv4前缀前形成VPN-IPv4地址（12字节），确保不同VPN的相同IP在BGP中唯一3.RT（Route Target，路由目标）控制路由的导入导出，确保路由只进入正确的VRF。地址重叠是MPLS VPN的重要特性，在企业并购、多租户托管等场景非常有用（不同公司使用相同的192.168.1.0/24网段，在同一运营商网络中互不干扰）。',
-    knowledgeId: 'datacom-mpls-vpn', direction: 'datacom',
+    knowledgeId: 'datacom-mpls-vpn', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-124', type: 'single',
@@ -1557,7 +1564,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['AFx1', 'AFx2', 'AFx3', '都一样'],
     answer: 'AFx3',
     explanation: 'DSCP AF（Assured Forwarding，确保转发）定义了4类（AF1-AF4），每类有3个丢弃优先级（Drop Precedence）：低（1）、中（2）、高（3）。命名格式AFxy，x=类别（1-4），y=丢弃优先级（1-3）。例如AF11（DSCP 10）、AF12（12）、AF13（14）；AF21（18）、AF22（20）、AF23（22）；AF31（26）、AF32（28）、AF33（30）；AF41（34）、AF42（36）、AF43（38）。同一类内（如AF1x），转发处理相同（相同的队列调度优先级），但丢弃优先级不同：y=3（如AF13）丢弃优先级最高，拥塞时最先被丢弃；y=1（如AF11）丢弃优先级最低，最后被丢弃。类别越高（AF4>AF3>AF2>AF1），转发优先级越高（通常分配更多带宽或更高调度优先级）。WRED（加权随机早期检测）根据丢弃优先级设置不同的丢弃阈值和概率。',
-    knowledgeId: 'datacom-qos-basic', direction: 'datacom',
+    knowledgeId: 'datacom-qos-basic', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-125', type: 'single',
@@ -1565,7 +1572,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['00-11-22-33-44-55', '01-00-5E-00-00-01', 'FF-FF-FF-FF-FF-FF', '00-00-00-00-00-00'],
     answer: '01-00-5E-00-00-01',
     explanation: 'MAC地址48位，第一个字节的最低位（第0位，I/G位，Individual/Group）标识是单播还是组播：0=单播（Individual），1=组播（Group）。组播MAC地址第一个字节的最低位为1。01-00-5E-00-00-01的第一个字节01（二进制00000001）最低位为1，是组播地址（这是IPv4组播映射的MAC地址前缀01-00-5E）。00-11-22-33-44-55第一个字节00最低位为0，是单播地址。FF-FF-FF-FF-FF-FF是广播地址（全F，也是一种特殊的组播，发送给所有节点）。00-00-00-00-00-00是全零地址，表示未知源或无设备。IPv6组播MAC前缀是33-33。注意区分广播（全F，所有节点）和组播（特定组，部分节点）。',
-    knowledgeId: 'datacom-ethernet', direction: 'datacom',
+    knowledgeId: 'datacom-ethernet', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-101', type: 'single',
@@ -1573,7 +1580,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['源安全区域+目的安全区域', '源IP+目的IP', '源IP+目的IP+服务+应用', '时间+用户'],
     answer: '源IP+目的IP+服务+应用',
     explanation: '防火墙安全策略的匹配精度取决于匹配条件的数量和具体程度：条件越多、越具体，匹配范围越小、精度越高。源IP+目的IP+服务+应用同时匹配了五元组和应用层信息，是最精确的匹配条件。安全策略按规则ID（序号）从小到大顺序匹配，匹配到即停止，因此精确的规则应放在前面，宽泛的规则放在后面。华为防火墙安全策略可匹配：源/目的安全区域、源/目的IP地址、用户/用户组、服务（端口）、应用（应用识别）、时间、URL分类等。安全策略动作包括：允许（permit）、拒绝（deny）、日志（log）、计数（count）等。默认最后隐含deny any。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-102', type: 'single',
@@ -1581,7 +1588,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['IKE SA是双向的，IPSec SA是单向的', 'IKE SA是单向的，IPSec SA是双向的', '两者都是双向的', '两者都是单向的'],
     answer: 'IKE SA是双向的，IPSec SA是单向的',
     explanation: 'IKE SA（Internet Key Exchange Security Association）是双向的逻辑连接，用于IKE协商，一个IKE SA可用于保护多个IPSec SA的协商。IPSec SA是单向的逻辑连接，每个方向需要一个独立的IPSec SA（入方向和出方向各一个），因为IPSec SA定义了加密密钥、认证密钥、SPI等参数，这些参数在两个方向上是不同的（虽然可以使用相同的加密/认证算法，但密钥和SPI不同）。因此，一次双向通信需要两个IPSec SA（inbound和outbound），但只需要一个IKE SA。IKE SA有生命周期（默认86400秒/24小时），IPSec SA也有生命周期（默认3600秒/1小时或按流量计算），到期前会自动重新协商（rekey）。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-103', type: 'judge',
@@ -1589,7 +1596,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: 'SSL VPN的接入方式：1.Web代理（Web Proxy）：用户通过浏览器访问SSL VPN网关，网关代理用户访问内部Web资源，用户不需要安装客户端软件，浏览器即可使用，适合访问Web应用（如OA、邮件Web版）2.文件共享（File Share）：通过浏览器访问CIFS/FTP文件服务器，上传下载文件3.端口转发（Port Forwarding）：通过浏览器插件或小控件，将本地端口映射到内部服务器，可访问TCP应用（如远程桌面、SSH）4.网络扩展（Network Extension）：需要安装专用客户端软件，获得虚拟IP，可像在企业内网一样访问所有网络资源（类似IPSec VPN）。Web代理、文件共享、端口转发都不需要安装完整客户端（端口转发可能需要Java/ActiveX控件），网络扩展需要安装客户端。Web代理是SSL VPN最便捷的接入方式，也是其相比IPSec VPN的重要优势。',
-    knowledgeId: 'security-ssl-vpn', direction: 'security',
+    knowledgeId: 'security-ssl-vpn', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-104', type: 'single',
@@ -1597,7 +1604,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['SYN Flood', 'UDP Flood', 'ICMP Flood', '以上都是'],
     answer: '以上都是',
     explanation: 'DDoS（Distributed Denial of Service，分布式拒绝服务）攻击通过大量受控主机（肉鸡/僵尸网络）同时向目标发送大量请求或数据包，耗尽目标的带宽、连接数、CPU、内存等资源，导致目标无法为正常用户提供服务。常见DDoS攻击类型：1.SYN Flood：大量伪造源IP的SYN包，耗尽半连接队列2.UDP Flood：大量UDP包，耗尽带宽和处理能力3.ICMP Flood（Ping Flood）：大量ICMP Echo Request，耗尽带宽4.HTTP Flood（CC攻击）：大量HTTP请求，耗尽Web服务器资源5.DNS Query Flood：大量DNS查询，耗尽DNS服务器资源6.Slowloris：慢速HTTP头攻击，保持连接不释放，耗尽连接数。DDoS相比DoS（单机拒绝服务）流量更大、来源更分散、更难防御，需要专业的DDoS防护设备/服务（流量清洗、黑洞、CDN等）。',
-    knowledgeId: 'security-attack-defense', direction: 'security',
+    knowledgeId: 'security-attack-defense', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-105', type: 'single',
@@ -1605,7 +1612,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['发送方公钥', '发送方私钥', '接收方公钥', '接收方私钥'],
     answer: '发送方私钥',
     explanation: '数字签名（Digital Signature）：发送方用自己的私钥（Private Key）对数据的哈希值（摘要）进行加密（签名），接收方用发送方的公钥（Public Key）进行验证（解密哈希值，与自己计算的哈希值对比）。数字签名提供：1.身份认证（验证发送者身份，因为只有发送者拥有私钥）2.完整性（验证数据是否被篡改，因为哈希值随数据变化）3.不可否认性（发送者不能否认发送过，因为私钥只有发送者有）。注意区分：加密用接收方公钥（只有接收方私钥能解密，保证机密性），签名用发送方私钥（任何人可用发送方公钥验证，保证身份和完整性）。实际应用中通常同时使用加密和签名：先加密数据（接收方公钥），再签名（发送方私钥），或先签名再加密。数字证书（Digital Certificate）由CA签发，证明公钥与身份的绑定关系。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-106', type: 'multiple',
@@ -1613,7 +1620,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['AES', 'RSA', '3DES', 'ECC'],
     answer: ['AES', '3DES'],
     explanation: '对称加密（Symmetric Encryption）：加密和解密使用同一密钥，速度快，适合大数据量加密。常见对称加密算法：1.DES（Data Encryption Standard，56位密钥，已不安全，可被暴力破解）2.3DES（Triple DES，168位密钥，三次DES加密，比DES安全但速度慢，逐步被AES替代）3.AES（Advanced Encryption Standard，128/192/256位密钥，当前主流，速度快安全性高）4.SM4（中国国密对称加密算法，128位密钥，国内合规要求）5.Blowfish、Twofish、RC4（流密码，已不推荐）等。非对称加密（Asymmetric Encryption）：使用公钥和私钥对，包括RSA、ECC（椭圆曲线）、DH（密钥交换）、SM2（国密非对称）等。非对称加密速度慢，适合密钥交换和数字签名。实际应用中通常混合使用：非对称加密交换对称密钥，对称密钥加密实际数据。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IE',
   },
   {
     id: 'sec-107', type: 'single',
@@ -1621,7 +1628,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['仅认证客户端，使用MD5', '双向证书认证，安全性最高', '先建立TLS隧道再认证客户端', '使用预共享密钥'],
     answer: '双向证书认证，安全性最高',
     explanation: '802.1X EAP认证方式：1.EAP-MD5：仅认证客户端，使用MD5哈希，不安全（易被破解，不支持密钥分发），已少用2.EAP-TLS（Transport Layer Security）：双向证书认证，客户端和服务器都需要数字证书，通过TLS握手完成认证和密钥协商，安全性最高，但管理成本高（需为每个客户端分发和管理证书）3.PEAP（Protected EAP）：先建立TLS隧道（服务器端证书），再在隧道内认证客户端（可使用EAP-MSCHAPv2、EAP-GTC等），只需服务器端证书，客户端用用户名密码，安全性较高，企业常用4.EAP-TTLS（Tunneled TLS）：类似PEAP，先建立TLS隧道，再在隧道内认证，支持多种内层认证方式5.EAP-FAST：使用PAC（Protected Access Credential）替代证书，建立安全隧道。EAP-TLS安全性最高但证书管理复杂，PEAP安全性高且管理简单，是企业802.1X的主流方案。',
-    knowledgeId: 'security-8021x', direction: 'security',
+    knowledgeId: 'security-8021x', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-108', type: 'judge',
@@ -1629,7 +1636,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: 'ASPF（Application Specific Packet Filter，应用层包过滤）是状态检测防火墙的重要功能，用于检测应用层协议状态，解决某些应用层协议在防火墙/NAT环境下的问题。典型场景：FTP主动模式（PORT）：客户端用随机端口连接服务器21端口（控制连接），服务器用20端口主动连接客户端的随机端口（数据连接）。如果防火墙只允许客户端访问服务器21端口，服务器从20端口主动发起的数据连接会被防火墙拒绝（因为是从低安全区域到高安全区域的主动连接）。ASPF检测FTP控制连接中的PORT命令，解析出客户端的数据端口和IP，自动创建临时的会话表项（Server-map表），允许服务器20端口到客户端数据端口的连接，FTP传输完成后自动删除临时表项。ASPF支持的应用层协议包括：FTP、SIP、H.323、RTSP、QQ、MSN、DNS等。ASPF与NAT ALG配合，可同时处理应用层协议的地址转换和端口开放问题。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-109', type: 'single',
@@ -1637,7 +1644,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['更安全，保护身份信息', '速度快，但身份信息明文传输', '使用更多消息', '不支持预共享密钥'],
     answer: '速度快，但身份信息明文传输',
     explanation: 'IKEv1阶段一模式：1.主模式（Main Mode）：共6条消息，身份信息（ID载荷）在第5-6条消息中传输，此时已经完成DH密钥交换和加密，身份信息被加密保护，安全性高，但协商速度慢（6条消息，3次往返）。2.野蛮模式（Aggressive Mode）：共3条消息，身份信息在第2条消息中传输，此时尚未完成加密，身份信息明文传输，安全性较低（攻击者可获取对端身份信息），但协商速度快（3条消息，1.5次往返），适合动态IP场景（如远程接入VPN，客户端IP不固定，需要用身份信息标识）。野蛮模式支持预共享密钥和证书认证，主模式也支持两者。主模式和野蛮模式都是IKEv1阶段一的模式，IKEv2简化为4条消息（IKE_SA_INIT 2条+IKE_AUTH 2条），结合了主模式的安全性和野蛮模式的高效性。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-110', type: 'single',
@@ -1645,7 +1652,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['SYN Flood', 'SQL注入', 'ARP欺骗', 'Land攻击'],
     answer: 'SQL注入',
     explanation: 'WAF（Web Application Firewall，Web应用防火墙）专门防护Web应用层攻击，工作在应用层，能理解HTTP/HTTPS协议内容。主要防护：1.SQL注入（SQL Injection）：在输入中插入恶意SQL语句，操纵数据库2.XSS（Cross-Site Scripting，跨站脚本）：在网页中注入恶意脚本，在用户浏览器执行3.CSRF（Cross-Site Request Forgery，跨站请求伪造）：利用用户已登录状态伪造请求4.文件上传漏洞：上传恶意文件（如Webshell）5.命令注入（Command Injection）：注入系统命令6.目录遍历（Directory Traversal）：访问未授权的文件路径7.CC攻击（HTTP Flood/Challenge Collapsar）：大量HTTP请求耗尽Web服务器资源8.Webshell检测、敏感信息泄露防护等。SYN Flood、Land攻击是网络层/传输层DoS攻击，由抗DDoS设备或防火墙DDoS防护功能处理。ARP欺骗是二层攻击，由DAI（动态ARP检测）或端口安全防护。WAF部署在Web服务器前面，可硬件设备、软件或云服务。',
-    knowledgeId: 'security-ips-ids', direction: 'security',
+    knowledgeId: 'security-ips-ids', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'wlan-101', type: 'single',
@@ -1653,7 +1660,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['增加发射功率', '多天线同时收发多路数据流，提高速率和可靠性', '减少干扰', '增加信道数量'],
     answer: '多天线同时收发多路数据流，提高速率和可靠性',
     explanation: 'MIMO（Multiple-Input Multiple-Output，多输入多输出）是802.11n（Wi-Fi 4）引入的核心技术，使用多根天线同时收发数据，通过空间复用（Spatial Multiplexing，SM）同时传输多路独立数据流，成倍提高吞吐量（如2x2 MIMO速率是1x1的2倍，3x3是3倍，4x4是4倍）。MIMO还提供发射分集（Transmit Diversity）和接收分集（Receive Diversity），提高信号可靠性和覆盖范围。802.11n支持最多4x4 MIMO，802.11ac（Wi-Fi 5）支持最多8x8 MIMO和下行MU-MIMO（多用户MIMO，同时向多个用户传输），802.11ax（Wi-Fi 6）支持上下行MU-MIMO。MIMO需要多根天线和多射频链，是WiFi速率提升的关键技术。注意MIMO的空间流数量（NSS）受限于AP和终端的天线数量的最小值。',
-    knowledgeId: 'wlan-standard', direction: 'wlan',
+    knowledgeId: 'wlan-standard', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-102', type: 'judge',
@@ -1661,7 +1668,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: '2.4GHz频段（2.400-2.4835GHz）共划分14个信道（中国支持1-13），每个信道带宽22MHz（802.11b/g）或20MHz（802.11n），信道中心频率间隔5MHz。由于信道带宽（22MHz）大于信道间隔（5MHz），相邻信道会重叠干扰。互不重叠的信道组合：1、6、11（间隔5个信道，中心频率间隔25MHz，完全不重叠，最常用，3个信道）；或1、5、9、13（间隔4个信道，中心频率间隔20MHz，基本不重叠但边缘有少量干扰，4个信道）。在多AP部署中，相邻AP应使用互不重叠的信道（蜂窝部署，如1-6-11循环），避免同频干扰。5GHz频段信道多（36、40、44、48、52、56、60、64、149、153、157、161等），带宽大（20/40/80/160MHz），干扰少，信道规划更灵活。2.4GHz只有3个不重叠信道，密集部署时同频干扰严重，这是2.4GHz的主要局限。',
-    knowledgeId: 'wlan-standard', direction: 'wlan',
+    knowledgeId: 'wlan-standard', direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-103', type: 'single',
@@ -1669,7 +1676,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['数据隧道（UDP 5247）', '控制隧道（UDP 5246）', '管理隧道（TCP 5246）', '维护隧道（UDP 5248）'],
     answer: '控制隧道（UDP 5246）',
     explanation: 'CAPWAP（Control And Provisioning of Wireless Access Points，无线接入点控制和配置协议）用于AC（接入控制器）和FIT AP（瘦AP）之间的通信，基于UDP协议，包含两个隧道：1.控制隧道（Control Tunnel）：UDP端口5246，传输控制报文（如AP上线、配置下发、状态上报、固件升级等），使用DTLS（Datagram Transport Layer Security）加密，确保控制信息安全。控制隧道必须建立。2.数据隧道（Data Tunnel）：UDP端口5247，传输用户数据报文（在隧道转发/集中转发模式下，用户数据通过CAPWAP数据隧道封装到AC转发），可选加密。数据隧道在直接转发/本地转发模式下不使用（用户数据由AP直接转发，不经过AC）。AP上线流程：AP获取IP→发现AC（广播/DHCP Option43/DNS/静态）→建立CAPWAP控制隧道（DTLS握手）→AP下载版本和配置→建立数据隧道（如需要）→AP正常工作提供无线接入。CAPWAP是IETF标准（RFC 5415），替代了早期的LWAPP（Lightweight Access Point Protocol，思科私有）。',
-    knowledgeId: 'wlan-arch', direction: 'wlan',
+    knowledgeId: 'wlan-arch', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-104', type: 'single',
@@ -1677,7 +1684,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['快速认证', '帮助终端快速发现邻居AP，减少扫描时间', '加密数据', '调整发射功率'],
     answer: '帮助终端快速发现邻居AP，减少扫描时间',
     explanation: '802.11k（Radio Resource Measurement，无线资源测量）是WLAN漫游优化的标准之一，作用是帮助终端（STA）快速发现周围的邻居AP，减少漫游时的扫描时间，加快漫游速度。802.11k定义了AP向终端提供邻居报告（Neighbor Report）的机制，终端可以向AP请求邻居列表，AP返回周围AP的信息（BSSID、信道、频段、运营类等），终端根据这些信息有针对性地扫描目标信道，而不是全频段扫描，大大减少扫描时间（从几百毫秒减少到几十毫秒）。802.11k与802.11v（BSS Transition Management，BSS过渡管理，AC/AP指导终端漫游到更优AP）和802.11r（Fast BSS Transition，快速BSS切换，预认证和密钥缓存，减少认证时间）结合（合称802.11k/v/r），实现智能快速漫游，是企业WLAN的重要功能，特别适合语音（VoWiFi）、视频等实时业务。802.11k需要AP和终端都支持才能生效。',
-    knowledgeId: 'wlan-roaming', direction: 'wlan',
+    knowledgeId: 'wlan-roaming', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-105', type: 'multiple',
@@ -1685,7 +1692,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['使用SAE替代PSK，防离线字典攻击', '强制管理帧保护（PMF）', '192位安全套件（企业级）', '使用WEP加密'],
     answer: ['使用SAE替代PSK，防离线字典攻击', '强制管理帧保护（PMF）', '192位安全套件（企业级）'],
     explanation: 'WPA3（Wi-Fi Protected Access 3）是WPA2的升级，主要安全改进：1.SAE（Simultaneous Authentication of Equals，同时认证对等体）替代PSK（预共享密钥），防止离线字典攻击（攻击者无法通过抓包离线破解密码，必须在线尝试，可被检测和锁定），即使密码较弱也更安全。2.强制管理帧保护（PMF，Protected Management Frames，802.11w）：保护解除认证、解除关联等管理帧，防止欺骗解除攻击（攻击者伪造AP发送解除认证帧踢掉用户），WPA2中PMF是可选的，WPA3强制要求。3.192位安全套件（WPA3-Enterprise，192-bit security）：使用384位椭圆曲线、256位GMAC、SHA-384，提供更高安全等级，适合政府、金融等高安全需求场景。4.前向保密（Forward Secrecy）：即使长期密钥泄露，过去的通信仍安全。5.简化公共WiFi安全（OWE，Opportunistic Wireless Encryption，机会无线加密）：开放网络也提供加密，防止窃听。WEP是最早的不安全加密，已被WPA/WPA2/WPA3淘汰，不是WPA3的改进。',
-    knowledgeId: 'wlan-security', direction: 'wlan',
+    knowledgeId: 'wlan-security', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-101', type: 'single',
@@ -1693,7 +1700,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['路由计算', 'VXLAN报文的封装和解封装', '用户认证', '流量加密'],
     answer: 'VXLAN报文的封装和解封装',
     explanation: 'VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）是VXLAN网络中负责封装和解封装的设备（通常是数据中心交换机、vSwitch虚拟交换机或服务器网卡），功能：1.封装：从本地VLAN/子网收到原始以太网帧后，添加VXLAN头（8字节，包含VNI）、UDP头（8字节，目的端口4789）、外层IP头（20字节，源/目的VTEP IP）、外层以太网头，将封装后的报文通过underlay三层网络发送到对端VTEP。2.解封装：收到VXLAN报文后，剥除外层以太网头、外层IP头、UDP头、VXLAN头，恢复原始以太网帧，根据VNI和目的MAC转发到本地VLAN/子网。3.VTEP有IP地址（underlay IP），VTEP之间建立VXLAN隧道（逻辑隧道，基于underlay IP网络）。4.VTEP维护MAC地址表（本地MAC和远端MAC-VTEP映射）。VTEP可以是硬件VXLAN（交换机ASIC支持，性能高）或软件VXLAN（vSwitch如OVS，灵活但性能较低）。VXLAN网关（三层网关）还负责不同VNI之间或VXLAN与非VXLAN之间的三层路由。',
-    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-102', type: 'judge',
@@ -1701,7 +1708,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: '传统VXLAN（无控制面）使用数据面学习（Data Plane Learning）：VTEP通过泛洪（头端复制或组播）发送BUM流量（广播、未知单播、组播），远端VTEP从收到的报文中学习源MAC与VTEP IP的映射。这种方式依赖泛洪，广播流量大，效率低。EVPN（Ethernet VPN，以太网VPN）作为VXLAN的控制面（Control Plane），通过BGP扩展（AFI=25, SAFI=70）分发MAC地址和IP地址信息：1.VTEP学习到本地主机MAC/IP后，通过EVPN Type 2路由（MAC/IP Advertisement）通告给其他VTEP2.其他VTEP收到后直接安装MAC表项，不需要数据面学习3.ARP代理/抑制：VTEP通过Type 2路由学习到IP-MAC映射，可直接响应ARP请求，减少ARP广播泛洪4.Type 3路由（Inclusive Multicast）用于VTEP自动发现和头端复制列表构建。EVPN大幅减少了广播流量，提高了网络效率和可扩展性，是当前数据中心VXLAN网络的标准控制面方案（IP Fabric + EVPN/VXLAN）。EVPN还支持分布式网关（Type 5路由同步主机路由）、多活网关、快速收敛等高级功能。',
-    knowledgeId: 'dcn-evpn', direction: 'dcn',
+    knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-103', type: 'single',
@@ -1709,7 +1716,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['加密网络数据', '控制器与交换机之间的通信协议，用于下发流表', '路由计算协议', '用户认证协议'],
     answer: '控制器与交换机之间的通信协议，用于下发流表',
     explanation: 'OpenFlow是SDN（Software Defined Network，软件定义网络）中控制器（Controller）与交换机（OpenFlow Switch）之间的标准通信协议（南向接口协议），作用：1.控制器通过OpenFlow向交换机下发流表（Flow Table），定义数据包的匹配规则（Match Fields）和动作（Actions，如转发、丢弃、修改字段、上报控制器等）2.交换机根据流表转发数据包，不需要自己运行路由协议（控制平面集中到控制器）3.当交换机收到不匹配流表的数据包时，通过Packet-in消息上报控制器，控制器决策后通过Flow-mod消息下发流表4.OpenFlow还支持统计信息收集（计数器）、端口状态查询、组表（Group Table）、计量表（Meter Table）等功能。OpenFlow由ONF（Open Networking Foundation）标准化，最新版本1.5.1。OpenFlow是SDN早期的主流南向协议，但现在NETCONF/YANG、BGP EVPN、P4等也广泛使用。SDN控制器（如ONOS、OpenDaylight、华为iMaster NCE）通过南向协议（OpenFlow/NETCONF/BGP等）控制网络设备，通过北向API（RESTful）向应用提供服务。',
-    knowledgeId: 'dcn-sdn-basic', direction: 'dcn',
+    knowledgeId: 'dcn-sdn-basic', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dc-126', type: 'single',
@@ -1717,7 +1724,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Hello', 'DD', 'LSR', 'LSU'],
     answer: 'LSR',
     explanation: 'OSPF报文类型：1.Hello：发现和维护邻居关系，选举DR/BDR，默认10秒发送一次（广播网络），死亡时间40秒。2.DD（Database Description，数据库描述）：描述本地LSDB中所有LSA的摘要（LSA头部信息），用于邻居间数据库同步，主从关系协商，ExStart/Exchange状态使用。3.LSR（Link State Request，链路状态请求）：请求对方发送缺失的LSA（完整内容），根据DD报文中的摘要发现缺失的LSA后发送，Loading状态使用。4.LSU（Link State Update，链路状态更新）：发送完整的LSA内容，响应LSR或泛洪LSA更新，可包含多个LSA。5.LSAck（Link State Acknowledgment，链路状态确认）：确认收到LSU，确保LSA传输可靠。OSPF邻居状态机：Down→Init（收到Hello）→2-Way（双向通信，选举DR/BDR）→ExStart（协商DD主从）→Exchange（交换DD摘要）→Loading（LSR/LSU交换完整LSA）→Full（数据库同步完成，邻接建立）。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-127', type: 'single',
@@ -1725,7 +1732,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['AS_Path', 'Cluster_List', 'MED', 'Local_Pref'],
     answer: 'Cluster_List',
     explanation: 'BGP防环机制：1.AS_Path：防止AS间路由环路，BGP路由器收到路由时检查AS_Path中是否包含自己的AS号，如果包含则丢弃（防止路由回到本AS）。AS_Path是EBGP防环机制。2.Cluster_List（簇列表）：路由反射器（RR）防环机制，RR反射路由时将自己的Cluster ID添加到Cluster_List中，其他RR收到路由时检查Cluster_List中是否包含自己的Cluster ID，如果包含则丢弃（防止路由在RR之间循环）。Cluster_List是IBGP/RR防环机制。3.Originator_ID（发起者ID）：RR防环机制，RR反射路由时将原始发起者的Router ID添加到Originator_ID属性，原始发起者收到路由时检查Originator_ID是否为自己，如果是则丢弃。4.IBGP水平分割：从IBGP邻居学到的路由不再发给其他IBGP邻居，防止AS内环路（这也是需要全互联/RR/联盟的原因）。MED和Local_Pref用于路由优选，不是防环机制。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-128', type: 'judge',
@@ -1733,7 +1740,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: 'IS-IS路由器类型：1.Level-1（L1）：只参与Level-1路由计算，维护Level-1链路状态数据库（LSDB），只能与同区域的L1或L1/2建立邻居，负责区域内路由。2.Level-2（L2）：只参与Level-2路由计算，维护Level-2 LSDB，可与任意区域的L2或L1/2建立邻居，负责区域间路由，构成IS-IS骨干。3.Level-1-2（L1/2）：同时参与Level-1和Level-2路由计算，维护两个独立的LSDB（Level-1 LSDB和Level-2 LSDB），可与同区域L1/L1/2建立L1邻居，与任意区域L2/L1/2建立L2邻居。L1/2路由器负责在L1和L2之间传递路由（类似OSPF的ABR），将L2路由以默认路由或具体路由的形式发布到L1区域（路由渗透），将L1路由发布到L2骨干。默认情况下华为设备接口为Level-1-2，可通过is-level命令修改。L1/2路由器是IS-IS网络中最常见的类型，特别是区域边界路由器。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-129', type: 'single',
@@ -1741,7 +1748,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['对端桥ID', '到根桥的路径开销（RPC）', '对端端口ID', '本端端口ID'],
     answer: '到根桥的路径开销（RPC）',
     explanation: 'STP根端口（Root Port，RP）选举（在非根桥上选举到根桥路径开销最小的端口），比较顺序：1.到根桥的路径开销（Root Path Cost，RPC）：最小者优先，这是首先比较的。RPC=本端口接收的BPDU中的根路径开销+本端口入方向开销。2.对端桥ID（Designated Bridge ID）：RPC相同时，比较对端（发送BPDU的交换机）的桥ID，小者优先。3.对端端口ID（Designated Port ID）：对端桥ID相同时（同一台交换机的多个端口），比较对端端口ID，小者优先。4.本端端口ID（Local Port ID）：以上都相同时（如通过Hub连接同一对端端口到本端多个端口），比较本端端口ID，小者优先。根端口是到根桥最优路径的端口，每个非根桥有且只有一个根端口。根桥上没有根端口（根桥上所有端口都是指定端口）。指定端口（DP）选举也类似：先比较RPC，再比较桥ID，再比较端口ID。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-130', type: 'single',
@@ -1749,7 +1756,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['路由器一个物理接口划分为多个子接口，每个子接口对应一个VLAN', '路由器多个物理接口分别连接不同VLAN', '三层交换机SVI接口', '不需要路由器'],
     answer: '路由器一个物理接口划分为多个子接口，每个子接口对应一个VLAN',
     explanation: '单臂路由（Router-on-a-Stick，也叫独臂路由）：路由器只用一个物理接口连接到交换机的Trunk端口，该物理接口划分为多个逻辑子接口（Sub-interface，如G0/0/0.1、G0/0/0.2），每个子接口对应一个VLAN，配置802.1Q封装（dot1q termination）和该VLAN的网关IP地址。不同VLAN的流量通过Trunk链路（带802.1Q标签）发送到路由器，路由器根据子接口的VLAN标签区分不同VLAN，在子接口之间进行三层路由，实现VLAN间通信。单臂路由的优点：节省路由器物理接口（一个接口实现多个VLAN的网关），配置简单。缺点：所有VLAN间流量都经过同一个物理接口，该接口成为带宽瓶颈，且路由器性能通常低于三层交换机，不适合大量VLAN间流量。三层交换机的SVI（Switched Virtual Interface，VLANIF接口）是更高效的VLAN间路由方案，硬件转发，性能高，是企业网络的主流方案。',
-    knowledgeId: 'datacom-vlan', direction: 'datacom',
+    knowledgeId: 'datacom-vlan', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-111', type: 'single',
@@ -1757,7 +1764,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['加密数据', '统一管理多个VRRP组的状态，实现主备切换一致性', '用户认证', '流量负载均衡算法'],
     answer: '统一管理多个VRRP组的状态，实现主备切换一致性',
     explanation: 'VGMP（VRRP Group Management Protocol，VRRP组管理协议）是华为防火墙双机热备的关键协议，作用：1.统一管理多个VRRP组（VGMP组），将多个VRRP组绑定在一起，统一进行主备状态管理，确保所有VRRP组的主备状态一致（同时主或同时备），避免出现部分VRRP组主在A设备、部分在B设备的混乱状态（Active-Active冲突）。2.VGMP组有优先级，决定哪台设备是主（Active）、哪台是备（Standby），VGMP优先级高的设备为主。3.当主设备故障（如接口故障、整机故障）时，VGMP组优先级降低，备设备VGMP优先级更高，抢占成为主，所有VRRP组同时切换，实现秒级主备切换。4.VGMP与HRP（Huawei Redundancy Protocol，华为冗余协议）配合：VGMP管理主备状态，HRP同步会话表、配置、动态表项等，确保主备切换时业务不中断。双机热备模式：主备模式（Active/Standby，一台主一台备）和负载分担模式（Active/Active，两台同时工作，互为主备，需要两个VGMP组）。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-106', type: 'single',
@@ -1765,7 +1772,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['加密广播帧', '通知处于省电模式的终端有缓存的广播/组播数据需要接收', '调整发射功率', '选择信道'],
     answer: '通知处于省电模式的终端有缓存的广播/组播数据需要接收',
     explanation: 'DTIM（Delivery Traffic Indication Message，交付流量指示消息）是WLAN中用于省电模式的机制，包含在Beacon帧中。作用：1.通知处于省电模式（Power Save Mode）的终端（STA），AP有缓存的广播/组播数据（如组播视频、广播报文）需要接收。2.终端在省电模式下会定期关闭射频以节省电量（如手机锁屏后），只在每个DTIM周期醒来监听Beacon帧，如果DTIM指示有缓存数据，则保持唤醒接收数据，否则继续睡眠。3.DTIM周期（DTIM Period）表示每多少个Beacon帧包含一个DTIM（默认通常是1-3，即每1-3个Beacon周期有一个DTIM），DTIM周期越长，终端睡眠时间越长，越省电，但广播/组播数据延迟越大。4.与TIM（Traffic Indication Map，流量指示映射）配合：TIM用于单播数据的省电通知（指示特定终端有单播数据缓存），DTIM用于广播/组播数据的省电通知。5.AP在DTIM Beacon之后会发送缓存的广播/组播数据（通常以最低速率发送，确保所有终端都能接收）。DTIM是WLAN省电机制的重要组成部分，对手机、IoT设备等电池供电终端非常重要。',
-    knowledgeId: 'wlan-vap', direction: 'wlan',
+    knowledgeId: 'wlan-vap', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-104', type: 'single',
@@ -1773,7 +1780,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['加密数据', '等价多路径负载分担，充分利用多条Spine链路', '用户认证', '减少交换机数量'],
     answer: '等价多路径负载分担，充分利用多条Spine链路',
     explanation: 'ECMP（Equal-Cost Multi-Path，等价多路径）是Spine-Leaf架构中的关键技术，作用：1.当Leaf到目标Leaf有多条等价路径（通过不同Spine，如Leaf1→Spine1→Leaf2和Leaf1→Spine2→Leaf2，路径开销相同）时，ECMP将流量均匀分担到多条路径上，充分利用所有Spine链路的带宽，实现无阻塞转发。2.ECMP基于哈希算法（如源IP、目的IP、源端口、目的端口、协议号等五元组哈希）将不同流分配到不同路径，同一流始终走同一条路径（避免乱序），不同流分散到不同路径。3.当某条Spine链路或Spine设备故障时，ECMP自动将流量切换到其他可用路径，实现快速故障收敛（亚秒级），提高网络可靠性。4.Spine-Leaf架构中，每个Leaf连接所有Spine（Full Mesh全互联），任意两台Leaf之间有N条等价路径（N=Spine数量），ECMP充分利用这些路径，实现水平扩展（增加Spine增加东西向带宽，增加Leaf增加接入端口）。5.ECMP需要underlay路由协议（OSPF/IS-IS/BGP）支持等价路由，数据中心通常用BGP（eBGP或iBGP）作为underlay路由协议，因为BGP更适合大规模、多路径、可扩展的场景。',
-    knowledgeId: 'dcn-arch', direction: 'dcn',
+    knowledgeId: 'dcn-arch', direction: 'dcn', difficulty: 'IE',
   },
 
   {
@@ -1782,7 +1789,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['NSSA允许引入外部路由（Type 7），Stub不允许', 'NSSA不接收Type 3，Stub接收', 'NSSA不接收Type 5，Stub接收', 'NSSA是骨干区域，Stub不是'],
     answer: 'NSSA允许引入外部路由（Type 7），Stub不允许',
     explanation: 'NSSA（Not-So-Stubby Area，非纯末梢区域）与Stub区域类似，都不接收Type 5外部LSA，但NSSA允许在区域内引入外部路由（ASBR可以存在于NSSA区域），外部路由以Type 7 LSA（NSSA External LSA）形式在NSSA区域内传播，到达ABR后转换为Type 5 LSA传播到其他区域。Stub区域不允许ASBR存在，也不允许Type 7 LSA。NSSA适合需要引入外部路由但又想减少LSA数量的区域。Totally NSSA是NSSA的更严格版本，不接收Type 3（除默认路由外）、Type 4、Type 5，允许Type 7。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-132', type: 'single',
@@ -1790,7 +1797,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['仅其他客户端', '仅非客户端', '所有客户端和非客户端', '不反射给任何人'],
     answer: '所有客户端和非客户端',
     explanation: '路由反射器（Route Reflector，RR）的反射规则：1.从客户端（Client）学到的路由→反射给所有其他客户端和所有非客户端（Non-Client）。2.从非客户端学到的路由→仅反射给所有客户端（不反射给其他非客户端）。3.从EBGP邻居学到的路由→发给所有客户端和非客户端。这样，一个RR只需与所有客户端建立IBGP邻居，客户端之间不需要全互联，大大减少了IBGP邻居数量。RR防环机制：Originator_ID（原始发起者Router ID，原始发起者收到自己发起的路由则丢弃）和Cluster_List（簇列表，RR反射时添加自己的Cluster ID，RR收到包含自己Cluster ID的路由则丢弃）。RR可以层级部署（RR的RR），也可以多个RR冗余（同一簇多个RR，相同Cluster ID）。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-133', type: 'judge',
@@ -1798,7 +1805,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '错误',
     explanation: 'IS-IS的DIS（Designated IS，指定中间系统）选举与OSPF的DR选举不同：1.IS-IS DIS优先级默认64，优先级为0的接口仍然参与DIS选举（OSPF中优先级为0的接口不参与DR选举）。2.DIS可抢占：新加入的高优先级路由器会抢占成为DIS（OSPF的DR不可抢占，DR故障后才重新选举BDR为DR）。3.IS-IS没有BDR（备份指定路由器），DIS故障后需要重新选举新的DIS（OSPF有BDR，DR故障后BDR立即成为DR，无需等待选举）。4.DIS选举基于接口优先级（值大者优先），优先级相同时System ID大者优先。DIS负责在广播网络中生成伪节点（Pseudonode）LSA和周期性发送CSNP（完全序列号报文），用于数据库同步。伪节点是DIS创建的虚拟节点，用于简化广播网络的LSA描述（所有连接到该网络的路由器都与伪节点建立邻接，而不是两两建立）。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-134', type: 'single',
@@ -1806,7 +1813,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['根端口的备份', '指定端口的备份，提供到同一网段的冗余连接', '连接终端的端口', '阻塞所有流量的端口'],
     answer: '指定端口的备份，提供到同一网段的冗余连接',
     explanation: 'RSTP端口角色：1.根端口（Root Port，RP）：到根桥路径开销最小的端口，每个非根桥一个。2.指定端口（Designated Port，DP）：每个网段到根桥路径开销最小的端口，负责向该网段转发。3.替代端口（Alternate Port，AP）：根端口的备份，提供到根桥的替代路径，根端口故障时替代端口可快速切换为根端口（无需等待30秒）。替代端口收到的是更优的BPDU（来自其他交换机）。4.备份端口（Backup Port，BP）：指定端口的备份，提供到同一网段的冗余连接，指定端口故障时备份端口可切换为指定端口。备份端口收到的是自己发出的更优BPDU（同一台交换机的另一个端口连接到同一网段，如Hub或共享介质）。替代端口和备份端口在RSTP中都处于Discarding状态，但可快速切换（RSTP的P/A协商机制，Proposal/Agreement，实现快速收敛，无需等待Forward Delay）。边缘端口（Edge Port）不是RSTP的端口角色，是端口属性（连接终端，不参与STP，快速进入Forwarding）。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-135', type: 'single',
@@ -1814,7 +1821,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['增加VLAN数量', '企业园区网中实现VLAN间部分互通、部分隔离，节省VLAN', '提高VLAN安全性', '加快VLAN转发'],
     answer: '企业园区网中实现VLAN间部分互通、部分隔离，节省VLAN',
     explanation: 'MUX VLAN（Multiplex VLAN，复用VLAN）是华为设备的VLAN特性，用于企业园区网中实现VLAN间的部分互通、部分隔离，同时节省VLAN资源。MUX VLAN分为：1.主VLAN（Principal VLAN）：可以与MUX VLAN内所有VLAN通信。2.从VLAN（Subordinate VLAN）：分为两种：a.互通型从VLAN（Group VLAN）：同一Group VLAN内的端口可以互相通信，也可以与Principal VLAN通信，但不同Group VLAN之间不能通信。b.隔离型从VLAN（Separate VLAN）：同一Separate VLAN内的端口不能互相通信，只能与Principal VLAN通信，不同Separate VLAN之间也不能通信。MUX VLAN的应用场景：企业园区中，员工之间需要互通（Group VLAN），访客之间需要隔离（Separate VLAN），但员工和访客都需要访问服务器（Principal VLAN），通过MUX VLAN可以用少量VLAN实现复杂的访问控制，节省VLAN资源。MUX VLAN配置在接入交换机端口上，基于端口实现VLAN复用和访问控制。',
-    knowledgeId: 'datacom-vlan', direction: 'datacom',
+    knowledgeId: 'datacom-vlan', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-136', type: 'single',
@@ -1822,7 +1829,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['确定主动端，由主动端选择活动接口', '确定接口速率', '确定加密算法', '确定负载分担方式'],
     answer: '确定主动端，由主动端选择活动接口',
     explanation: 'LACP（Link Aggregation Control Protocol，链路聚合控制协议，IEEE 802.3ad）模式中，系统优先级（System Priority，默认32768，值小者优先）用于确定LACP主动端（Actor）：1.两端交换机比较系统优先级，优先级高（值小）的一端为主动端。2.系统优先级相同时，比较系统MAC地址，MAC地址小的一端为主动端。3.主动端负责选择活动接口（Active Interface）：根据接口优先级（Port Priority，默认32768，值小者优先）选择活动接口，接口优先级相同时接口编号小的优先。4.活动接口数量受最大活动接口数（max active-linknumber）限制，超过的接口为备用接口（Standby），活动接口故障时备用接口自动切换。LACP模式相比手工负载分担模式的优势：支持活动/备用接口、支持主备冗余、可检测链路故障（LACPDU超时检测）、支持跨设备链路聚合（如堆叠/集群设备间的Eth-Trunk）。LACP优先级：系统优先级（确定主动端）>接口优先级（确定活动接口）。LACPDU（LACP数据单元）每秒发送一次，超时时间通常3倍发送间隔。',
-    knowledgeId: 'datacom-eth-trunk', direction: 'datacom',
+    knowledgeId: 'datacom-eth-trunk', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-112', type: 'single',
@@ -1830,7 +1837,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['仅传输层', '整个原始IP包（包括原IP头）', '仅ESP头', '仅外部IP头'],
     answer: '整个原始IP包（包括原IP头）',
     explanation: 'ESP（Encapsulating Security Payload，封装安全载荷，协议号50）提供加密+认证（完整性+数据源认证），是IPSec的主流协议。ESP工作模式：1.传输模式（Transport Mode）：保护传输层数据（TCP/UDP头+数据），原IP头保持不变，ESP头插在原IP头和传输层头之间，加密的是传输层头+数据（ESP载荷），认证的是ESP头+传输层头+数据。传输模式用于主机到主机（End-to-End）。2.隧道模式（Tunnel Mode）：保护整个原始IP包（包括原IP头），新增外部IP头，ESP头插在外部IP头和原始IP包之间，加密的是整个原始IP包（原IP头+传输层头+数据），认证的是ESP头+整个原始IP包。隧道模式用于网关到网关（Site-to-Site VPN），安全性更高（隐藏内部IP地址）。ESP加密算法：DES、3DES、AES（主流）、SM4（国密）。ESP认证算法：MD5、SHA-1、SHA-2（主流）、SM3（国密）。ESP不认证外部IP头（隧道模式），因为外部IP头在传输过程中可能被NAT修改。AH（协议号51）仅提供认证不加密，认证整个IP头（包括不变字段），不支持NAT，已少用。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-113', type: 'judge',
@@ -1838,7 +1845,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['正确', '错误'],
     answer: '正确',
     explanation: '防火墙工作模式：1.路由模式（三层模式）：接口配置IP地址，像路由器一样转发，支持NAT、VPN、动态路由等三层功能，是最常用的模式。2.透明模式（二层模式）：接口不配置IP地址，像二层交换机一样转发（基于MAC地址表），对用户透明（不改变网络拓扑，不需要修改上下行设备的网关配置），适合在线部署（串接在现有网络中，不改变现有IP规划）。透明模式下需要配置VLAN（接口加入VLAN，基于VLAN转发），防火墙在不同安全区域之间根据安全策略控制流量（即使是二层转发，也需要安全策略允许）。透明模式不支持NAT、VPN等三层功能（因为接口无IP），但支持基本的访问控制、攻击防范、内容过滤等。3.混合模式：同时有三层接口（路由模式）和二层接口（透明模式），适用于部分业务需要三层功能、部分业务需要透明接入的场景。透明模式的优点：部署简单，不改变现有网络拓扑和IP规划，适合旁路/在线部署；缺点：不支持NAT/VPN等三层功能，功能受限。华为防火墙通过firewall zone和interface配置工作模式，透明模式接口需配置portswitch切换为二层口。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-107', type: 'single',
@@ -1846,7 +1853,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['增加发射功率', '将信道划分为子载波同时服务多用户，提高效率降低延迟', '增加信道数量', '提高加密强度'],
     answer: '将信道划分为子载波同时服务多用户，提高效率降低延迟',
     explanation: 'OFDMA（Orthogonal Frequency Division Multiple Access，正交频分多址）是Wi-Fi 6（802.11ax）的核心技术，是OFDM（Orthogonal Frequency Division Multiplexing，正交频分复用）的多用户扩展。OFDM（802.11a/g/n/ac使用）将信道划分为多个子载波，但同一时刻整个信道只能服务一个用户（即使用户只需要传输少量数据，也占用整个信道），导致信道利用率低、延迟高（特别是密集用户和小包场景）。OFDMA将信道划分为更小的资源单元（RU，Resource Unit，如26/52/106/242/484/996子载波），不同的RU可以同时分配给不同用户，实现多用户同时传输，优势：1.提高信道利用率（多用户共享信道，避免一个用户占用整个信道）2.降低延迟（特别是小包和密集用户场景，用户无需等待整个信道空闲）3.减少冲突（调度式接入，类似蜂窝通信）4.支持上下行OFDMA（802.11ax支持上行和下行OFDMA，802.11ac仅支持下行MU-MIMO）。OFDMA与MU-MIMO配合：OFDMA在频域上区分用户（不同子载波），MU-MIMO在空间上区分用户（不同空间流），两者结合可同时服务更多用户。Wi-Fi 6还引入1024-QAM（高阶调制，比256-QAM提高25%速率）、BSS着色（BSS Coloring，减少同频干扰）、TWT（Target Wake Time，目标唤醒时间，终端节能）等技术。',
-    knowledgeId: 'wlan-standard', direction: 'wlan',
+    knowledgeId: 'wlan-standard', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-105', type: 'single',
@@ -1854,7 +1861,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['所有Leaf配置相同的网关IP和MAC，主机迁移时无需改网关', '每个Leaf配置不同的网关IP', '网关集中在Spine上', '网关需要动态分配IP'],
     answer: '所有Leaf配置相同的网关IP和MAC，主机迁移时无需改网关',
     explanation: 'Anycast网关（任播网关）是VXLAN分布式网关的核心技术：1.所有Leaf（叶节点，分布式网关）配置相同的Anycast网关IP地址和Anycast网关MAC地址（虚拟MAC）。2.主机（服务器/虚拟机）的默认网关就是这个Anycast IP，无论主机连接到哪个Leaf，网关IP和MAC都相同。3.当主机发送网关ARP请求时，本地Leaf直接以Anycast MAC响应（ARP代理/分布式ARP代理），主机将数据发给本地Leaf，本地Leaf直接进行三层转发（查找路由表/VXLAN隧道），无需经过集中网关。4.优势：a.东西向流量只需2跳（Leaf→Spine→Leaf），性能好，无瓶颈b.虚拟机迁移时网关IP和MAC不变，业务不中断（无需修改主机网关配置）c.无单点故障（分布式，每个Leaf都是网关，一个Leaf故障不影响其他）d.可扩展（增加Leaf增加网关处理能力）。5.Anycast网关需要EVPN控制面支持：通过EVPN Type 2路由（携带主机IP和MAC）同步主机路由，通过Type 5路由同步外部前缀。Anycast网关是当前数据中心VXLAN网络的标准方案（IP Fabric + EVPN/VXLAN + 分布式网关），替代了传统的集中式网关（所有三层流量集中到网关设备，性能瓶颈和单点故障）。',
-    knowledgeId: 'dcn-evpn', direction: 'dcn',
+    knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
 
   { id: 'dc-141', type: 'single', question: 'OSPF中，Hello报文的默认发送间隔在广播网络中是多少？', options: ['5秒', '10秒', '30秒', '60秒'], answer: '10秒', explanation: 'OSPF Hello报文默认发送间隔：广播网络（Broadcast）和点到点网络（P2P）为10秒，NBMA和点到多点网络为30秒。死亡时间（Dead Interval）默认是Hello间隔的4倍：广播/P2P为40秒，NBMA/P2MP为120秒。Hello报文用于发现邻居、维护邻居关系（Keepalive）、选举DR/BDR、协商参数（区域ID、认证、掩码、Hello间隔、死亡间隔等）。如果在死亡时间内未收到邻居的Hello报文，则认为邻居失效，拆除邻居关系。Hello间隔和死亡时间可在接口上通过ospf timer hello和ospf timer dead命令修改，但邻居两端必须一致才能建立邻居。', knowledgeId: 'datacom-ospf', direction: 'datacom' },
@@ -1880,7 +1887,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
   { id: 'dc-156', type: 'single', question: 'IPv6中，邻居发现协议（NDP）的NS（邻居请求）报文作用是？', options: ['请求路由器地址前缀', '请求目标IP对应的MAC地址（替代IPv4的ARP）', '宣告自己的MAC地址', '检测路由可达性'], answer: '请求目标IP对应的MAC地址（替代IPv4的ARP）', explanation: 'IPv6邻居发现协议（NDP，Neighbor Discovery Protocol，基于ICMPv6）替代了IPv4中的ARP、ICMP路由器发现、重定向等功能，包含5种报文：1.RS（Router Solicitation，路由器请求，ICMPv6类型133）：主机发送，请求路由器发送RA，主机启动或接口up时发送。2.RA（Router Advertisement，路由器通告，类型134）：路由器周期性发送或响应RS，包含地址前缀、前缀长度、默认网关、MTU、跳数限制等，用于SLAAC无状态自动配置。3.NS（Neighbor Solicitation，邻居请求，类型135）：主机发送，请求目标IP地址对应的MAC地址（替代IPv4的ARP请求），目标地址是被请求的IP，源地址是自己的IPv6地址，目的地址是目标IP的请求节点组播地址（Solicited-Node Multicast，FF02::1:FFXX:XXXX）。NS也用于DAD（重复地址检测，源地址为::）和邻居不可达检测（NUD）。4.NA（Neighbor Advertisement，邻居通告，类型136）：响应NS，宣告自己的MAC地址（替代IPv4的ARP响应），也可主动发送（地址变化时）。NA包含目标IP、目标MAC、标志位（Router/Solicited/Override）。5.Redirect（重定向，类型137）：路由器通知主机有更优的下一跳，类似IPv4的ICMP重定向。NDP是IPv6的核心协议，工作在链路本地范围（使用FE80::/10地址），实现地址解析、邻居发现、路由器发现、地址自动配置、重复地址检测、邻居不可达检测等功能。NS报文替代了IPv4的ARP请求，但使用组播（而非广播），更高效。', knowledgeId: 'datacom-ipv6-basic', direction: 'datacom' },
   { id: 'sec-118', type: 'single', question: '802.1X认证中，认证设备（Authenticator）在用户认证通过前，端口允许通过的报文是？', options: ['所有报文', '仅EAPoL报文（802.1X认证报文）', '仅HTTP报文', '仅DHCP报文'], answer: '仅EAPoL报文（802.1X认证报文）', explanation: '802.1X认证中，认证设备（Authenticator，交换机/AP）的端口在用户认证通过前，处于未授权状态（Unauthorized），只允许EAPoL（EAP over LAN，802.1X认证报文，目的MAC 01-80-C2-00-00-03）通过，其他所有报文（如HTTP、DHCP、TCP/IP数据等）都被阻塞，用户无法访问网络资源。认证通过后，端口变为授权状态（Authorized），允许正常流量通过。802.1X的三种接入控制方式（端口控制模式）：1.自动模式（Auto）：默认，端口自动发起802.1X认证，认证通过后开放。2.强制授权模式（Force Authorized）：不进行认证，端口始终允许所有流量通过（相当于关闭802.1X）。3.强制非授权模式（Force Unauthorized）：端口始终拒绝所有流量（始终关闭）。802.1X认证流程：客户端（Supplicant）发送EAPoL-Start→认证设备请求身份（EAP-Request/Identity）→客户端回复身份（EAP-Response/Identity）→认证设备封装为RADIUS Access-Request发给认证服务器→服务器挑战（EAP-Request）→客户端响应→服务器验证通过返回Access-Accept→认证设备发送EAP-Success→端口开放授权→客户端可正常访问网络。Guest VLAN（访客VLAN）：认证失败或无客户端的用户可访问Guest VLAN（有限资源，如Internet），是802.1X的扩展功能。Critical VLAN（关键VLAN）：RADIUS服务器不可达时，用户可访问Critical VLAN，保证基本网络访问。', knowledgeId: 'security-8021x', direction: 'security' },
   { id: 'wlan-110', type: 'judge', question: 'WLAN中，WMM（Wi-Fi多媒体）将语音业务映射到AC_VO（最高优先级）。', options: ['正确', '错误'], answer: '正确', explanation: 'WMM（Wi-Fi Multimedia，Wi-Fi多媒体，基于802.11e）是WLAN QoS的基础，将无线流量分为4个接入类别（Access Category，AC），优先级从高到低：1.AC_VO（Voice，语音）：最高优先级，低延迟、低丢包、低抖动，用于VoWiFi电话、实时语音等。AIFS最小，ECW最小，TXOP最大（可连续发送多个帧）。2.AC_VI（Video，视频）：次高优先级，用于视频会议、流媒体视频、监控视频等。AIFS较小，ECW较小，TXOP较大。3.AC_BE（Best Effort，尽力而为）：默认优先级，用于网页浏览、文件下载、邮件等普通业务。AIFS默认，ECW默认。4.AC_BK（Background，背景）：最低优先级，用于后台下载、软件更新、备份等不敏感业务。AIFS最大，ECW最大，TXOP为0（每次只能发一个帧）。WMM通过不同的AIFS（仲裁帧间间隔，越大等待越久优先级越低）、ECWmin/ECWmax（竞争窗口，越大冲突概率越高优先级越低）、TXOP（传输机会，高优先级可连续发送多个帧）参数实现差异化服务。用户优先级（UP，User Priority，802.1p，0-7）映射到WMM AC：UP 7(NC)/6(VO)→AC_VO，UP 5(VI)/4(CL)→AC_VI，UP 0(BE)/3(EE)→AC_BE，UP 1(BK)/2(保留)→AC_BK。语音业务（VoWiFi）映射到AC_VO，获得最高优先级和最低延迟，是WMM的典型应用。WMM认证是Wi-Fi联盟的认证项目，支持WMM的设备可实现QoS。WMM还支持WMM-PS（WMM Power Save，更高效的省电机制）和U-APSD（Unscheduled Automatic Power Save Delivery，非调度自动省电交付）。', knowledgeId: 'wlan-qos', direction: 'wlan' },
-  { id: 'dcn-108', type: 'single', question: 'SD-WAN相比传统MPLS VPN的主要优势不包括？', options: ['智能选路（根据应用质量选择链路）', '可使用Internet链路降低成本', '集中管理和零接触部署', '物理传输距离更短，延迟更低'], answer: '物理传输距离更短，延迟更低', explanation: 'SD-WAN（Software Defined Wide Area Network，软件定义广域网）是基于SDN技术的广域网解决方案，相比传统MPLS VPN的优势：1.智能选路（Application-aware Routing）：根据应用的SLA要求（延迟、丢包、抖动、带宽）和链路质量，动态选择最优链路（关键应用走MPLS/高质量链路，普通应用走Internet），提高用户体验和链路利用率。2.降低成本：可使用廉价的Internet链路（宽带、4G/5G）替代或补充昂贵的MPLS专线，混合链路（Hybrid WAN），降低广域网成本（通常可降低30-50%）。3.集中管理和自动化：云管平台统一配置、监控、运维，零接触部署（ZTP，Zero Touch Provisioning，设备上电自动获取配置），减少运维成本。4.应用优化：应用识别（DPI）、QoS、TCP优化、缓存、压缩等，提升应用体验。5.安全集成：集成防火墙、IPS、URL过滤、加密等安全功能（SASE，Secure Access Service Edge，安全访问服务边缘，将SD-WAN与安全服务融合）。6.灵活扩展：支持多种链路类型（MPLS、Internet、4G/5G、卫星），快速开通新站点。物理传输距离由地理位置决定，SD-WAN不改变物理距离，Internet链路的物理延迟可能高于MPLS（因为MPLS通常有QoS保障和更优路径），但SD-WAN通过智能选路和应用优化保证关键应用体验。SD-WAN不保证延迟更低，而是保证关键应用在可用链路中选择最优路径。SD-WAN是当前企业广域网改造的主流方案，特别适合多分支、云应用多、需要灵活接入的企业。', knowledgeId: 'dcn-sdn-basic', direction: 'dcn' },
 
   { id: 'dc-161', type: 'single', question: 'OSPF中，Totally NSSA区域不接收以下哪种LSA？', options: ['Type 1 和 Type 2', 'Type 3（除默认路由外）、Type 4、Type 5', 'Type 7', '仅Type 5'], answer: 'Type 3（除默认路由外）、Type 4、Type 5', explanation: 'Totally NSSA（完全非纯末梢区域）是NSSA的更严格版本，不接收：Type 3 Summary LSA（除ABR生成的默认路由0.0.0.0/0外）、Type 4 Summary LSA（ASBR位置）、Type 5 AS External LSA。允许Type 7 NSSA External LSA（本区域内引入的外部路由），到ABR后转换为Type 5。NSSA区域不接收Type 4和Type 5，但接收Type 3区域间路由和Type 7。Stub区域不接收Type 4和Type 5，接收Type 3。Totally Stub不接收Type 3（除默认外）、Type 4、Type 5。四种末梢区域对比：Stub（拒绝Type4/5，允许Type3/1/2）、Totally Stub（拒绝Type3除默认/Type4/5，允许默认Type3/1/2）、NSSA（拒绝Type4/5，允许Type3/Type7/1/2）、Totally NSSA（拒绝Type3除默认/Type4/5，允许默认Type3/Type7/1/2）。末梢区域的作用是减少LSA数量和路由表规模，提高稳定性，适用于末节区域（只有一个出口的区域）。', knowledgeId: 'datacom-ospf', direction: 'datacom' },
   { id: 'dc-162', type: 'single', question: 'BGP中，路由反射器（RR）的Cluster_List属性作用是？', options: ['防止路由在RR之间循环', '选择最优路由', '标记路由优先级', '加密路由'], answer: '防止路由在RR之间循环', explanation: 'BGP路由反射器（RR）的防环机制有两个属性：1.Originator_ID（发起者ID，可选非过渡属性）：RR反射路由时，将原始发起者（Originator，最初引入该路由的IBGP邻居）的Router ID添加到Originator_ID属性。当原始发起者收到包含自己Router ID的Originator_ID的路由时，丢弃该路由，防止环路。2.Cluster_List（簇列表，可选非过渡属性）：RR反射路由时，将自己的Cluster ID（簇ID，默认是RR的Router ID，可手动配置）添加到Cluster_List属性的开头。当RR收到包含自己Cluster ID的Cluster_List的路由时，丢弃该路由，防止路由在RR簇之间循环。Cluster_List是一系列Cluster ID的列表，记录路由经过的RR簇。Originator_ID防止路由回到原始发起者，Cluster_List防止路由在RR之间循环。两者配合确保IBGP路由反射无环路。RR的反射规则：从客户端学到的路由反射给所有客户端和非客户端；从非客户端学到的路由仅反射给客户端；从EBGP学到的路由发给所有客户端和非客户端。RR解决了IBGP全互联（Full Mesh）的问题，减少IBGP邻居数量，提高可扩展性。多个RR可组成簇（Cluster），相同Cluster ID，提供冗余备份。RR可层级部署（RR的RR），适用于大规模网络。', knowledgeId: 'datacom-bgp', direction: 'datacom' },
@@ -1899,7 +1905,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Type 7 NSSA External LSA',
     explanation: 'Type 7 LSA（NSSA External LSA）仅在NSSA区域内泛洪，不会进入其他区域。NSSA区域的ABR会将Type 7 LSA转换为Type 5 LSA后再泛洪到其他区域。Type 1/2在区域内泛洪，Type 5在整个OSPF域（除Stub/Totally Stub/NSSA区域）泛洪。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-068',
@@ -1909,7 +1915,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '连接不连续的骨干区域或连接无法直连骨干的区域',
     explanation: 'OSPF要求骨干区域Area 0必须连续，所有非骨干区域必须直接连接骨干区域。当骨干区域不连续（被分割）或某个非骨干区域无法直接连接骨干区域时，可通过虚链路（Virtual Link）在两个ABR之间建立逻辑通道，穿越一个非骨干区域（Transit Area）连接骨干区域。虚链路是临时解决方案，不建议长期使用，应优化网络拓扑。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-069',
@@ -1919,7 +1925,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'ABR（Area Border Router，区域边界路由器）连接多个OSPF区域，负责在区域间交换路由信息（生成Type 3 Summary LSA）。ABR必须至少有一个接口在骨干区域Area 0中，否则不是真正的ABR。ABR为每个连接的区域维护独立的链路状态数据库。如果一台路由器有接口在多个区域但没有接口在Area 0，它不能被称为ABR，也不会生成Summary LSA。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-070',
@@ -1929,7 +1935,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'MED',
     explanation: 'MED（Multi-Exit Discriminator，多出口鉴别符）用于在相邻AS之间影响入站流量选择，值越小越优先。当一个AS有多个入口点时，可通过设置不同的MED值告诉相邻AS哪个入口更优。Local_Pref用于AS内部影响出站流量选择，值越大越优。Weight是华为私有属性，仅本地有效。Community是团体属性，用于标记路由组，便于策略控制。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-071',
@@ -1939,7 +1945,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '仅客户端',
     explanation: '路由反射器RR的反射规则：1.从客户端学到的路由→反射给所有客户端和非客户端2.从非客户端学到的路由→仅反射给所有客户端（不反射给其他非客户端）3.从EBGP邻居学到的路由→发给所有客户端和非客户端。这样可以保证路由在AS内传播，同时避免环路（通过Originator ID和Cluster List防环）。RR解决了IBGP全互联的问题，减少了IBGP邻居数量。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-072',
@@ -1949,7 +1955,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['Origin', 'AS_Path', 'Next_Hop'],
     explanation: 'BGP公认必遵属性（Well-known Mandatory）：所有BGP路由器都必须识别，且每条BGP更新报文必须包含。包括：Origin（起源，标识路由来源IGP/EGP/Incomplete）、AS_Path（AS路径，记录经过的AS，防环）、Next_Hop（下一跳，到达目标的下一跳IP）。MED是可选过渡属性（Optional Transitive），Local_Pref是公认自由决定属性（Well-known Discretionary），Weight是华为私有属性。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-073',
@@ -1959,7 +1965,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '同步链路状态数据库（发送完整LSP摘要）',
     explanation: 'IS-IS报文类型：1.IIH（IS-to-IS Hello）：发现和维护邻居关系2.LSP（Link State PDU）：发布链路状态信息3.CSNP（Complete Sequence Number PDU，完全序列号报文）：发送本地完整LSP数据库的摘要（LSP ID+序列号+校验和+剩余时间），用于邻居间数据库同步，DIS在广播网络中周期性发送4.PSNP（Partial Sequence Number PDU，部分序列号报文）：请求缺失的LSP或确认收到的LSP。CSNP类似OSPF的DD报文，PSNP类似LSR+LSAck。',
     knowledgeId: 'datacom-isis',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-074',
@@ -1969,7 +1975,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'IS-IS在广播网络中选举DIS（Designated IS，指定中间系统），负责生成伪节点LSP和周期性发送CSNP。与OSPF不同，IS-IS没有BDR（备份指定路由器），DIS故障后需要重新选举新的DIS。DIS选举基于接口优先级（默认64，值大者优先，优先级0也参与选举）和System ID（优先级相同时System ID大者优先），DIS可抢占（新加入的高优先级路由器会抢占成为DIS）。',
     knowledgeId: 'datacom-isis',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-075',
@@ -1979,7 +1985,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '根端口的备份，提供到根桥的替代路径',
     explanation: 'RSTP端口角色：1.根端口（Root Port）：到根桥路径开销最小的端口2.指定端口（Designated Port）：每个网段到根桥路径开销最小的端口3.替代端口（Alternate Port）：根端口的备份，提供到根桥的替代路径，当根端口故障时替代端口可快速切换为根端口4.备份端口（Backup Port）：指定端口的备份，提供到同一网段的冗余连接，当指定端口故障时备份端口可切换。替代端口和备份端口在RSTP中可快速切换，无需等待30秒收敛。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-076',
@@ -1989,7 +1995,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '交换机的MAC地址',
     explanation: 'MSTP中，MST域（Multiple Spanning Tree Region）由以下三个参数判定，必须完全相同才属于同一个MST域：1.域名（Configuration Name，配置名称）2.修订级别（Revision Level，修订号）3.VLAN与MSTI（多生成树实例）的映射关系（VLAN-to-instance mapping）。MAC地址不影响MST域的判定，不同MAC地址的交换机只要上述三个参数相同就属于同一个MST域。MST域内运行MSTP，域间通过CST（公共生成树）互联。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-077',
@@ -1999,7 +2005,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'VXLAN',
     explanation: 'VXLAN（Virtual Extensible LAN，虚拟可扩展局域网）使用24位的VNI（VXLAN Network Identifier），支持约1600万个网段（2^24=16,777,216），远多于VLAN的4094个，解决了VLAN数量不足的问题。VLAN聚合（Super VLAN）、MUX VLAN都是在VLAN范围内的优化技术，不增加VLAN数量。VXLAN通过MAC-in-UDP封装在三层网络上构建大二层虚拟网络，是数据中心和云计算的主流技术。',
     knowledgeId: 'dcn-vxlan-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-078',
@@ -2009,7 +2015,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '广播型网络上指定出接口无法确定下一跳的MAC地址，可能导致转发失败',
     explanation: '静态路由配置方式：1.指定下一跳IP地址：适用于所有网络类型，路由器通过ARP获取下一跳MAC地址2.指定出接口：仅适用于点到点链路（如串行链路），因为点到点链路只有一个对端，指定出接口即可确定下一跳。在广播型网络（如以太网）上，如果只指定出接口，路由器不知道下一跳IP地址，无法通过ARP获取下一跳MAC地址，可能导致转发失败或需要代理ARP。因此在广播型网络上必须指定下一跳IP地址。',
     knowledgeId: 'datacom-static-route',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-079',
@@ -2019,7 +2025,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'OSPF基于链路状态，运行SPF（最短路径优先）算法计算最短路径树。SPF算法只在网络拓扑变化（如链路up/down、路由器加入/离开）时运行，因为拓扑变化影响路径树结构。而路由属性变化（如Type 3 Summary LSA的路由度量变化、外部路由变化）只影响路由表中的具体路由，不需要重新计算整个最短路径树，只需进行PRC（Partial Route Calculation，部分路由计算），只重新计算受影响的路由，提高了收敛速度和CPU效率。这是OSPF比距离矢量协议更高效的原因之一。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-080',
@@ -2029,7 +2035,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '解决IBGP全互联问题，将一个大AS划分为多个子AS',
     explanation: 'BGP联盟（Confederation）将一个大AS划分为多个子AS（Member AS），子AS之间使用EBGP连接（但对外表现为一个AS），子AS内部使用IBGP。这样减少了IBGP全互联的邻居数量（每个子AS内全互联，子AS间EBGP连接）。联盟与路由反射器（RR）都是解决IBGP全互联问题的技术，可单独使用也可结合使用。联盟的AS号分为联盟AS号（对外）和子AS号（内部），子AS号通常使用私有AS号。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-081',
@@ -2039,7 +2045,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'DAD（重复地址检测）',
     explanation: 'DAD（Duplicate Address Detection，重复地址检测）是IPv6邻居发现协议的一部分，主机在使用自动配置的IPv6地址前，必须发送NS（邻居请求）报文检测该地址是否已被其他节点使用。如果收到NA（邻居通告）响应，说明地址已被占用，主机不能使用该地址，需要重新生成或手动配置。DAD确保了IPv6地址在本地链路内的唯一性，替代了IPv4中ARP冲突检测的功能。DAD使用NS报文，目标地址是被检测的地址，源地址是::（未指定地址）。',
     knowledgeId: 'datacom-ipv6-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-082',
@@ -2049,7 +2055,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['基于链路运行而非子网', '使用链路本地地址作为邻居通信源地址', 'Router ID仍为32位', '认证使用IPv6 AH/ESP而非自带认证'],
     explanation: 'OSPFv3与OSPFv2的主要区别：1.基于链路运行而非基于IP子网，同一链路可运行多个OSPFv3实例（Instance ID）2.使用链路本地地址（FE80::/10）作为邻居间通信的源地址3.Router ID仍为32位，需手动配置或从IPv4地址获取4.LSA类型变化：新增Type 8 Link LSA和Type 9 Intra-Area-Prefix LSA，地址信息从Router/Network LSA中分离5.认证使用IPv6 AH/ESP，而非OSPFv2自带的明文/MD5认证6.邻居建立、DR选举、区域划分等机制基本相同。',
     knowledgeId: 'datacom-ospfv3',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-083',
@@ -2059,7 +2065,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '前24位',
     explanation: 'ACL通配符掩码（反掩码）与子网掩码相反：0表示该位必须匹配，1表示该位忽略。0.0.0.255表示前24位（前三个字节）必须匹配，最后8位（第四个字节）任意，即匹配一个C类网段（如192.168.1.0/24）。注意通配符掩码不一定是连续的，如0.0.255.0表示匹配前16位和后8位，忽略中间8位，这是子网掩码无法表达的。华为ACL中，基本ACL仅匹配源IP，高级ACL可匹配源/目的IP、协议、端口等。',
     knowledgeId: 'datacom-acl',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-084',
@@ -2069,7 +2075,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'NAT（网络地址转换）将内网私有IP地址转换为公网IP地址，外网只能看到NAT设备的公网IP，无法直接看到内网主机的真实IP地址，从而隐藏了内网拓扑和主机信息，提高了网络安全性（攻击者无法直接定位和攻击内网主机）。但NAT不是安全设备，不能替代防火墙，NAT本身不提供深度包检测和访问控制。NAT的优点包括：节省公网IP地址、隐藏内网结构、地址复用；缺点包括：破坏端到端模型、某些应用层协议需ALG支持、不支持端到端IPsec（AH）。',
     knowledgeId: 'datacom-nat',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-085',
@@ -2079,7 +2085,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '自动降低优先级',
     explanation: 'VRRP跟踪接口/链路功能：当Master路由器的上行接口或链路故障时，VRRP自动降低Master的优先级（降低值可配置，如降低10），当Master优先级低于Backup时，Backup（抢占模式默认开启）会抢占成为新的Master，实现流量切换。这样可以避免Master上行故障但VRRP仍为Master导致的黑洞问题。VRRP还可配置跟踪BFD、路由等，实现更快速的故障检测和切换。华为设备通过vrrp vrid track interface命令配置接口跟踪。',
     knowledgeId: 'datacom-vrrp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-086',
@@ -2089,7 +2095,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '实现PHP（倒数第二跳弹出），让倒数第二跳弹出标签',
     explanation: 'MPLS保留标签：0（显式空标签，Explicit Null）、1（路由器告警标签，Router Alert）、3（隐式空标签，Implicit Null）。隐式空标签（值3）用于PHP（Penultimate Hop Popping，倒数第二跳弹出）：Egress PE为其直连路由分配隐式空标签，倒数第二跳LSR收到带隐式空标签的报文后，不进行标签交换，而是直接弹出标签，将IP报文转发给Egress PE。这样Egress PE无需处理标签（弹出标签后查路由表），减少了Egress PE的处理负担，提高了转发效率。显式空标签（值0）表示必须弹出标签后查路由表，但标签仍保留在标签栈中传递。',
     knowledgeId: 'datacom-mpls-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-087',
@@ -2099,7 +2105,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'RT（路由目标）',
     explanation: 'MPLS VPN中：1.RD（Route Distinguisher，路由区分符）：8字节，添加在IPv4前缀前形成VPN-IPv4地址，确保不同VPN使用相同IP地址时在BGP中唯一，仅用于区分，不控制导入导出。2.RT（Route Target，路由目标）：BGP扩展团体属性，控制VPN路由的导入导出。Export RT：导出路由时标记的RT；Import RT：导入路由时匹配的RT。PE从CE学到路由后，标记Export RT并通过BGP发给其他PE；其他PE收到后，检查路由的RT是否与本地VRF的Import RT匹配，匹配则导入该VRF。RT实现了VPN之间的路由隔离和互访控制。',
     knowledgeId: 'datacom-mpls-vpn',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-088',
@@ -2109,7 +2115,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'PQ（Priority Queue，优先队列）严格按优先级从高到低调度：高优先级队列有数据时始终优先转发，只有高优先级队列空了才服务低优先级队列。如果高优先级流量持续存在（如语音视频流量过大），低优先级队列（如文件下载、邮件）可能永远得不到服务，导致"饿死"（Starvation）。为避免这个问题，实际部署中常用PQ+WFQ/CBQ组合：关键业务（语音）用PQ保证低延迟，其他业务用WFQ/CBQ按权重公平分配带宽，确保低优先级业务也能获得最低带宽保障。WRR/WFQ通过加权轮询保证每个队列都能获得服务。',
     knowledgeId: 'datacom-qos-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-089',
@@ -2119,7 +2125,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '单播向DHCP服务器发送DHCP Request',
     explanation: 'DHCP租期更新：1.租期到50%（T1）：客户端单播向原DHCP服务器发送DHCP Request请求续租，服务器回复DHCP ACK则续租成功，租期重新计算。2.租期到87.5%（T2）：如果T1时未收到服务器响应，客户端广播发送DHCP Request，向任何DHCP服务器请求续租。3.租期到期：如果仍未收到响应，客户端停止使用该IP地址，重新发送DHCP Discover开始新的分配流程。T1和T2可在DHCP服务器上配置，默认T1=50%，T2=87.5%。',
     knowledgeId: 'datacom-dhcp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-090',
@@ -2129,7 +2135,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '300秒',
     explanation: '交换机MAC地址表的默认老化时间是300秒（5分钟）。当一个MAC地址在老化时间内没有收到对应源MAC的帧，交换机会将该MAC地址表项删除，以节省MAC地址表空间。老化时间可通过mac-address aging-time命令修改（范围0-1000000秒，0表示不老化）。MAC地址表容量有限（通常几千到几万条），老化机制确保表中只保留活跃的MAC地址。ARP表的默认老化时间是180秒（华为设备），注意区分MAC地址表（300秒）和ARP表（180秒）的老化时间。',
     knowledgeId: 'datacom-ethernet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-031',
@@ -2139,7 +2145,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '用户密码',
     explanation: '防火墙会话表（Session Table）记录每个会话的五元组信息：源IP、目的IP、源端口、目的端口、协议号（TCP/UDP/ICMP等），以及会话状态、超时时间、安全策略、NAT转换信息等。会话表用于状态检测：首包匹配安全策略后建立会话，后续包直接匹配会话表转发，无需重新匹配策略。用户密码是认证信息，不记录在会话表中，认证通过后可能记录用户身份信息到会话表，但密码本身不会存储。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-032',
@@ -2149,7 +2155,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '两台同时Active，互为主备',
     explanation: '防火墙双机热备模式：1.主备模式（Active/Standby）：一台主设备（Active）转发所有流量，备设备（Standby）备份会话和配置，主设备故障时备设备接管。2.负载分担模式（Active/Active）：两台设备同时工作，都转发流量，互为主备（每台设备既是某些业务的主设备又是其他业务的备设备），通过VGMP（VRRP组管理协议）管理多个VRRP组，实现负载分担和冗余备份。负载分担模式提高了设备利用率，但配置更复杂，需确保会话同步正确。HRP（华为冗余协议）用于主备设备间会话表、配置、动态表项的同步。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-033',
@@ -2159,7 +2165,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'IPSec工作模式：1.传输模式（Transport Mode）：保护传输层数据（TCP/UDP头和数据），原IP头保持不变，AH/ESP头插在原IP头和传输层头之间。传输模式开销小，用于主机到主机通信（End-to-End）。2.隧道模式（Tunnel Mode）：保护整个IP数据包（包括原IP头），新增外部IP头，原IP包被封装在ESP/AH payload中。隧道模式开销大，用于网关到网关VPN（Site-to-Site），安全性更高。传输模式下，AH认证整个IP头（包括不变字段），ESP只认证ESP头之后的内容（不认证外部IP头）。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-034',
@@ -2169,7 +2175,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '6条',
     explanation: 'IKEv1阶段一模式：1.主模式（Main Mode）：共6条消息，保护身份信息（身份信息在加密后传输），安全性高但速度慢。消息1-2：协商安全策略（加密/认证算法、DH组等）；消息3-4：DH密钥交换（交换公共值，生成共享密钥）和Nonce（随机数）；消息5-6：身份认证（交换身份信息和预共享密钥/证书验证，已加密）。2.野蛮模式（Aggressive Mode）：共3条消息，身份信息明文传输（不保护），安全性低但速度快，适合动态IP场景。IKEv2简化为4条消息（IKE_SA_INIT 2条+IKE_AUTH 2条），更安全高效。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-035',
@@ -2179,7 +2185,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'SYN Flood',
     explanation: 'SYN Flood利用TCP三次握手漏洞：攻击者发送大量伪造源IP的SYN包，目标服务器回复SYN-ACK后等待第三次握手（ACK），这些半连接（Half-open Connection）占用服务器的SYN队列（半连接队列），队列满后无法接受新的正常连接。防御方法：1.SYN Cookie：不建立半连接，用Cookie（基于源/目的IP端口和时间戳计算的哈希）验证，收到ACK后才建立连接2.SYN Proxy：防火墙代理三次握手，验证客户端真实后再与服务器建立连接3.限制SYN速率和半连接数量4.增大SYN队列和缩短超时时间。Land攻击是源IP=目的IP的SYN包，Smurf是ICMP广播放大，Teardrop是IP分片重叠。',
     knowledgeId: 'security-attack-defense',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-036',
@@ -2189,7 +2195,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: ['SQL注入', 'XSS跨站脚本', 'CC攻击（HTTP Flood）'],
     explanation: '应用层攻击针对应用层协议和应用程序漏洞：1.SQL注入：在输入中插入恶意SQL语句，操纵数据库2.XSS（跨站脚本）：在网页中注入恶意脚本，在用户浏览器中执行3.CC攻击（HTTP Flood/Challenge Collapsar）：大量代理或肉鸡发送HTTP请求，耗尽Web服务器资源4.文件上传漏洞、命令注入、目录遍历、CSRF等。SYN Flood是传输层（TCP）攻击，利用TCP三次握手漏洞，不属于应用层攻击。应用层攻击通常流量不大但针对应用漏洞，传统防火墙难以防护，需要WAF（Web应用防火墙）和IPS。',
     knowledgeId: 'security-attack-defense',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-037',
@@ -2199,7 +2205,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '证明公钥与身份的绑定关系',
     explanation: '数字证书由CA（证书颁发机构）签发，包含：持有者公钥、持有者身份信息（名称、组织等）、CA签名、证书序列号、有效期、签发者等。数字证书的主要作用是证明公钥与身份的绑定关系，确保用户拿到的公钥确实属于声称的持有者，防止公钥被篡改或冒充。在非对称加密中，公钥分发是个问题（如何确认公钥属于某人），数字证书通过CA的可信签名解决了这个问题。PKI（公钥基础设施）是管理数字证书的体系，包括CA、RA、证书库、CRL/OCSP等。HTTPS/TLS握手时服务器发送数字证书给客户端验证。',
     knowledgeId: 'security-crypto',
-    direction: 'security',
+    direction: 'security', difficulty: 'IE',
   },
   {
     id: 'sec-038',
@@ -2209,7 +2215,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '错误',
     explanation: '非对称加密（公钥加密）基于复杂的数学问题（大整数分解、椭圆曲线离散对数等），计算量大，速度慢（比对称加密慢100-1000倍），不适合加密大量数据。对称加密（如AES）速度快，适合加密大量数据。实际应用中通常结合使用（混合加密）：1.用非对称加密安全交换对称密钥（如TLS握手时用RSA/ECC交换预主密钥）2.用对称密钥加密实际数据（如TLS记录层用AES加密数据）。非对称加密适合：密钥交换、数字签名、小数据量加密（如加密对称密钥）。对称加密适合：大数据量加密、实时通信加密。',
     knowledgeId: 'security-crypto',
-    direction: 'security',
+    direction: 'security', difficulty: 'IE',
   },
   {
     id: 'sec-039',
@@ -2219,7 +2225,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '组播地址01-80-C2-00-00-03',
     explanation: '802.1X使用EAPoL（EAP over LAN）在客户端（Supplicant）和认证设备（Authenticator，交换机/AP）之间传输EAP报文。EAPoL报文的目的MAC地址是固定的组播地址01-80-C2-00-00-03（IEEE 802.1X指定的组播地址），交换机不会转发该组播地址的帧（仅本地处理），确保EAPoL报文只在客户端和认证设备之间传输，不会被转发到其他端口。EAPoL类型包括：EAP-Packet（封装EAP报文）、EAPOL-Start（客户端发起认证）、EAPOL-Logoff（客户端注销）、EAPOL-Key（密钥分发）等。',
     knowledgeId: 'security-8021x',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-040',
@@ -2229,7 +2235,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'SSL VPN网关（AC/防火墙）从地址池分配',
     explanation: 'SSL VPN网络扩展（Network Extension，也叫全网互联/Full Network Access）模式下，客户端安装SSL VPN客户端软件，与SSL VPN网关（防火墙/AC）建立SSL隧道后，网关从虚拟IP地址池中为客户端分配一个虚拟IP地址，客户端获得该虚拟IP后可以像在企业内网一样访问所有授权的网络资源（类似IPSec VPN的效果）。虚拟IP地址池在SSL VPN网关上配置，可基于用户/用户组分配不同的地址池。网络扩展模式功能最强大（可访问所有网络资源），但需要安装客户端软件。Web代理、文件共享、端口转发模式不需要客户端，但只能访问特定类型的资源。',
     knowledgeId: 'security-ssl-vpn',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-026',
@@ -2239,7 +2245,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '广播SSID和网络参数，让终端发现无线网络',
     explanation: 'Beacon帧（信标帧）是AP周期性发送的管理帧（默认每100ms/10个时间单位发送一次），包含：SSID（无线网络名称，隐藏SSID时为空）、支持的速率、信道、加密方式、能力信息、时间戳、DTIM周期等。终端通过监听Beacon帧发现周围的无线网络，并获取网络参数。Beacon帧还用于同步终端与AP的时钟、省电模式通知（DTIM）等。隐藏SSID时，Beacon帧中SSID字段为空（长度为0），终端需手动输入SSID通过Probe Request探测。Beacon帧间隔可配置（通常100ms），间隔越小终端发现越快但空口开销越大。',
     knowledgeId: 'wlan-vap',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-027',
@@ -2249,7 +2255,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '扫描→认证→关联',
     explanation: 'WLAN终端接入流程：1.扫描（Scanning）：终端通过主动扫描（发送Probe Request，AP回复Probe Response）或被动扫描（监听Beacon帧）发现周围的AP和SSID。2.认证（Authentication）：终端向选定的AP发送认证请求，开放认证（Open System）直接通过，共享密钥认证（Shared Key）需要挑战-响应验证（WEP时代，已不安全）。3.关联（Association）：认证通过后，终端发送关联请求（Association Request），AP回复关联响应（Association Response），关联成功后终端可以传输数据。对于WPA/WPA2/WPA3，认证和关联后还需进行4次握手（4-Way Handshake）协商单播密钥，以及组播密钥协商（Group Key Handshake）。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-028',
@@ -2259,7 +2265,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'WPA/WPA2/WPA3中，关联成功后进行4次握手（4-Way Handshake），目的是：1.验证客户端和AP拥有相同的PSK（预共享密钥）或PMK（从802.1X认证获得）2.协商并生成PTK（Pairwise Transient Key，成对临时密钥），用于单播数据加密3.安装加密密钥，开始加密通信4次握手消息：消息1（AP→Client：ANonce随机数）→消息2（Client→AP：SNonce+MIC）→消息3（AP→Client：GTK+MIC）→消息4（Client→AP：确认安装）。PTK由PMK+ANonce+SNonce+AP MAC+Client MAC通过PRF生成。GTK（Group Temporal Key，组临时密钥）用于组播/广播数据加密，在消息3中传递。WPA3使用SAE替代PSK认证，但仍使用4次握手（或类似机制）协商密钥。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-029',
@@ -2269,7 +2275,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'AP的MAC地址',
     explanation: '影响WLAN传输速率的因素：1.信号强度（RSSI，Received Signal Strength Indicator）：信号越强速率越高，终端根据信号强度自动选择速率（速率自适应）。2.信噪比（SNR，Signal-to-Noise Ratio）：信号与噪声的比值，SNR越高速率越高，干扰大时SNR降低。3.信道带宽：20/40/80/160MHz，带宽越大速率越高（但干扰可能更大）。4.MIMO空间流数量：空间流越多速率越高（如2x2 MIMO比1x1速率翻倍）。5.调制编码方式（MCS）：MCS索引越高速率越高（从BPSK到1024-QAM）。6.距离和障碍物：距离越远、障碍物越多，信号衰减越大，速率越低。AP的MAC地址是硬件标识，不影响传输速率。',
     knowledgeId: 'wlan-standard',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IA',
   },
   {
     id: 'wlan-030',
@@ -2279,7 +2285,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '同频干扰严重或用户流量大',
     explanation: '空口利用率（信道利用率/Channel Utilization）表示信道被占用的时间比例，高利用率意味着信道繁忙，可能导致冲突、延迟增加、吞吐量下降。主要原因：1.同频干扰严重：相邻AP使用相同信道，彼此的信号都占用信道（即使不是自己的用户，同频信号也会触发CSMA/CA退避）2.用户流量大：大量用户同时传输数据，占用空口资源3.低速率用户：低速率终端占用空口时间长（发送相同数据需要更长时间），拖累整体性能4.广播/组播帧过多：以最低速率发送，占用大量空口。优化方法：合理信道规划（1/6/11蜂窝部署）、开启5G优先、限制低速率、开启广播优化、用户负载均衡。AP发射功率低、终端距离远会导致信号弱速率低，但不是空口利用率高的直接原因。',
     knowledgeId: 'wlan-qos',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-011',
@@ -2289,7 +2295,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '2跳',
     explanation: 'Spine-Leaf架构中，所有Leaf（叶节点，接入交换机）都连接到所有Spine（脊节点，核心交换机）。任意两台服务器之间的通信路径：服务器→Leaf→Spine→Leaf→服务器，在网络设备层面经过2跳（Leaf→Spine→Leaf），延迟低且可预测（无论哪两台服务器通信都是2跳）。传统三层架构（核心-汇聚-接入）中，同一汇聚下的服务器通信2跳，跨汇聚的服务器通信3跳（接入→汇聚→核心→汇聚→接入），延迟不一致且核心可能成为瓶颈。Spine-Leaf的2跳一致性是其重要优势，适合东西向流量大的数据中心场景。',
     knowledgeId: 'dcn-arch',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-012',
@@ -2299,7 +2305,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'VXLAN分布式网关（Distributed Gateway）中，每个Leaf都是三层网关，为了实现虚拟机迁移时无需更改网关，所有Leaf配置相同的Anycast网关IP地址和Anycast网关MAC地址。主机无论连接到哪个Leaf，其默认网关IP和MAC都相同。当主机发送网关ARP请求时，本地Leaf直接以Anycast MAC响应（ARP代理），主机将数据发给本地Leaf，本地Leaf直接进行三层转发（查找路由表/VXLAN隧道），无需经过集中网关。这样：1.东西向流量只需2跳（Leaf→Spine→Leaf），性能好2.虚拟机迁移时网关不变，业务不中断3.无单点故障和性能瓶颈。Anycast网关是分布式VXLAN的核心技术，需EVPN控制面支持（同步主机路由）。',
     knowledgeId: 'dcn-evpn',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-013',
@@ -2309,7 +2315,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'VTEP发现和头端复制列表构建',
     explanation: 'EVPN路由类型：1.Type 1（Ethernet Auto-discovery Route）：以太网自动发现，ES（以太网段）成员发现和快速收敛2.Type 2（MAC/IP Advertisement Route）：通告主机MAC和IP地址，最常用3.Type 3（Inclusive Multicast Ethernet Tag Route，集成多播路由）：VTEP通过Type 3路由通告自己的VNI和VTEP IP，其他VTEP学习后建立VXLAN隧道，形成头端复制列表（Head End Replication List），用于BUM（广播/未知单播/组播）流量的复制发送4.Type 4（Ethernet Segment Route）：以太网段路由，DF（Designated Forwarder，指定转发者）选举5.Type 5（IP Prefix Route）：通告IP前缀路由，用于分布式网关和外部路由。Type 3是EVPN VXLAN中VTEP自动发现的关键。',
     knowledgeId: 'dcn-evpn',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-014',
@@ -2319,7 +2325,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '应用层用户名',
     explanation: 'OpenFlow流表的匹配字段（Match Fields）包括：1.入端口（Ingress Port）2.二层：源/目的MAC、以太网类型、VLAN ID、VLAN优先级3.三层：源/目的IP、IP协议号、IP ToS/DSCP、ICMP类型4.四层：TCP/UDP源/目的端口、TCP标志位5.其他：MPLS标签、隧道ID、元数据等。OpenFlow是基于数据包头部字段的匹配，不解析应用层内容（如HTTP用户名、密码等），应用层识别需要DPI（深度包检测）或应用层网关。SDN控制器通过OpenFlow下发流表，交换机根据流表匹配执行动作（转发/丢弃/修改字段/上报控制器等）。',
     knowledgeId: 'dcn-sdn-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dcn-015',
@@ -2329,7 +2335,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '数据中心内部服务器之间的流量',
     explanation: '数据中心流量分为：1.东西向流量（East-West Traffic）：数据中心内部服务器之间的流量，如Web服务器与数据库服务器之间、应用服务器之间、虚拟机迁移、分布式计算（Hadoop/Spark）、存储访问等。云计算和大数据时代，东西向流量占比越来越大（通常70-80%以上）。2.南北向流量（North-South Traffic）：数据中心与外部网络之间的流量，如用户访问数据中心的应用、数据中心到Internet、数据中心到分支机构等。传统三层架构（核心-汇聚-接入）设计时主要考虑南北向流量，核心层是流量汇聚点；而Spine-Leaf架构针对东西向流量优化，任意服务器间2跳，无阻塞，是数据中心的主流架构。',
     knowledgeId: 'dcn-arch',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IP',
   },
 
   // ==================== 扩充题库 Batch A（数通） ====================
@@ -2341,7 +2347,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'SYN+ACK',
     explanation: 'TCP三次握手：1.客户端发送SYN（同步序号），请求建立连接。2.服务器回复SYN+ACK（同步+确认），确认客户端的SYN，同时发送自己的SYN。3.客户端回复ACK（确认），确认服务器的SYN，连接建立。第二次握手是SYN+ACK，既有确认又有同步。',
     knowledgeId: 'datacom-tcp-udp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a002',
@@ -2351,7 +2357,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '2MSL（最大报文生存时间的2倍）',
     explanation: 'TCP四次挥手后，主动关闭方进入TIME_WAIT状态，持续2MSL（Maximum Segment Lifetime，最大报文生存时间，通常2分钟，即120秒）。作用：1.确保最后一个ACK能到达对端（如果丢失，对端会重发FIN，主动方还能重发ACK）。2.让本次连接的所有报文在网络中消失，避免影响下一个相同四元组的连接。MSL通常设为2分钟，所以TIME_WAIT通常4分钟。可通过tcp_tw_reuse等参数优化。',
     knowledgeId: 'datacom-tcp-udp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a003',
@@ -2361,7 +2367,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'UDP（User Datagram Protocol，用户数据报协议）特点：1.无连接：发送数据前不需要建立连接，发送后也不需要释放连接。2.不可靠：不保证数据一定到达，不保证按序到达，不保证不重复，没有确认和重传机制。3.面向报文：对应用层交下来的报文，添加首部后直接交给IP层，不合并也不拆分。4.无拥塞控制：网络拥塞时不会降低发送速率。5.首部开销小：只有8字节（源端口、目的端口、长度、校验和），TCP首部20字节。6.支持一对一、一对多、多对一、多对多通信。UDP适用于实时应用（语音、视频、直播、DNS、DHCP、TFTP、SNMP、RIP等），这些应用能容忍少量丢包但要求低延迟。',
     knowledgeId: 'datacom-tcp-udp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a004',
@@ -2371,7 +2377,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'DNS',
     explanation: 'DNS（Domain Name System，域名系统）默认使用UDP 53端口进行域名解析（查询响应小，一次交互即可，UDP效率高）。当响应超过512字节或区域传输（AXFR/IXFR）时使用TCP 53端口。HTTP使用TCP 80，HTTPS使用TCP 443。FTP使用TCP 21（控制连接）和TCP 20（主动模式数据连接）。SMTP使用TCP 25（发送邮件）。其他使用UDP的常见协议：DHCP（67/68）、TFTP（69）、SNMP（161/162）、RIP（520）、NTP（123）、SIP（5060）、RTP（动态端口，实时传输）、QUIC（UDP 443，HTTP/3）。',
     knowledgeId: 'datacom-tcp-udp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a005',
@@ -2381,7 +2387,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '192.168.1.0 和 192.168.1.15',
     explanation: '/28表示前28位是网络位，后4位是主机位。块大小=2^(32-28)=16。网络地址：192.168.1.0（第4字节0，是16的倍数）。广播地址：网络地址+块大小-1=192.168.1.15。可用主机地址：192.168.1.1-192.168.1.14，共14个。192.168.1.10在192.168.1.0/28网段内。子网划分计算：1.确定块大小=2^主机位数。2.网络地址是块大小的整数倍（且小于等于IP）。3.广播地址=下一个网络地址-1。4.可用主机=网络地址+1 到 广播地址-1。',
     knowledgeId: 'datacom-ip-subnet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a006',
@@ -2391,7 +2397,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '192.168.1.1',
     explanation: '私有IP地址范围（RFC 1918）：1.A类：10.0.0.0-10.255.255.255（10.0.0.0/8），约1600万个地址。2.B类：172.16.0.0-172.31.255.255（172.16.0.0/12），约100万个地址。3.C类：192.168.0.0-192.168.255.255（192.168.0.0/16），约6.5万个地址。私有IP地址在公网上不可路由，需要NAT（网络地址转换）转换为公网IP才能访问互联网。172.32.1.1不在私有范围（172.16-172.31才是私有），是公网IP。8.8.8.8是Google DNS公网IP。202.103.0.117是中国电信公网IP。其他特殊地址：127.0.0.0/8环回地址、169.254.0.0/16链路本地地址（APIPA）、0.0.0.0/0默认路由、224.0.0.0/4组播、240.0.0.0/4保留。',
     knowledgeId: 'datacom-ip-subnet',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a007',
@@ -2401,7 +2407,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: '华为设备中，路由优先级（Preference，也叫管理距离Administrative Distance）数值越小优先级越高。常见协议默认优先级：直连路由0（最高）、静态路由60、OSPF内部路由10、IS-IS Level-1 15、IS-IS Level-2 18、EBGP 25、RIP 100、OSPF ASE/Type5 150、IBGP 255（最低）。当不同协议学到相同目的网段的路由时，优先级高（数值小）的协议路由被选中。静态路由优先级60，比OSPF（10）低，比RIP（100）高。可通过ip route-static命令的preference参数修改静态路由优先级。浮动静态路由（Floating Static Route）：配置高优先级（大数值）的静态路由作为备份，主路由故障时才启用。注意：不同厂商优先级数值不同，Cisco的管理距离：直连0、静态1、EIGRP汇总5、EBGP 20、EIGRP内部90、IGRP 100、OSPF 110、IS-IS 115、RIP 120、ODR 160、EIGRP外部170、IBGP 200。',
     knowledgeId: 'datacom-static-route',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a008',
@@ -2411,7 +2417,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '匹配所有IP地址，当没有更具体路由时使用',
     explanation: '默认路由（Default Route）0.0.0.0/0是一种特殊的静态路由，前缀长度为0，匹配所有IP地址（因为最长匹配原则下，任何地址都至少匹配0位）。当路由表中没有更具体的路由匹配目的地址时，使用默认路由转发。默认路由通常用于：1.企业网络出口路由器，指向ISP（所有未知流量都发给ISP）。2.末梢网络（Stub Network），只有一个出口，用默认路由简化路由表。3.OSPF Stub/Totally Stub区域，ABR向区域内发布默认路由（Type 3 LSA）。4.IS-IS L1区域，L1/2路由器通过ATT位通知L1路由器生成默认路由。配置方式：静态默认路由ip route-static 0.0.0.0 0.0.0.0 下一跳。默认路由的优先级与静态路由相同（60），可修改。最长匹配原则（Longest Match）：路由器转发时选择前缀最长（最具体）的路由，默认路由前缀最短（0），所以只有在没有其他匹配路由时才使用。',
     knowledgeId: 'datacom-static-route',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-a009',
@@ -2421,7 +2427,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '15跳',
     explanation: 'RIP（Routing Information Protocol，路由信息协议）是距离矢量路由协议，以跳数（Hop Count）为度量值（Metric），最大有效跳数为15跳，16跳表示不可达（网络不可达）。这限制了RIP只能用于小型网络（直径不超过15台路由器）。RIP版本：RIPv1（有类路由，不支持VLSM，广播更新255.255.255.255，不支持认证）、RIPv2（无类路由，支持VLSM和CIDR，组播更新224.0.0.9，支持明文和MD5认证）、RIPng（IPv6版本，基于RIPv2，组播FF02::9，UDP 521）。RIP特点：1.定期更新（默认30秒发送完整路由表）。2.触发更新（拓扑变化时立即发送更新）。3.水平分割（Split Horizon，不从收到路由的接口发回该路由）。4.毒性逆转（Poison Reverse，将从某接口学到的路由以跳数16发回该接口）。5.抑制计时（Hold-down，180秒，路由不可达后在一定时间内不接受更差路由）。6.刷新计时（Flush，240秒，超时后删除路由）。RIP使用UDP 520端口。RIP适用于小型网络，大型网络用OSPF或IS-IS。',
     knowledgeId: 'datacom-rip',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a010',
@@ -2431,7 +2437,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'RIPv2相比RIPv1的改进：1.无类路由（Classless）：路由更新中携带子网掩码，支持VLSM（可变长子网掩码）和CIDR（无类域间路由）。RIPv1是有类路由，不携带掩码，不支持VLSM。2.组播更新：使用组播地址224.0.0.9发送路由更新，而不是RIPv1的广播255.255.255.255，减少对不运行RIP的设备的干扰。3.认证支持：支持明文认证和MD5认证，提高安全性。RIPv1不支持认证。4.下一跳字段：路由更新中携带下一跳地址，可避免次优路径。5.路由标记（Route Tag）：可标记外部路由，便于策略控制。RIPv2向后兼容RIPv1，可配置接口发送版本（version 1/2/multicast）和接收版本。RIPv2默认自动汇总（在主类网络边界汇总），可通过undo summary关闭自动汇总以支持不连续子网。RIPv2仍保留RIP的基本机制：距离矢量、跳数度量、最大15跳、30秒定期更新、水平分割、毒性逆转等。RIPv2适用于小型网络，是RIP的主流版本。',
     knowledgeId: 'datacom-rip',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a011',
@@ -2441,7 +2447,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '接口优先级（大的优先），优先级相同时Router ID大的优先',
     explanation: 'OSPF在广播网络（Broadcast）和NBMA网络中选举DR（Designated Router，指定路由器）和BDR（Backup Designated Router，备份指定路由器）。选举规则：1.比较接口优先级（Priority，0-255，默认1，值越大越优先）。优先级为0的路由器不参与DR/BDR选举（DROther）。2.优先级相同时，比较Router ID（路由器ID），Router ID大的优先。3.DR选举是不可抢占的（Non-preemptive）：一旦DR选举完成，即使新加入更高优先级的路由器，也不会抢占当前DR，只有当DR故障时BDR才成为DR，然后重新选举BDR。DR/BDR的作用：1.减少邻接关系数量：广播网络中所有路由器只与DR和BDR建立邻接关系，DROther之间只建立邻居关系（2-Way），不建立邻接。n台路由器只需2(n-1)条邻接，而非全互联的n(n-1)/2。2.减少LSA泛洪：DROther只将LSA发给DR（组播224.0.0.6），DR再泛洪给所有DROther（组播224.0.0.5），避免重复泛洪。3.DR生成Type 2 Network LSA，描述广播网络中的所有路由器。点到点（P2P）和点到多点（P2MP）网络不选举DR/BDR。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a012',
@@ -2451,7 +2457,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '手动配置>Loopback接口最大IP>物理接口最大IP',
     explanation: 'OSPF Router ID（路由器ID）是一个32位的点分十进制数值，唯一标识OSPF域中的一台路由器。选举顺序（优先级从高到低）：1.手动配置：通过router-id命令手动指定Router ID，优先级最高。2.Loopback接口：如果没有手动配置，选择所有Loopback接口中IP地址最大的作为Router ID。3.物理接口：如果没有Loopback接口，选择所有物理接口中IP地址最大的（接口状态为up的）作为Router ID。Router ID的特点：1.一旦选举完成，即使接口IP变化或手动配置，也不会立即改变，需要重启OSPF进程或手动执行reset ospf process命令才会重新选举。2.Router ID在OSPF域内必须唯一，重复会导致邻接关系建立失败或路由计算错误。3.Router ID格式与IP地址相同，但只是一个标识符，不一定是真实的IP地址。4.建议手动配置Router ID（通常用Loopback接口地址），便于管理和维护，避免因接口变化导致Router ID变化。5.Router ID为0.0.0.0的路由器不能建立OSPF邻接。OSPFv3（IPv6）也使用Router ID（32位IPv4格式），因为IPv6地址128位不适合做Router ID。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a013',
@@ -2461,7 +2467,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'OSPF邻接关系建立的状态机：1.Down：初始状态，未收到任何Hello报文。2.Init：收到对方的Hello报文，但对方的Hello中没有包含自己的Router ID（单向通信）。3.2-Way：收到对方的Hello报文，且其中包含自己的Router ID（双向通信），邻居关系建立。在广播网络中，此状态后选举DR/BDR。4.ExStart（交换初始）：协商主从关系（Master/Slave）和DD报文序列号，主路由器先发DD。5.Exchange（交换）：双方交换DD报文（Database Description，数据库描述），DD报文包含本地LSDB中所有LSA的摘要（LSA头部信息），不包含完整LSA内容。6.Loading（加载）：根据DD报文中的LSA摘要，发现本地缺失的LSA，发送LSR（Link State Request，链路状态请求）请求完整LSA；对方回复LSU（Link State Update，链路状态更新）携带完整LSA；收到LSU后回复LSAck（Link State Acknowledgment，链路状态确认）。7.Full（完全邻接）：双方LSDB同步完成，邻接关系建立。只有达到Full状态才是真正的邻接关系（Adjacency），2-Way只是邻居关系（Neighbor）。点到点网络中所有邻居都建立Full邻接；广播网络中DROther之间停留在2-Way，只与DR/BDR建立Full。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a014',
@@ -2471,7 +2477,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'MED',
     explanation: 'MED（Multi-Exit Discriminator，多出口区分符，也叫Metric）是BGP可选非过渡属性，用于影响相邻AS的入站流量选择（告诉对端AS从哪个入口进入本AS更优）。MED值越小越优先（类似IGP的度量值）。MED只在相邻两个AS之间传递，默认不跨AS传递（收到的MED只用于本AS与相邻AS的比较，不会传给第三个AS），除非配置always-compare-med或compare-med。MED的典型应用：一个AS有多个出口连接到同一个相邻AS时，通过设置不同的MED值，让对端AS优先选择MED小的入口，实现入站流量负载分担或路径优化。BGP路由优选顺序（13条）：1.忽略下一跳不可达的路由。2.优选Weight大的（Cisco私有，华为不支持）。3.优选Local_Pref大的。4.优选本地始发的路由（network/aggregate/import-route）。5.优选AS_Path短的。6.优选Origin类型优的（IGP>EGP>Incomplete）。7.优选MED小的。8.优选EBGP路由优于IBGP路由。9.优选到下一跳IGP度量小的。10.优选Cluster_List短的（RR场景）。11.优选Originator_ID小的。12.优选邻居Router ID小的。13.优选邻居IP地址小的。Local_Pref影响本AS出站流量（值大优先），MED影响相邻AS入站流量（值小优先）。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a015',
@@ -2481,7 +2487,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'TCP 179',
     explanation: 'BGP（Border Gateway Protocol，边界网关协议）使用TCP作为传输层协议，端口号179。BGP是唯一使用TCP的路由协议（OSPF/IS-IS/RIP都不使用TCP：OSPF直接封装在IP中协议号89，IS-IS直接封装在数据链路层，RIP使用UDP 520）。BGP使用TCP的原因：1.BGP需要可靠传输：路由更新必须可靠到达，不能丢失，TCP提供确认和重传机制。2.BGP邻居之间可能跨多跳（EBGP邻居通常直连，但也可多跳；IBGP邻居可跨多跳），TCP提供端到端可靠通信。3.BGP更新量可能很大（完整路由表数十万条），TCP的流量控制和拥塞控制能保证稳定传输。BGP邻居建立过程：1.主动端（Active）向被动端（Passive）的TCP 179端口发起连接。2.如果双方都配置了对方为邻居，会同时发起连接，最终只保留一个（Router ID大的作为主动方）。3.TCP连接建立后，发送Open报文协商参数（版本、AS号、Hold Time、Router ID、能力等）。4.协商成功后发送Keepalive报文确认。5.邻居关系建立（Established状态），开始交换Update报文（路由更新）。BGP状态机：Idle→Connect→Active→OpenSent→OpenConfirm→Established。BGP是外部网关协议（EGP），用于AS之间交换路由信息，是互联网的核心路由协议。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a016',
@@ -2491,7 +2497,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'IS-IS（Intermediate System to Intermediate System，中间系统到中间系统）是ISO（国际标准化组织）开发的链路状态路由协议，最初为CLNP（无连接网络协议）设计，后来扩展支持IP（集成IS-IS，Integrated IS-IS）。IS-IS的封装方式：直接封装在数据链路层帧中，以太网类型字段为0x88FE（IPv4）和0x88FE（IPv6，同一类型号通过协议ID区分）。不使用IP协议号（OSPF用IP协议号89），不使用UDP/TCP端口（RIP用UDP 520，BGP用TCP 179）。IS-IS的PDU（Protocol Data Unit，协议数据单元）类型：1.IIH（IS-to-IS Hello PDU）：类似OSPF的Hello，用于发现和维护邻居，分为L1 IIH、L2 IIH、P2P IIH。2.LSP（Link State PDU，链路状态PDU）：类似OSPF的LSA，描述链路状态信息，分为L1 LSP和L2 LSP。3.CSNP（Complete Sequence Number PDU，完全序列号PDU）：包含本地LSDB中所有LSP的摘要，用于数据库同步，DIS在广播网络中周期性发送。4.PSNP（Partial Sequence Number PDU，部分序列号PDU）：请求缺失的LSP或确认收到的LSP。IS-IS的优点：1.封装效率高（直接二层封装，首部开销小）。2.协议扩展性好（TLV结构，易于扩展新功能）。3.路由计算效率高（SPF计算范围小，L1/L2分层）。4.适用于大规模网络（运营商骨干网常用IS-IS）。IS-IS与OSPF都是链路状态协议，都使用SPF算法，但IS-IS更简洁高效，在运营商网络中广泛使用。',
     knowledgeId: 'datacom-isis',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a017',
@@ -2501,7 +2507,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '桥ID（Bridge ID）最小，优先级+MAC地址',
     explanation: 'STP（Spanning Tree Protocol，生成树协议，802.1D）中，根桥（Root Bridge）是整个交换网络的逻辑中心，所有其他交换机都以根桥为计算无环拓扑的基准。根桥选举依据：桥ID（Bridge ID，BID）最小的成为根桥。桥ID由两部分组成：1.桥优先级（Bridge Priority，2字节，默认32768，范围0-61440，步长4096）。2.MAC地址（6字节，交换机的基础MAC地址）。比较规则：先比较桥优先级，优先级小的成为根桥；优先级相同时，比较MAC地址，MAC地址小的成为根桥。可通过stp priority命令修改桥优先级，或通过stp root primary（自动设为4096）/stp root secondary（自动设为8192）配置根桥/备份根桥。根桥的所有端口都是指定端口（Designated Port），都处于Forwarding状态。其他交换机选举根端口（Root Port，到根桥路径开销最小的端口）。每条链路上选举指定端口（Designated Port，到根桥路径开销小的一端）。既不是根端口也不是指定端口的被阻塞（Blocking）。STP通过阻塞冗余端口实现无环拓扑，同时提供冗余备份（活动链路故障时阻塞端口转为转发）。RSTP（802.1w）和MSTP（802.1s）的根桥选举规则与STP相同。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-a018',
@@ -2511,7 +2517,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '12位',
     explanation: '802.1Q VLAN标签（Tag）插在以太网帧的源MAC地址和类型字段之间，共4字节（32位）：1.TPID（Tag Protocol Identifier，标签协议标识符，2字节）：固定为0x8100，表示这是802.1Q标签帧。2.TCI（Tag Control Information，标签控制信息，2字节）：包含：- PCP（Priority Code Point，优先级代码点，3位）：802.1p优先级，0-7，用于QoS。- CFI（Canonical Format Indicator，规范格式指示符，1位）：以太网中通常为0，令牌环中为1。- VID（VLAN ID，VLAN标识符，12位）：VLAN编号，范围0-4095。可用VLAN ID为1-4094（0和4095保留），所以最多支持4094个VLAN。VLAN 1是默认VLAN，所有端口默认属于VLAN 1，通常作为管理VLAN或本征VLAN（Native VLAN）。VLAN 1002-1005在Cisco中保留用于令牌环和FDDI，华为设备可使用全部1-4094。802.1Q标签的作用：1.标识帧所属的VLAN，实现VLAN间隔离。2.Trunk链路中携带VLAN信息，使多个VLAN的流量能在同一条物理链路上复用。3.PCP字段提供QoS优先级标记。Access端口发送帧时剥离标签（Untagged），接收时打上PVID标签。Trunk端口发送时，PVID VLAN的帧不打标签（Native VLAN），其他VLAN帧保留标签。QinQ（802.1Q-in-802.1Q）在帧中插入两层VLAN标签，扩展VLAN数量（4094*4094），用于运营商网络。',
     knowledgeId: 'datacom-vlan',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-a019',
@@ -2521,7 +2527,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'MPLS（Multi-Protocol Label Switching，多协议标签交换）标签（Label）共4字节（32位），位于二层帧头和三层IP头之间（也叫"2.5层"）。标签格式：1.Label（标签值，20位）：标签标识符，范围0-1048575。0-15为保留标签（0=IPv4显式空标签，1=路由器告警标签，2=IPv6显式空标签，3=隐式空标签），16以上为普通标签。2.Exp（Experimental，实验位，3位）：用于QoS（类似802.1p的PCP），标记流量优先级。3.S（Stack，栈位，1位）：表示是否为栈底标签。S=1表示这是栈底标签（最底层标签，靠近IP头）；S=0表示栈中还有更多标签（上层标签）。MPLS支持标签栈（Label Stack），可嵌套多层标签，从栈顶到栈底依次处理。4.TTL（Time To Live，生存时间，8位）：与IP TTL类似，每经过一台LSR减1，为0时丢弃，防止环路。S位的作用：标识标签栈的底部，让LSR知道何时停止弹出标签。当LSR弹出标签后，如果S=1（栈底），则按IP转发（或下一层协议）；如果S=0，则继续处理下一层标签。典型的标签栈应用：1.VPN（L3VPN）：两层标签，外层公网标签（LDP分配，到达出口PE），内层VPN标签（MP-BGP分配，标识VPN实例）。2.MPLS TE：一层或多层标签。3.AToM（L2VPN）：两层标签。标签操作：Push（压入标签，在栈顶添加新标签）、Pop（弹出标签，移除栈顶标签）、Swap（交换标签，替换栈顶标签）。PHP（Penultimate Hop Popping，倒数第二跳弹出）：倒数第二跳LSR弹出栈底标签，减少最后一跳的处理负担，使用隐式空标签（标签值3）实现。',
     knowledgeId: 'datacom-mpls-vpn',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-a020',
@@ -2531,7 +2537,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'MP-BGP（多协议BGP）',
     explanation: 'MPLS L3VPN（三层VPN）中，PE（Provider Edge，运营商边缘路由器）之间通过MP-BGP（Multi-Protocol BGP，多协议BGP）传递VPN用户路由。MP-BGP在BGP基础上扩展，支持多种网络层协议（IPv4单播、IPv4组播、IPv6、VPNv4等），通过新增地址族（Address Family）和子地址族（Subsequent Address Family）实现。VPNv4地址族（VPNv4 Address Family）：在IPv4地址前添加8字节的RD（Route Distinguisher，路由区分符），形成12字节的VPNv4地址，解决不同VPN用户使用相同IP地址（地址重叠）的问题。RD+IPv4 = VPNv4，全局唯一。MP-BGP传递VPN路由时携带：1.VPNv4前缀（RD+用户IPv4路由）。2.VPN标签（MP-BGP分配的内层标签，标识VPN实例和出接口）。3.RT（Route Target，路由目标，扩展团体属性，控制VPN路由的导入导出）。LDP（Label Distribution Protocol，标签分发协议）用于分配公网标签（外层标签），建立公网LSP（标签交换路径），使MPLS报文能在运营商网络中传输。OSPF/RIP等IGP用于运营商骨干网内部路由，使PE之间能互通。RSVP-TE用于MPLS TE（流量工程），建立约束路由LSP。MPLS L3VPN的基本模型：1.CE（Customer Edge，用户边缘路由器）连接PE，通过静态路由或IGP（OSPF/RIP/BGP）交换用户路由。2.PE将CE路由引入VPN实例，添加RD形成VPNv4，通过MP-BGP传给对端PE。3.对端PE根据RT导入到对应VPN实例，添加RD后传给CE。4.数据转发时，PE压入两层标签（内层VPN标签+外层公网标签），在公网通过MPLS转发，到达对端PE后弹出标签，按VPN路由转发给CE。',
     knowledgeId: 'datacom-mpls-vpn',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
 
 
@@ -2544,7 +2550,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Type 3（除默认路由）、Type 4、Type 5',
     explanation: 'Totally Stub（完全末梢区域）是最严格的末梢区域，不接收Type 3区域间路由（除ABR生成的默认路由0.0.0.0/0）、Type 4（ASBR位置）、Type 5（外部路由），只接收Type 1/2（本区域内）和默认Type 3。大幅减少LSA数量和路由表规模。',
     knowledgeId: 'datacom-ospf',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-b002',
@@ -2554,7 +2560,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '标记一组路由，便于策略控制',
     explanation: 'Community（团体属性）是BGP可选过渡属性，32位，用于标记一组具有相同策略的路由，便于批量控制（如根据Community设置Local_Pref、MED、过滤等）。分为公认团体（No_Export、No_Advertise、Internet、Local_AS）和私有团体（AS:NN格式）。',
     knowledgeId: 'datacom-bgp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-b003',
@@ -2564,7 +2570,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'IS-IS Level-1（L1）路由器只维护L1链路状态数据库，只能与同区域的L1/L1-2建立邻居，只知道本区域内拓扑，不知道其他区域具体路由。访问其他区域时通过本区域L1/2路由器（ATT位）生成默认路由转发，类似OSPF Stub区域。',
     knowledgeId: 'datacom-isis',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-b004',
@@ -2574,7 +2580,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '通过P/A协商和边缘端口实现快速收敛（秒级）',
     explanation: 'RSTP（802.1w）相比STP（802.1D）的改进：1.P/A（Proposal/Agreement）协商机制，点到点链路上端口快速进入Forwarding，无需等30秒。2.边缘端口（Edge Port）直接Forwarding。3.替代/备份端口快速切换。4.BPDU超时从20秒缩短到6秒（3倍Hello）。5.端口状态简化为Discarding/Learning/Forwarding。RSTP兼容STP。',
     knowledgeId: 'datacom-stp',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-b005',
@@ -2584,7 +2590,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Trunk端口只能属于一个VLAN',
     explanation: 'Trunk端口可以允许多个VLAN通过（port trunk allow-pass vlan），通过802.1Q标签区分不同VLAN的流量。Access端口只能属于一个VLAN（port default vlan）。VLAN隔离广播域，不同VLAN默认二层隔离，需三层设备（路由器/三层交换机SVI）才能通信。VLAN ID 12位，可用1-4094。',
     knowledgeId: 'datacom-vlan',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-b001',
@@ -2594,7 +2600,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Local（100）',
     explanation: '华为防火墙安全区域及默认安全级别：Local（100，防火墙本身）> Trust（85，内网可信区域）> DMZ（50，隔离区，放置服务器）> Untrust（5，外网不可信区域）。安全级别数值越大越可信。数据从高级别到低级别为出方向（Outbound），从低级别到高级别为入方向（Inbound）。同区域内流量默认允许，不同区域间流量需安全策略允许。',
     knowledgeId: 'security-firewall-basic',
-    direction: 'security',
+    direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-b002',
@@ -2604,7 +2610,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '50',
     explanation: 'IPSec两个协议：ESP（Encapsulating Security Payload，封装安全载荷）IP协议号50，提供加密+认证，是主流；AH（Authentication Header，认证头）IP协议号51，仅提供认证和完整性，不加密，不支持NAT。GRE协议号47，OSPF协议号89。ESP支持传输模式和隧道模式，隧道模式用于VPN（新增外部IP头），传输模式用于主机到主机。',
     knowledgeId: 'security-ipsec',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-b003',
@@ -2614,7 +2620,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'SYN Flood是最常见的DDoS攻击之一：攻击者发送大量伪造源IP的SYN报文，服务器回复SYN+ACK后等待ACK（半连接状态），攻击者不回应ACK，服务器半连接队列被占满，无法接受新的正常连接。防御方法：SYN Cookie（不分配半连接资源，用Cookie验证）、增大半连接队列、缩短超时时间、源IP验证、流量清洗、防火墙代理等。其他DDoS攻击：UDP Flood、ICMP Flood（Ping of Death/Smurf）、HTTP Flood（CC攻击）、DNS Query Flood、NTP反射放大攻击、SSDP反射攻击等。',
     knowledgeId: 'security-attack-defense',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-b004',
@@ -2624,7 +2630,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'RSA',
     explanation: '对称加密算法：加密和解密使用相同密钥，速度快，适合大量数据加密。常见：AES（128/192/256位，当前主流）、DES（56位，已不安全）、3DES（三重DES，112/168位）、SM4（中国国密，128位）、Blowfish、RC4等。非对称加密算法（公钥加密）：加密和解密使用不同密钥（公钥加密私钥解密，或私钥签名公钥验证），速度慢，适合密钥交换和数字签名。常见：RSA（1024/2048/4096位）、ECC（椭圆曲线，密钥短安全性高）、SM2（中国国密椭圆曲线）、DSA（数字签名）、DH（Diffie-Hellman密钥交换）。混合加密：用非对称加密交换对称密钥，用对称加密传输数据（如HTTPS/TLS、IPSec IKE）。',
     knowledgeId: 'security-crypto',
-    direction: 'security',
+    direction: 'security', difficulty: 'IE',
   },
   {
     id: 'wlan-b001',
@@ -2634,7 +2640,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '波束成形（Beamforming）',
     explanation: 'Wi-Fi 6（802.11ax）关键技术：1.OFDMA（正交频分多址）：将信道划分为多个子信道（RU），同时与多个用户通信，提高多用户效率，降低延迟。2.上下行MU-MIMO：Wi-Fi 5只支持下行MU-MIMO，Wi-Fi 6支持上下行均支持，最多8个空间流。3.1024-QAM：相比Wi-Fi 5的256-QAM，调制密度提高25%，单用户速率提升。4.BSS Coloring（BSS着色）：标记不同BSS，减少同频干扰，提高密集环境性能。5.TWT（Target Wake Time，目标唤醒时间）：设备协商唤醒时间，降低功耗，延长电池寿命。波束成形（Beamforming）在Wi-Fi 5（802.11ac）就已支持（802.11n开始有），不是Wi-Fi 6独有。Wi-Fi 6E扩展到6GHz频段。Wi-Fi 7（802.11be）支持320MHz带宽、4096-QAM、16x16 MU-MIMO、多链路操作（MLO）。',
     knowledgeId: 'wlan-wifi6',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-b002',
@@ -2644,7 +2650,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'FIT AP（瘦AP，也叫集中式架构）：AC（Access Controller，接入控制器）集中管理所有AP，负责配置下发、固件升级、用户认证、漫游管理、安全策略等。AP（Access Point，接入点）负责射频管理（信道/功率调整）、数据加密/解密、数据转发（直接转发或隧道转发）、无线接入等。AP发现AC的方式：广播、DHCP Option43、DNS、静态配置。AP通过CAPWAP协议（控制隧道UDP 5246，数据隧道UDP 5247）与AC通信。FIT AP优势：集中管理、统一配置、快速部署、无缝漫游、负载均衡、安全策略统一。FAT AP（胖AP，自治式架构）：每台AP独立配置和管理，适合小型环境，无法集中管理和无缝漫游。云管理AP（云AP）：通过云平台管理，结合FIT和FAT优势，适合中小企业和分布式部署。',
     knowledgeId: 'wlan-arch',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-b001',
@@ -2654,7 +2660,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '接入服务器，同时连接所有Spine',
     explanation: 'Spine-Leaf（叶脊）架构：1.Leaf（叶节点，接入交换机）：连接服务器（TOR，Top of Rack，柜顶交换机），同时连接到所有Spine节点，是服务器的网关。2.Spine（脊节点，核心交换机）：不连接服务器，只连接所有Leaf节点，提供高带宽的东西向交换。任意两台服务器通信路径：服务器→Leaf→Spine→Leaf→服务器，固定2跳，延迟低且可预测。通过ECMP等价多路径负载分担，充分利用所有Spine链路带宽，实现无阻塞。水平扩展：增加Leaf提高接入密度，增加Spine提高东西向带宽。Spine-Leaf是数据中心网络标准架构，适合东西向流量为主的数据中心（分布式计算、存储、微服务）。underlay通常运行BGP或OSPF/IS-IS，overlay通常用VXLAN/EVPN。',
     knowledgeId: 'dcn-arch',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-b002',
@@ -2664,7 +2670,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'VXLAN（Virtual Extensible LAN，虚拟可扩展局域网，RFC 7348）：1.封装方式：MAC-in-UDP，将原始以太网帧封装在UDP报文中，外层IP头使用VTEP IP，目的端口UDP 4789。2.VNI（VXLAN Network Identifier）24位，支持约1600万个网段（2^24），远多于VLAN的4094个。3.VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）：负责VXLAN封装和解封装，可在物理交换机、虚拟交换机（vSwitch）、服务器网卡上实现。4.在三层underlay网络上构建二层overlay网络，实现大二层扩展，支持虚拟机迁移（IP不变）。5.解决VLAN数量不足、STP无法支撑大规模二层、多租户隔离等问题。VXLAN通常与EVPN配合（EVPN作为控制面，VXLAN作为数据面），通过EVPN Type 2路由同步MAC/IP，Type 3路由发现VTEP（头端复制），实现自动化和可扩展。BUM流量处理：头端复制（HER）或组播。',
     knowledgeId: 'dcn-vxlan-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dc-b006',
@@ -2674,7 +2680,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '2001:db8::ff00:42:8329',
     explanation: 'IPv6地址简写规则：1.每个16位段中的前导零可以省略（0db8→db8，0000→0，0042→42）。2.连续的全零段可以用::代替，但::在一个地址中只能使用一次（否则无法确定每个::代表多少个零段）。2001:0db8:0000:0000:0000:ff00:0042:8329：省略前导零→2001:db8:0:0:0:ff00:42:8329；连续三个全零段用::代替→2001:db8::ff00:42:8329。注意：::只能用一次，所以不能同时省略开头和结尾的零。IPv6地址128位，8个16位段，用冒号分隔。环回地址::1（0:0:0:0:0:0:0:1），未指定地址::（全零），链路本地地址FE80::/10，唯一本地地址FC00::/7（类似IPv4私有地址），组播地址FF00::/8，任播地址（与单播格式相同，通过配置标识）。IPv6无状态自动配置（SLAAC）：主机根据RA报文的前缀+EUI-64接口标识自动生成全球单播地址，无需DHCPv6。',
     knowledgeId: 'datacom-ipv6-basic',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-b007',
@@ -2684,7 +2690,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'PQ（优先级队列）',
     explanation: 'QoS队列调度算法：1.PQ（Priority Queuing，优先级队列）：严格按优先级调度，高优先级队列有报文时优先发送，保证低延迟业务（语音/视频）优先。缺点：高优先级队列持续有流量时，低优先级队列可能"饿死"（永远得不到服务）。2.WRR（Weighted Round Robin，加权轮询）：按权重轮询调度各队列，每个队列获得与权重成比例的带宽，避免饿死。缺点：按报文个数调度，不同报文长度时实际带宽不准，延迟保障不如PQ。3.WFQ（Weighted Fair Queuing，加权公平队列）：按权重和报文长度调度，保证每个流获得公平带宽，按字节调度更精确。4.CBQ（Class Based Queuing，基于类的队列）：结合带宽保证和优先级。5.LPQ（Low Latency Queuing，低延迟队列）：PQ+WFQ/CBQ的结合，一个严格优先级队列（LLQ）保证低延迟，其他队列用WFQ保证公平，是当前主流（既保证语音/视频低延迟，又避免低优先级饿死）。FIFO（先进先出）最简单，无QoS保障，默认队列。QoS模型：Best-Effort（尽力而为，无QoS）、IntServ（集成服务，RSVP信令，每流预留，扩展性差）、DiffServ（区分服务，按类别标记和处理，PHB逐跳行为，扩展性好，当前主流）。DiffServ的PHB：BE（默认尽力而为）、AF（确保转发，4类3丢弃优先级=12种）、EF（加速转发，低延迟低抖动，用于语音）、CS（类别选择，兼容IP优先级）。',
     knowledgeId: 'datacom-qos',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-b005',
@@ -2694,7 +2700,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: 'Web代理模式',
     explanation: 'SSL VPN接入模式：1.Web代理（Web Proxy）：无需客户端，浏览器通过HTTPS访问SSL VPN网关，网关代理访问内网Web应用，仅支持Web应用（HTTP/HTTPS），最简单。2.文件共享（File Share）：浏览器访问内网CIFS/FTP文件服务器，仅支持文件访问。3.端口转发（Port Forwarding）：浏览器安装插件，将特定TCP端口的流量通过SSL隧道转发，支持特定TCP应用（如远程桌面、SSH），需浏览器插件。4.网络扩展（Network Extension，全网互联）：安装专用客户端软件（如SecoClient），获得虚拟IP，像在内网一样访问所有IP层应用，功能最强大，类似IPSec VPN。SSL VPN优势：无需客户端（Web代理模式）、穿越NAT/防火墙方便（443端口）、细粒度访问控制、终端安全检查、适合移动办公。SSL VPN与IPSec VPN对比：IPSec VPN适合站点到站点（Site-to-Site），网络层全通，性能高，需配置感兴趣流；SSL VPN适合远程用户接入（Client-to-Site），应用层细粒度控制，易用性好。企业通常两者结合：站点间用IPSec，远程用户用SSL VPN。',
     knowledgeId: 'security-ssl-vpn',
-    direction: 'security',
+    direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-b003',
@@ -2704,7 +2710,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '验证PSK并生成PTK（成对临时密钥）',
     explanation: 'WPA2-PSK（预共享密钥）认证过程：1.客户端关联AP后，进行四次握手（4-Way Handshake）。2.第一次握手：AP发送ANonce（AP随机数）给客户端。3.第二次握手：客户端生成SNonce（客户端随机数），用PMK（Pairwise Master Key，由PSK+SSID通过PBKDF2派生）、ANonce、SNonce、AP MAC、客户端MAC计算PTK（Pairwise Transient Key，成对临时密钥），发送SNonce和MIC（消息完整性校验）给AP。4.第三次握手：AP用同样参数计算PTK，验证MIC通过后，发送加密后的GTK（Group Temporal Key，组播临时密钥，用于加密广播/组播流量）给客户端。5.第四次握手：客户端确认收到GTK，安装密钥。四次握手的目的：验证双方都拥有正确的PSK（通过MIC验证），同时生成PTK（用于单播数据加密）和GTK（用于组播数据加密），PSK本身不在空中传输。WPA2使用CCMP（AES-CCM）加密，替代WPA的TKIP（RC4，已不安全）。WPA3使用SAE（Simultaneous Authentication of Equals，对等同时认证）替代PSK四次握手，抵抗离线字典攻击，安全性更高。802.1X（企业级WPA/WPA2/WPA3-Enterprise）使用RADIUS服务器认证，每个用户独立密钥，安全性更高，适合企业。',
     knowledgeId: 'wlan-security',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-b003',
@@ -2714,7 +2720,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '同步主机MAC和IP地址，实现控制面MAC学习',
     explanation: 'EVPN（Ethernet VPN，以太网VPN）路由类型：1.Type 1（Ethernet Auto-Discovery Route，ES自动发现路由）：多归接入场景下发现以太网段（ES）成员，快速收敛。2.Type 2（MAC/IP Advertisement Route，MAC/IP地址通告路由）：同步主机的MAC地址和IP地址，实现控制面MAC学习（无需数据面泛洪），用于ARP代理/抑制、分布式网关主机路由同步。3.Type 3（Inclusive Multicast Ethernet Tag Route，包含组播以太网标签路由）：发现同VNI的VTEP，构建头端复制（HER）列表，用于BUM流量转发。4.Type 4（Ethernet Segment Route，以太网段路由）：多归接入场景下选举DF（Designated Forwarder，指定转发器），避免BUM流量重复。5.Type 5（IP Prefix Route，IP前缀路由）：通告IP前缀路由（如外部路由、汇聚路由），用于分布式网关和跨子网路由。EVPN是BGP的一个地址族（L2VPN EVPN），作为VXLAN的控制面，替代传统的VXLAN数据面学习（泛洪+学习），实现自动化、可扩展、快速收敛。EVPN+VXLAN是数据中心overlay网络的标准架构，支持大二层、多租户、虚拟机迁移、分布式网关等。',
     knowledgeId: 'dcn-evpn',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dc-b008',
@@ -2724,7 +2730,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'NAT（Network Address Translation，网络地址转换）类型：1.静态NAT（Static NAT）：一对一固定映射，内网IP与公网IP一一对应，不节省公网IP，主要用于服务器对外发布（内网服务器映射到公网IP）。2.动态NAT（Dynamic NAT）：多对多，从公网地址池中动态分配，内网主机数不超过公网IP数时可用，仍需较多公网IP。3.PAT（Port Address Translation，端口地址转换，也叫NAPT，Network Address Port Translation）：多对一，多个内网主机共享一个（或少量）公网IP地址，通过不同的源端口号区分不同主机的会话，大幅节省公网IP。PAT是最常用的NAT方式（家庭路由器、企业出口都用PAT）。NAT的作用：1.解决IPv4地址不足（内网用私有IP，通过NAT访问公网）。2.隐藏内网拓扑（提高安全性，外网无法直接访问内网主机）。3.网络迁移时保持内部地址不变。NAT的限制：1.破坏端到端模型（外网无法主动访问内网主机，需静态NAT/端口映射）。2.部分应用不兼容（如FTP、SIP等在载荷中携带IP/端口的应用，需ALG应用层网关）。3.影响IPSec（AH不兼容NAT，ESP可用NAT-T穿越）。4.增加延迟和单点故障。NAT会话表：记录内网IP:端口→公网IP:端口的映射，超时后删除。华为防火墙NAT类型：源NAT（No-PAT、PAT、Smart NAT、三元组NAT）、目的NAT（静态NAT、端口映射）、双向NAT、NAT Server（服务器映射）、Twice NAT（两次转换，源和目的都转换）。',
     knowledgeId: 'datacom-nat',
-    direction: 'datacom',
+    direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-b006',
@@ -2734,7 +2740,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '签发和管理数字证书，证明公钥与身份的绑定关系',
     explanation: 'PKI（Public Key Infrastructure，公钥基础设施）是基于非对称加密的安全基础设施，核心是CA（Certificate Authority，证书颁发机构）。CA的作用：1.签发数字证书（Digital Certificate）：将用户/设备的公钥与其身份（姓名、组织、域名等）绑定，用CA的私钥签名，证明公钥的合法性。2.管理证书生命周期：签发、更新、撤销（CRL证书撤销列表/OCSP在线证书状态协议）、归档。3.维护信任根：CA的公钥（根证书）预先安装在终端/浏览器中，作为信任锚点。数字证书格式：X.509标准，包含版本、序列号、签名算法、颁发者、有效期、主体（Subject）、主体公钥、颁发者唯一标识符、主体唯一标识符、扩展、签名等。证书验证过程：1.验证证书签名（用CA公钥验证CA签名，确保证书未被篡改）。2.验证证书有效期（当前时间在有效期内）。3.验证证书是否被撤销（检查CRL或OCSP）。4.验证证书用途（密钥用法是否匹配）。5.验证证书链（从终端证书到根证书，逐级验证）。PKI应用：HTTPS/TLS（服务器证书+可选客户端证书）、IPSec（数字证书认证）、802.1X（EAP-TLS）、代码签名、电子邮件加密（S/MIME）、VPN、电子签名等。国密PKI：使用SM2（非对称）、SM3（哈希）、SM4（对称）算法，符合中国密码法要求。',
     knowledgeId: 'security-pki',
-    direction: 'security',
+    direction: 'security', difficulty: 'IE',
   },
   {
     id: 'wlan-b004',
@@ -2744,7 +2750,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '跨AC漫游（无802.11r）',
     explanation: 'WLAN漫游分类：1.同一AC内漫游（Intra-AC Roaming）：终端在同一AC管理的不同AP之间漫游，AC维护终端上下文，无需重新认证，只需重新关联和密钥协商，快速切换。分为二层漫游（同VLAN，IP不变，业务不中断）和三层漫游（不同VLAN/子网，IP可能变化，需隧道转发保证业务不中断）。2.跨AC漫游（Inter-AC Roaming）：终端在不同AC管理的AP之间漫游，AC之间通过漫游隧道同步终端上下文。无802.11r时，需要重新进行802.1X认证（如果是企业级认证）和四次握手，耗时较长（数百毫秒到1秒），可能导致业务中断。有802.11r（快速BSS切换）时，通过预认证和FT密钥层次，无需重新完整认证，实现毫秒级切换。3.802.11r快速漫游（Fast BSS Transition）：通过PMK-R0/R1密钥层次和FT协议，漫游时只需2次消息交换，无需重新802.1X认证，实现<50ms快速切换，适合VoWiFi等实时业务。802.11k（无线资源测量，帮助终端快速发现邻居AP）和802.11v（BSS过渡管理，AC指导终端漫游）配合802.11r，实现智能快速漫游（802.11k/v/r）。漫游的关键：业务不中断（IP不变、会话保持）、切换时间短（<150ms语音不中断，<50ms理想）、安全不降级（重新认证或密钥协商）。华为AC支持敏捷分布式漫游、智能漫游（主动引导终端漫游到更优AP）、频谱导航（引导双频终端到5GHz）等。',
     knowledgeId: 'wlan-roaming',
-    direction: 'wlan',
+    direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-b004',
@@ -2754,7 +2760,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     answer: '正确',
     explanation: 'SDN（Software Defined Network，软件定义网络）核心思想：1.控制平面与数据平面分离（Control/Data Plane Separation）：传统网络设备（交换机/路由器）的控制平面（路由计算、协议处理）和数据平面（报文转发）都在设备上，分布式控制。SDN将控制平面抽离到集中的控制器（Controller），数据平面留在交换机上（只负责转发，通过流表规则）。2.集中控制（Centralized Control）：控制器全局掌握网络拓扑和状态，统一计算和下发转发规则，实现全局优化和快速收敛。3.开放接口（Open API）：控制器与交换机之间通过标准协议（如OpenFlow）通信，控制器向上提供API（如REST API），应用可通过API编程控制网络，实现网络自动化和可编程。4.网络可编程（Network Programmability）：网络行为可通过软件编程定义，无需手动配置每台设备，实现自动化部署、灵活调度、快速创新。SDN架构：应用层（Application，网络应用如负载均衡、防火墙、流量工程）→控制层（Controller，SDN控制器如ODL、ONOS、华为iMaster NCE）→基础设施层（Infrastructure，SDN交换机/路由器，支持OpenFlow或NETCONF）。SDN优势：集中管理、自动化部署、灵活调度、快速创新、降低运维成本。SDN应用：数据中心网络（SDN+VXLAN/EVPN）、运营商网络（SD-WAN、核心网）、校园网、云网络等。SDN与传统网络对比：传统网络分布式控制、设备配置为主、收敛慢、扩展性受协议限制；SDN集中控制、软件编程、全局优化、快速收敛。注意：SDN不是要完全替代传统网络，而是在特定场景（数据中心、云、大规模自动化）中发挥优势，很多网络是混合模式（传统+SDN）。',
     knowledgeId: 'dcn-sdn-basic',
-    direction: 'dcn',
+    direction: 'dcn', difficulty: 'IE',
   },
 
 
@@ -2765,7 +2771,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['连接不同区域的路由器，至少一个接口在骨干区域Area 0', '只在骨干区域的路由器', '引入外部路由的路由器', 'DR路由器'],
     answer: '连接不同区域的路由器，至少一个接口在骨干区域Area 0',
     explanation: 'ABR（Area Border Router，区域边界路由器）：同时连接多个OSPF区域，且至少有一个接口在骨干区域（Area 0）的路由器。ABR维护每个连接区域的独立LSDB，负责将本区域的Type 1/2 LSA汇总为Type 3 Summary LSA发布到其他区域，将其他区域的Type 3汇总后发布到本区域。ABR是区域间路由的桥梁。ASBR（AS Boundary Router，自治系统边界路由器）：引入外部路由（其他协议/静态/直连）到OSPF的路由器，生成Type 5 LSA，可在任意区域。DR（Designated Router，指定路由器）：广播网络中选举，负责生成Type 2 LSA和泛洪。骨干路由器：至少一个接口在Area 0的路由器（ABR也是骨干路由器）。内部路由器：所有接口都在同一区域的路由器。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-c002', type: 'single',
@@ -2773,14 +2779,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['防止AS内环路（IBGP水平分割）', '性能考虑', '安全考虑', '协议bug'],
     answer: '防止AS内环路（IBGP水平分割）',
     explanation: 'BGP的IBGP水平分割（Split Horizon）规则：从IBGP邻居学到的路由，不再传递给其他IBGP邻居。这是为了防止AS内环路（因为BGP路由的AS_Path在AS内不变化，无法通过AS_Path检测AS内环路）。这导致IBGP邻居需要全互联（Full Mesh）才能让所有路由器学到所有路由，n台路由器需要n(n-1)/2条IBGP邻居，扩展性差。解决方案：1.路由反射器（RR，Route Reflector）：RR将从客户端学到的路由反射给其他客户端和非客户端，打破全互联限制。2.联盟（Confederation）：将一个大AS划分为多个子AS，子AS间用EBGP关系，子AS内用IBGP，减少全互联数量。3.两者结合使用。EBGP邻居之间没有水平分割限制（AS_Path会变化，可检测环路），从EBGP学到的路由可传递给所有IBGP和EBGP邻居。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-c003', type: 'judge',
     question: 'IS-IS中，NET（网络实体标题）的System ID占6字节，同一区域内必须唯一。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'NET（Network Entity Title，网络实体标题）是IS-IS路由器的网络层地址，格式：Area ID（1-13字节）+ System ID（6字节）+ NSEL（1字节，值为00表示路由器本身）。System ID（系统ID）6字节，唯一标识一个路由器，同一区域内必须唯一（不同区域System ID可以相同，但建议全局唯一）。System ID通常由IP地址转换而来（如192.168.001.001→1921.6800.1001），或用MAC地址，或手动配置。Area ID标识区域，同一L1区域内Area ID必须相同。NET长度8-20字节，通常10字节（Area ID 3字节+System ID 6字节+NSEL 1字节）。一台路由器可配置多个NET（最多3个），System ID必须相同，Area ID可不同（用于区域迁移）。NSEL为00表示IS本身，非00表示主机或特定服务。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-c004', type: 'single',
@@ -2788,7 +2794,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['CST（公共生成树）', 'MSTI', 'IST', 'RSTP'],
     answer: 'CST（公共生成树）',
     explanation: 'MSTP（Multiple Spanning Tree Protocol，802.1s）中：1.MSTI（Multiple Spanning Tree Instance，多生成树实例）：MST域内的生成树实例，每个MSTI独立计算，可映射不同VLAN，实现负载分担。MSTI仅在域内有效，不跨域。2.IST（Internal Spanning Tree，内部生成树，MSTI 0）：MST域内的默认生成树实例，所有VLAN默认映射到IST，IST在域内运行，域间表现为CST的一部分。3.CST（Common Spanning Tree，公共生成树）：在整个交换网络（不同MST域和STP/RSTP域）中形成的一棵公共生成树，将每个MST域视为一个虚拟桥，域间运行CST，确保域间无环路。4.CIST（Common and Internal Spanning Tree，公共和内部生成树）：CIST = CST（域间）+ IST（域内MSTI 0），是整个网络的总生成树。MST域判定条件：域名（Configuration Name）、修订级别（Revision Level）、VLAN-实例映射关系三者完全相同。MSTP兼容STP/RSTP，与STP/RSTP设备互联时，MSTP端口发送STP/RSTP BPDU实现互通。MSTP优势：兼容STP/RSTP、多实例负载分担、减少VLAN场景端口阻塞、提高链路利用率，是企业网络主流生成树协议。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-c005', type: 'single',
@@ -2796,7 +2802,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['扩展VLAN数量（4094*4094），用于运营商网络', '加密VLAN标签', '提高VLAN转发速度', '减少VLAN标签长度'],
     answer: '扩展VLAN数量（4094*4094），用于运营商网络',
     explanation: 'QinQ（802.1Q-in-802.1Q，也叫VLAN Stacking，VLAN堆叠）：在用户的802.1Q标签（内层标签，C-Tag，Customer Tag）外再添加一层802.1Q标签（外层标签，S-Tag，Service Tag，运营商标签），形成两层标签。作用：1.扩展VLAN数量：外层4094*内层4094≈1600万个VLAN，解决公网VLAN ID不足问题。2.用户隔离：不同用户使用不同外层VLAN（S-Tag），内层VLAN（C-Tag）用户可自由规划，用户间二层隔离。3.节省公网VLAN资源：运营商只需分配外层VLAN，内层VLAN由用户管理。4.便于批量管理：按外层VLAN对用户流量进行QoS、统计、策略控制。QinQ封装：用户帧带C-Tag进入运营商网络，PE设备添加S-Tag（外层），在公网中按S-Tag转发，到达对端PE后剥离S-Tag，恢复用户原始帧。QinQ类型：1.基本QinQ（基于端口）：端口收到的所有帧都添加相同外层VLAN。2.灵活QinQ（基于流）：根据内层VLAN、优先级、协议等添加不同外层VLAN，更灵活。QinQ与VXLAN对比：QinQ是二层标签堆叠，扩展性有限（1600万），适合运营商二层专线；VXLAN是MAC-in-UDP封装，扩展性更强（1600万VNI），适合数据中心大二层和多租户。',
-    knowledgeId: 'datacom-vlan', direction: 'datacom',
+    knowledgeId: 'datacom-vlan', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-c001', type: 'single',
@@ -2804,7 +2810,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['基于ACL逐条过滤每个报文', '维护会话表，只检查首包，后续包按会话表转发', '基于应用层内容过滤', '基于IP地址黑名单'],
     answer: '维护会话表，只检查首包，后续包按会话表转发',
     explanation: '状态检测（Stateful Inspection，也叫状态包过滤）是现代防火墙的核心技术：1.首包检查：当新连接的第一个报文到达时，防火墙根据安全策略（源/目的IP、端口、协议、应用、用户、时间等）判断是否允许，允许则创建会话表项（Session Table），记录五元组、状态、超时、NAT信息、字节/包统计等。2.后续包快速转发：同一会话的后续报文直接匹配会话表转发，无需再次匹配安全策略，性能高（基于硬件ASIC/NP芯片线速转发）。3.状态跟踪：跟踪协议状态（TCP三次握手/四次挥手、UDP会话、ICMP请求/响应、应用层协议状态如FTP动态端口），检测异常报文（如未建立连接直接发数据、非法TCP标志位），防止应用层攻击。4.会话超时：不同协议/状态有不同超时时间（TCP ESTABLISHED通常1200秒，UDP 120秒，ICMP 20秒），超时后删除会话表项。状态检测相比包过滤（ACL逐条过滤）的优势：性能高（后续包不查策略）、安全性高（检测协议状态和异常）、支持应用层协议（ASPF检测动态端口）。华为防火墙状态检测：默认开启，支持TCP/UDP/ICMP/SCTP等协议状态检测，支持ASPF（应用层包过滤）检测FTP、SIP、H.323、RTSP、DNS等应用层协议，自动开放动态端口。会话表数量是防火墙重要性能指标（并发连接数），每秒新建连接数（CPS）也是关键指标。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-c002', type: 'single',
@@ -2812,14 +2818,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['UDP 500', 'UDP 4500', 'TCP 179', 'UDP 4789'],
     answer: 'UDP 4500',
     explanation: 'IPSec NAT穿越（NAT Traversal，NAT-T）：当IPSec VPN路径中存在NAT设备时，ESP（IP协议号50）和AH（协议号51）无法通过NAT（NAT只能处理TCP/UDP/ICMP，无法修改ESP/AH的校验和，且ESP加密后NAT无法识别）。NAT-T将ESP报文封装在UDP报文中（端口4500），使ESP能通过NAT设备。NAT-T工作过程：1.IKE协商阶段一（主模式/野蛮模式）使用UDP 500端口，双方通过NAT-D载荷（NAT Discovery）检测路径中是否存在NAT，以及哪一端在NAT后。2.检测到NAT后，IKE协商切换到UDP 4500端口（阶段一后续消息和阶段二快速模式都用4500）。3.IPSec数据报文（ESP）封装在UDP 4500报文中传输，NAT设备能正常处理（修改UDP端口和IP）。4.对端收到后剥离UDP头，恢复ESP报文，正常解密。NAT-T注意：1.只能用ESP，不能用AH（AH认证整个IP头，NAT修改IP头会导致认证失败）。2.传输模式下NAT-T有限制（ESP传输模式不加密IP头，NAT修改IP头可能影响上层校验和），隧道模式更适合NAT-T。3.NAT设备需要支持ESP的ALG或直接放行UDP 4500。4.华为防火墙默认开启NAT-T，可通过nat traversal命令控制。其他端口：UDP 500是IKE默认端口（无NAT时），TCP 179是BGP，UDP 4789是VXLAN。IPSec VPN在NAT场景下（如家庭宽带、移动网络）必须使用NAT-T，否则无法建立连接。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-c003', type: 'judge',
     question: 'ARP欺骗（ARP Spoofing）通过发送伪造的ARP响应，将网关MAC地址替换为攻击者MAC，实现中间人攻击。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'ARP欺骗（ARP Spoofing/ARP Poisoning，ARP投毒）：攻击者在局域网内发送伪造的ARP响应报文（免费ARP或响应ARP请求），将目标IP（如网关IP）对应的MAC地址替换为攻击者的MAC地址。受害主机的ARP表被污染，将本应发给网关的流量发给攻击者，攻击者可嗅探、篡改、中断流量，实现中间人攻击（MITM）。ARP协议无认证机制，任何主机都可发送ARP响应，主机默认信任收到的ARP响应并更新ARP表，这是ARP欺骗的根本原因。防御方法：1.静态ARP绑定：在主机/交换机上静态绑定IP-MAC，不动态学习。2.DAI（Dynamic ARP Inspection，动态ARP检测）：交换机结合DHCP Snooping绑定表，检查ARP报文的IP-MAC是否合法，丢弃伪造ARP。3.DHCP Snooping：记录合法IP-MAC-端口绑定，为DAI提供依据。4.端口安全（Port Security）：限制端口MAC地址数量，防止MAC泛洪。5.ARP网关保护：在交换机上配置网关IP-MAC静态绑定，防止网关被欺骗。6.私有VLAN（PVLAN）：隔离主机间二层通信，防止ARP欺骗扩散。7.加密协议：使用HTTPS/SSH等加密协议，即使被嗅探也无法解密内容。其他二层攻击：MAC泛洪（CAM表溢出，使交换机退化为集线器）、DHCP欺骗（伪造DHCP服务器分配错误网关/DNS）、STP攻击（伪造BPDU抢占根桥）、VLAN跳跃（Double Tagging/Switch Spoofing）等。',
-    knowledgeId: 'security-attack-defense', direction: 'security',
+    knowledgeId: 'security-attack-defense', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-c004', type: 'single',
@@ -2827,7 +2833,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['用私钥对消息摘要加密，接收方用公钥验证', '用公钥对消息加密，接收方用私钥解密', '用对称密钥加密消息', '用哈希算法生成摘要'],
     answer: '用私钥对消息摘要加密，接收方用公钥验证',
     explanation: '数字签名（Digital Signature）实现原理：1.发送方对原始消息计算哈希摘要（如SHA-256、SM3），得到固定长度摘要。2.发送方用自己的私钥（Private Key）对摘要加密（签名），生成数字签名。3.发送方将原始消息+数字签名一起发给接收方。4.接收方用发送方的公钥（Public Key）解密数字签名，得到摘要A。5.接收方对收到的原始消息计算哈希摘要，得到摘要B。6.比较摘要A和摘要B，相同则验证通过（消息未被篡改，且确实由私钥持有者发送）。数字签名的特性：1.身份认证（Authentication）：只有私钥持有者能生成签名，公钥能验证，证明发送者身份。2.完整性（Integrity）：消息被篡改后摘要变化，签名验证失败。3.不可否认（Non-repudiation）：发送方不能否认发送过该消息（私钥只有自己有）。数字签名与加密的区别：加密用公钥加密私钥解密（保证机密性，只有接收方能解密），签名用私钥加密公钥验证（保证身份和完整性，任何人都能验证）。常见数字签名算法：RSA、DSA、ECDSA（椭圆曲线）、SM2（国密）、Ed25519。数字签名应用：HTTPS/TLS证书验证、软件代码签名、电子邮件（S/MIME）、电子合同/电子签名、区块链、VPN认证（IPSec数字证书认证）等。PKI体系中，CA用自己的私钥对数字证书签名，用户用CA公钥验证证书合法性，这也是数字签名的典型应用。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-c001', type: 'single',
@@ -2835,14 +2841,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['AP与AC之间的通信协议，用于控制管理和数据隧道', '无线加密协议', '射频管理协议', '用户认证协议'],
     answer: 'AP与AC之间的通信协议，用于控制管理和数据隧道',
     explanation: 'CAPWAP（Control And Provisioning of Wireless Access Points，无线接入点控制与供应协议，RFC 5415）是FIT AP架构中AP与AC之间的通信协议，基于UDP。CAPWAP两个隧道：1.控制隧道（Control Tunnel）：UDP 5246端口，使用DTLS加密，传输AP与AC之间的控制报文（配置下发、状态上报、固件升级、漫游管理、统计信息等）。2.数据隧道（Data Tunnel）：UDP 5247端口，可选DTLS加密，传输用户数据报文（隧道转发模式下，用户数据通过CAPWAP数据隧道封装到AC转发）。CAPWAP协议功能：1.AP发现AC（Discover/Join）。2.AP配置管理（配置下发、配置更新）。3.AP固件管理（版本升级、版本回退）。4.用户数据转发（隧道转发模式）。5.漫游管理（跨AC漫游时上下文同步）。6.状态监控和统计（AP状态、射频状态、用户统计、性能统计）。7.安全控制（DTLS加密、接入控制）。AP上线流程：获取IP（DHCP/静态）→发现AC（广播/DHCP Option43/DNS/静态）→建立CAPWAP控制隧道（Discover→Join→Configure→Data Check→Run）→下载版本（如需）→下载配置→正常工作。CAPWAP与LWAPP（Lightweight Access Point Protocol，Cisco私有）类似，CAPWAP是IETF标准，更通用。华为AC支持CAPWAP，可配置CAPWAP源接口（AC的源IP）、隧道加密（DTLS）、数据转发模式（直接/隧道）等。CAPWAP控制隧道必须建立，数据隧道仅在隧道转发模式下建立（直接转发模式不建立数据隧道，用户数据由AP直接转发）。',
-    knowledgeId: 'wlan-arch', direction: 'wlan',
+    knowledgeId: 'wlan-arch', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-c002', type: 'judge',
     question: 'WLAN中，5GHz频段相比2.4GHz频段，信道更多、干扰更小、速率更高，但穿墙能力更弱。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'WLAN两个主要频段对比：2.4GHz频段：1.优点：穿墙能力强（频率低波长长，绕射能力强）、覆盖范围大、兼容性好（所有Wi-Fi设备都支持）。2.缺点：信道少（中国常用1、6、11三个不重叠信道，共13个信道）、干扰大（蓝牙、微波炉、无线鼠标、邻居Wi-Fi都用2.4G）、速率低（802.11n最高600Mbps，实际更低）、拥塞严重。5GHz频段：1.优点：信道多（中国支持36-64、149-165等多个不重叠信道，802.11ac支持20/40/80/160MHz带宽）、干扰小（使用设备少，非Wi-Fi干扰少）、速率高（802.11ac最高3.5Gbps，802.11ax更高）、延迟低。2.缺点：穿墙能力弱（频率高波长短，穿透损耗大，混凝土墙衰减严重）、覆盖范围小（需更多AP）、兼容性（老设备可能不支持5G）。6GHz频段（Wi-Fi 6E）：信道更多更宽（支持160MHz连续信道）、几乎无干扰（新频段）、速率更高，但穿墙能力更弱，覆盖更小，需新设备支持。企业WLAN部署：1.双频AP同时提供2.4G和5G，频谱导航（Band Steering）引导双频终端优先连接5G（减轻2.4G拥塞）。2.高密度场景（会议室、体育场）优先5G，2.4G仅用于老设备和IoT。3.覆盖设计：5G按覆盖设计（需更多AP），2.4G按容量设计（可能需要降低功率避免干扰）。4.信道规划：2.4G用1/6/11蜂窝部署，5G用更多信道复用（如36/40/44/48、149/153/157/161）。5.功率调整：2.4G功率适当降低（避免远距离关联和干扰），5G功率适当提高（保证覆盖）。',
-    knowledgeId: 'wlan-rf', direction: 'wlan',
+    knowledgeId: 'wlan-rf', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-c001', type: 'single',
@@ -2850,14 +2856,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['VXLAN封装和解封装', '维护MAC-VTEP映射表', '路由计算（OSPF/BGP）', '用户认证'],
     answer: '用户认证',
     explanation: 'VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）是VXLAN网络的边缘设备，负责VXLAN封装和解封装，功能包括：1.VXLAN封装：收到虚拟机/服务器的二层帧后，根据目的MAC查找MAC-VTEP映射表，封装VXLAN头（VNI）+UDP头+外层IP头（源VTEP IP，目的VTEP IP），通过underlay三层网络转发。2.VXLAN解封装：收到VXLAN报文后，剥离外层IP/UDP/VXLAN头，恢复原始二层帧，根据目的MAC转发到对应虚拟机/服务器。3.维护MAC-VTEP映射表：记录虚拟机MAC地址与所属VTEP IP的映射关系，用于封装时确定目的VTEP。映射表学习方式：数据面学习（泛洪+学习，传统VXLAN）或控制面学习（EVPN Type 2路由，EVPN/VXLAN）。4.BUM流量处理：广播、未知单播、组播流量通过头端复制（HER）或组播方式转发给同VNI的所有VTEP。5.二层/三层网关：VTEP可作为二层网关（同VNI转发）或三层网关（分布式网关/集中式网关，跨VNI/子网路由）。6.隧道管理：建立和维护VXLAN隧道，支持隧道冗余和负载分担。用户认证不是VTEP的功能（用户认证由接入交换机、防火墙、AAA服务器等完成）。VTEP可在物理交换机（硬件VTEP，性能高）、虚拟交换机vSwitch（软件VTEP，如OVS，灵活但性能低）、服务器网卡（智能网卡SmartNIC，卸载VXLAN封装，降低CPU开销）上实现。VXLAN网络模型：VTEP之间通过underlay三层网络（IP Fabric，运行OSPF/IS-IS/BGP）建立VXLAN隧道，overlay网络（VXLAN）为虚拟机提供大二层网络。VNI标识VXLAN网段，不同VNI二层隔离，类似VLAN。',
-    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-c002', type: 'judge',
     question: '分布式网关（Distributed Gateway）中，每台Leaf都是网关，虚拟机的默认网关在本地Leaf上，跨子网流量在源Leaf直接路由。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'VXLAN/EVPN网络中，三层网关有两种模式：1.集中式网关（Centralized Gateway）：所有VNI的三层网关都在一台设备上（通常是Spine或专用网关设备），虚拟机的默认网关指向集中网关。跨子网流量路径：源虚拟机→源Leaf（二层封装VXLAN）→集中网关（解封装，三层路由，重新封装VXLAN）→目的Leaf→目的虚拟机。优点：网关集中管理，配置简单，便于策略控制。缺点：集中网关是性能瓶颈和单点故障，跨子网流量绕行（经过集中网关），延迟高，东西向流量效率低。2.分布式网关（Distributed Gateway）：每台Leaf都是所有VNI的三层网关，虚拟机的默认网关在本地Leaf上（Anycast Gateway，任播网关，所有Leaf的网关IP和MAC相同）。跨子网流量路径：源虚拟机→源Leaf（本地三层路由，直接封装VXLAN到目的Leaf）→目的Leaf→目的虚拟机。流量在源Leaf直接路由，无需绕行集中网关，延迟低，效率高，无瓶颈和单点故障。分布式网关通过EVPN Type 2路由（携带主机IP）同步主机路由，每台Leaf学习到所有虚拟机的IP-VTEP映射，跨子网时直接查主机路由封装到目的Leaf。分布式网关是数据中心VXLAN/EVPN的主流方案，适合东西向流量大的数据中心。Anycast Gateway（任播网关）：所有Leaf的三层网关IP和MAC地址相同，虚拟机无论迁移到哪台Leaf，默认网关都不变，无需重新配置，实现无缝迁移。集中式网关适合小型数据中心或需要集中安全策略的场景，分布式网关适合中大型数据中心和东西向流量为主的场景。',
-    knowledgeId: 'dcn-vxlan-gateway', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-gateway', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dc-c006', type: 'single',
@@ -2865,14 +2871,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['快速检测链路故障（毫秒级），联动路由协议快速收敛', '加密链路数据', '负载均衡', '流量整形'],
     answer: '快速检测链路故障（毫秒级），联动路由协议快速收敛',
     explanation: 'BFD（Bidirectional Forwarding Detection，双向转发检测）是一种快速故障检测协议，能在毫秒级（通常50ms-1s）检测到链路或设备故障，比传统路由协议的Hello检测（OSPF默认40秒死亡时间，IS-IS默认30秒）快得多。BFD特点：1.快速检测：最小可配置3.3ms间隔，检测时间<100ms，实现亚秒级收敛。2.与协议无关：BFD本身不负责路由计算，只负责故障检测，可与OSPF、IS-IS、BGP、静态路由、VRRP、MPLS LSP、PWE3等各种协议联动。3.简单轻量：BFD控制报文简单，封装在UDP中（端口3784/4784），开销小。4.双向检测：同时检测两个方向的连通性，单向故障也能检测。BFD工作模式：1.异步模式（Asynchronous）：双方周期性发送BFD控制报文，检测时间内未收到则认为故障，是默认模式。2.查询模式（Demand）：不周期性发送，需要时发送查询报文检测，适用于不希望周期性发送的场景。3.回声模式（Echo）：发送回声报文，对端不处理直接环回，检测本地转发路径故障，可与异步模式结合。BFD联动：1.BFD与OSPF/IS-IS/BGP联动：BFD检测到故障后通知路由协议，立即撤销邻居和路由，触发快速收敛，无需等待协议Hello超时。2.BFD与静态路由联动：BFD检测到下一跳故障后，静态路由失效，切换备份路由。3.BFD与VRRP联动：BFD检测到上行链路故障后，VRRP快速切换主备。4.BFD与MPLS LSP/PW联动：检测LSP/PW故障，触发保护倒换（FRR）。BFD是实现网络高可用（HA）和快速收敛的关键技术，运营商和企业网络广泛使用。华为设备支持BFD，可配置单跳/多跳BFD、BFD会话参数（最小发送间隔、最小接收间隔、检测倍数）、BFD与各种协议联动。注意：BFD检测时间越短，对设备性能和链路质量要求越高（CPU开销、报文丢失可能导致误检），需根据实际场景合理配置。',
-    knowledgeId: 'datacom-bfd', direction: 'datacom',
+    knowledgeId: 'datacom-bfd', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-c007', type: 'judge',
     question: 'VRRP（虚拟路由冗余协议）中，Master路由器负责转发流量，Backup路由器在Master故障后接管成为新的Master。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'VRRP（Virtual Router Redundancy Protocol，虚拟路由冗余协议，RFC 5798，华为默认VRRPv3支持IPv4/IPv6）：将多台路由器组成一个虚拟路由器（Virtual Router），对外提供一个虚拟IP（VIP）和虚拟MAC（VMAC，00-00-5E-00-01-{VRID}），局域网内主机的默认网关指向虚拟IP。VRRP路由器角色：1.Master（主路由器）：优先级最高的路由器成为Master，负责转发以虚拟MAC为目的的流量，响应ARP请求（回复虚拟MAC），周期性发送VRRP通告报文（Advertisement，默认1秒，组播224.0.0.18）。2.Backup（备份路由器）：其他路由器为Backup，不转发流量，不响应ARP，只监听Master的通告报文。如果在Master_Down_Interval（默认3倍通告间隔+偏移时间，约3.6秒）内未收到Master通告，则认为Master故障，优先级最高的Backup抢占成为新Master，接管虚拟IP和MAC，继续转发流量，实现网关冗余。VRRP优先级：1-254，默认100，值越大越优先。优先级255保留给虚拟IP所有者（IP Address Owner，物理接口IP=虚拟IP的路由器，自动成为Master且不可被抢占）。优先级0用于Master主动放弃（发送优先级0的通告，Backup立即接管）。VRRP抢占模式：默认开启，高优先级Backup发现自己优先级高于Master时，抢占成为Master。可配置抢占延迟（避免网络震荡时频繁切换）。VRRP跟踪（Track）：1.跟踪接口/链路：Master上行接口故障时，降低优先级，让Backup接管，避免黑洞。2.跟踪BFD：BFD快速检测故障，联动VRRP快速切换（亚秒级）。3.跟踪路由：路由消失时降低优先级。VRRP与HSRP（Cisco私有）、GLBP（Cisco私有，支持负载分担）类似，VRRP是IETF标准，华为支持。VRRP只能实现主备冗余（同一时间只有Master转发），不能负载分担（可通过多VRRP组+不同VLAN网关指向不同VRRP实现负载分担，即VRRP负载分担模式）。VRRPv2仅支持IPv4，VRRPv3支持IPv4和IPv6。',
-    knowledgeId: 'datacom-vrrp', direction: 'datacom',
+    knowledgeId: 'datacom-vrrp', direction: 'datacom', difficulty: 'IP',
   },
 
 
@@ -2883,7 +2889,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Type 1 Router LSA', 'Type 3 Summary LSA', 'Type 5 AS External LSA', 'Type 7 NSSA External LSA'],
     answer: 'Type 1 Router LSA',
     explanation: 'OSPF LSA类型及泛洪范围：Type 1 Router LSA（每台路由器生成，描述本路由器接口、开销、邻居，仅在本区域内泛洪）；Type 2 Network LSA（DR生成，描述广播网络所有路由器，仅本区域）；Type 3 Summary LSA（ABR生成，描述区域间路由，可跨区域）；Type 4 Summary LSA（ABR生成，描述ASBR位置，可跨区域）；Type 5 AS External LSA（ASBR生成，描述外部路由，整个OSPF域除Stub/NSSA外泛洪）；Type 7 NSSA External LSA（NSSA区域ASBR生成，仅在NSSA区域内泛洪，到ABR转换为Type 5）。Type 1和Type 2仅在本区域内泛洪，是区域内路由计算的基础。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-d002', type: 'single',
@@ -2891,14 +2897,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Origin类型', 'Local_Pref（本地优先级）', 'MED', 'Router ID'],
     answer: 'Local_Pref（本地优先级）',
     explanation: 'BGP路由优选顺序（13条，前几条）：1.忽略下一跳不可达的路由；2.优选Weight大的（Cisco私有，华为不支持）；3.优选Local_Pref大的（本地优先级，影响本AS出站流量）；4.优选本地始发的路由（network/aggregate/import-route）；5.优选AS_Path短的；6.优选Origin类型优的（IGP>EGP>Incomplete）；7.优选MED小的（影响相邻AS入站流量）；8.优选EBGP优于IBGP；9.优选到下一跳IGP度量小的；10.优选Cluster_List短的；11.优选Originator_ID小的；12.优选邻居Router ID小的；13.优选邻居IP小的。Local_Pref在AS_Path之前比较，是影响本AS出站流量的重要属性，值越大越优先，默认100，仅在IBGP邻居间传递，不传给EBGP邻居。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-d003', type: 'judge',
     question: 'IS-IS中，L1/2路由器同时维护Level-1和Level-2两个链路状态数据库。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IS-IS路由器类型：1.L1路由器（Level-1）：只维护L1链路状态数据库，只能与同区域的L1/L1-2建立邻居，只知道本区域内拓扑，访问其他区域通过L1/2默认路由。2.L2路由器（Level-2）：只维护L2链路状态数据库，只能与L2/L1-2建立邻居（可跨区域），负责骨干区域路由，不知道L1区域内具体拓扑。3.L1/2路由器（Level-1-2）：同时维护L1和L2两个独立的链路状态数据库，同时与同区域的L1/L1-2建立L1邻居，与其他区域的L2/L1-2建立L2邻居，是L1区域与L2骨干的桥梁，负责区域间路由发布和默认路由下发（ATT位）。L1/2路由器是IS-IS分层路由的关键，类似OSPF的ABR。默认情况下华为路由器是L1/2类型，可通过is-level命令修改为L1或L2。L1数据库和L2数据库独立计算SPF，互不影响。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-d004', type: 'single',
@@ -2906,7 +2912,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['直接进入Forwarding状态，不参与STP计算，连接终端设备', '与其他交换机互联的端口', '被阻塞的备份端口', '选举DR的端口'],
     answer: '直接进入Forwarding状态，不参与STP计算，连接终端设备',
     explanation: 'RSTP/MSTP边缘端口（Edge Port）：1.直接进入Forwarding状态，无需经过Listening/Learning的30秒等待，实现终端快速接入。2.不参与STP计算，不接收BPDU（收到BPDU后会自动变为非边缘端口，重新参与STP计算，防止环路）。3.连接终端设备（PC、服务器、打印机等），这些设备不会产生环路。4.边缘端口up/down不会触发拓扑变化（TC），减少网络震荡。5.可通过stp edged-port enable命令在接口上配置，或通过stp default edge-port全局配置（所有端口默认边缘，连接交换机的端口手动关闭边缘）。边缘端口是RSTP快速收敛的重要机制之一，配合P/A协商实现整体快速收敛。注意：边缘端口如果连接了交换机或HUB，可能产生环路，因为边缘端口不监听BPDU（收到第一个BPDU后才变为非边缘），所以必须确保连接终端。BPDU保护（BPDU Protection）：边缘端口收到BPDU时自动关闭端口（Error-Down），防止环路和非法接入，需配合边缘端口使用。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'dc-d005', type: 'single',
@@ -2914,7 +2920,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['不同VLAN默认可以直接通信', '不同VLAN需要三层设备（路由器/三层交换机SVI）才能通信', 'VLAN间路由只能用路由器', 'VLAN间通信不需要IP地址'],
     answer: '不同VLAN需要三层设备（路由器/三层交换机SVI）才能通信',
     explanation: 'VLAN（虚拟局域网）隔离广播域，不同VLAN在二层是隔离的，默认不能直接通信。VLAN间通信需要三层设备（网络层）进行路由转发：1.三层交换机SVI（Switch Virtual Interface，交换虚拟接口，华为叫VLANIF）：为每个VLAN创建逻辑三层接口，配置网关IP，不同VLAN的SVI之间通过三层路由表通信，是企业网络主流方式，硬件转发性能高。2.路由器子接口（单臂路由）：路由器物理接口划分为多个逻辑子接口，每个子接口配置802.1Q封装和网关IP，实现VLAN间路由，性能低（软件转发），所有VLAN共享物理接口带宽，已被三层交换机替代。3.路由器物理接口：每个VLAN用一个物理接口连接路由器，浪费端口，不常用。VLAN间通信原理：主机A（VLAN 10）发现目的IP在不同网段，将数据发给默认网关（VLAN 10的SVI IP），三层设备查路由表发现目的网络是直连的VLAN 20，从VLAN 20的SVI转发给主机B。每个VLAN需要一个独立的IP网段，不同VLAN不能用同一网段（除非用VLAN聚合等特殊技术）。',
-    knowledgeId: 'datacom-vlan', direction: 'datacom',
+    knowledgeId: 'datacom-vlan', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-d001', type: 'single',
@@ -2922,7 +2928,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['源IP地址', '目的端口', '应用（Application）', '协议号'],
     answer: '应用（Application）',
     explanation: '防火墙安全策略（Security Policy）匹配条件：基本五元组：源IP地址、目的IP地址、源端口、目的端口、协议号（TCP/UDP/ICMP等）。扩展匹配条件：1.应用（Application）：基于应用层协议识别（如HTTP、FTP、DNS、微信、抖音等），通过DPI（深度包检测）识别应用，比端口更准确（应用可使用非标准端口）。2.用户（User）：基于认证用户/用户组，实现基于身份的访问控制（如只有销售部能访问财务系统）。3.时间段（Time Range）：基于时间范围（如工作时间允许，休息时间禁止）。4.服务（Service）：基于预定义或自定义服务（端口+协议组合）。5.源/目的安全区域（Security Zone）：基于流量的入/出安全区域。6.入侵防御（IPS）、反病毒（AV）、URL过滤、文件过滤、内容过滤等UTM功能。7.地理位置（Geo IP）、IP信誉、域名（FQDN）等。安全策略动作：允许（Permit）、拒绝（Deny，静默丢弃）、拒绝并回复（Reject，发送TCP RST或ICMP不可达）、日志记录、流量统计、引用UTM配置文件等。安全策略按顺序匹配（从上到下），匹配到第一条即执行，不再继续匹配，所以策略顺序很重要（精确策略放上面，宽泛策略放下面，最后默认拒绝）。华为防火墙默认安全策略：所有区域间流量默认拒绝（需手动配置允许策略），同区域内默认允许。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-d002', type: 'single',
@@ -2930,14 +2936,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['3条', '4条', '6条', '8条'],
     answer: '6条',
     explanation: 'IKEv1（Internet Key Exchange version 1）阶段一建立IKE SA，两种模式：1.主模式（Main Mode）：6条消息，保护身份信息（身份在第5、6条加密传输），更安全，但协商慢。消息1-2：协商IKE策略（加密算法、认证算法、认证方式、DH组、生命周期）。消息3-4：DH密钥交换（交换Diffie-Hellman公钥，生成共享密钥）和随机数（Nonce）。消息5-6：身份认证（交换身份信息和预共享密钥/证书签名，加密传输）。2.野蛮模式（Aggressive Mode）：3条消息，身份信息明文传输（不安全），但协商快，适合对端IP不固定或NAT场景。消息1：发起方发送IKE策略+DH公钥+身份+随机数。消息2：响应方确认+DH公钥+身份+随机数+认证。消息3：发起方认证确认。阶段二（快速模式Quick Mode）：3条消息，建立IPSec SA，协商IPSec策略（加密/认证算法、封装模式、感兴趣流、生命周期），生成IPSec密钥，可建立多个IPSec SA（不同方向/协议）。IKEv2简化为4条消息（IKE_SA_INIT 2条+IKE_AUTH 2条），同时建立IKE SA和第一个IPSec SA，更安全高效，支持MOBIKE（移动性），推荐使用。IKE使用UDP 500端口，NAT-T时用UDP 4500。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-d003', type: 'judge',
     question: 'DDoS攻击中，UDP Flood通过发送大量伪造源IP的UDP报文，耗尽目标带宽和处理能力。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'UDP Flood是常见的DDoS攻击：攻击者发送大量伪造源IP的UDP报文到目标服务器的随机端口，目标服务器收到后：1.消耗带宽（大量UDP报文占满上行/下行带宽）。2.消耗CPU（检查端口、发送ICMP端口不可达响应）。3.耗尽连接表（防火墙/路由器状态表被占满）。UDP是无连接协议，不需要三次握手，攻击者可以轻易伪造源IP发送大量UDP报文，目标无法通过握手验证来源，难以防御。防御方法：1.流量清洗（清洗中心识别并丢弃攻击流量，只转发合法流量）。2.黑洞路由（将攻击目标流量引入黑洞，牺牲目标可用性保护网络）。3.限速（对UDP流量限速，限制单IP速率）。4.源IP验证（uRPF，反向路径转发，检查源IP是否真实可达，丢弃伪造源IP）。5.任何cast（分布式架构分散攻击流量）。6.CDN/云清洗（利用云厂商大带宽和清洗能力）。其他DDoS攻击：SYN Flood（TCP半连接耗尽）、ICMP Flood（Ping洪水/Smurf）、HTTP Flood（CC攻击，大量HTTP请求耗尽Web服务器）、DNS Query Flood（大量DNS请求耗尽DNS服务器）、NTP/SSDP反射放大攻击（利用开放服务器放大攻击流量，放大倍数可达数百倍）、慢速攻击（Slowloris，慢速发送HTTP头保持连接耗尽连接数）等。DDoS防御是综合工程，需要网络层、应用层、云清洗多层防护。',
-    knowledgeId: 'security-attack-defense', direction: 'security',
+    knowledgeId: 'security-attack-defense', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-d004', type: 'single',
@@ -2945,7 +2951,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['协商加密算法并交换会话密钥，之后用对称密钥加密HTTP数据', '用非对称密钥加密所有HTTP数据', '验证服务器身份并直接传输数据', '压缩HTTP数据'],
     answer: '协商加密算法并交换会话密钥，之后用对称密钥加密HTTP数据',
     explanation: 'HTTPS = HTTP + TLS/SSL，TLS（Transport Layer Security，传输层安全）握手过程：1.客户端发送Client Hello：支持的TLS版本、加密套件列表、随机数（Client Random）。2.服务器回复Server Hello：选择的TLS版本和加密套件、随机数（Server Random）、服务器数字证书（包含公钥）。3.客户端验证证书（CA签名、有效期、域名匹配、是否撤销），生成预主密钥（Pre-master Secret），用服务器公钥加密后发送（Key Exchange）。4.双方用Client Random+Server Random+Pre-master Secret计算会话密钥（Master Secret→会话密钥）。5.客户端发送Finished（用会话密钥加密，验证密钥协商成功）。6.服务器发送Finished（确认）。7.握手完成，之后所有HTTP数据用会话密钥（对称加密，如AES）加密传输，保证机密性、完整性、身份认证。TLS握手的核心：用非对称加密（RSA/ECC）安全交换会话密钥，用对称加密（AES/ChaCha20）高效加密大量数据，用哈希算法（SHA-256）保证完整性，用数字证书认证服务器身份（可选客户端认证）。TLS版本：SSL 3.0（已淘汰，不安全）、TLS 1.0/1.1（已淘汰）、TLS 1.2（当前主流）、TLS 1.3（最新，更快更安全，握手简化为1-RTT甚至0-RTT）。HTTPS默认端口443，HTTP默认80。HTTPS是网络安全基础，所有网站都应启用（Let\u2019s Encrypt免费证书）。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IE',
   },
   {
     id: 'wlan-d001', type: 'single',
@@ -2953,14 +2959,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['使用多根天线同时收发多路数据流，提高速率和可靠性', '增加发射功率', '扩展频段到6GHz', '简化认证流程'],
     answer: '使用多根天线同时收发多路数据流，提高速率和可靠性',
     explanation: 'MIMO（Multiple-Input Multiple-Output，多输入多输出）：使用多根发射天线和多根接收天线，同时收发多路独立的数据流，在不增加带宽和发射功率的情况下，成倍提高无线传输速率和链路可靠性。802.11n（Wi-Fi 4）首次引入MIMO，支持最多4x4 MIMO（4根发射4根接收，4个空间流），理论速率最高600Mbps（40MHz带宽+4空间流+64-QAM）。MIMO技术分类：1.空间复用（Spatial Multiplexing）：多根天线同时发送不同数据流，接收端区分，成倍提高速率（如2x2 MIMO速率是1x1的2倍）。2.发射分集（Transmit Diversity）：多根天线发送相同数据的不同编码，接收端合并，提高可靠性和覆盖（如STBC空时块编码）。3.接收分集（Receive Diversity）：多根天线接收相同信号，选择最强或合并，提高接收质量。4.波束成形（Beamforming）：多根天线调整相位，使信号在目标方向增强，在其他方向减弱，提高覆盖和抗干扰。MIMO是Wi-Fi速率提升的核心技术：Wi-Fi 4（802.11n）4x4 MIMO；Wi-Fi 5（802.11ac）8x8 MU-MIMO（下行）；Wi-Fi 6（802.11ax）8x8上下行MU-MIMO+OFDMA；Wi-Fi 7（802.11be）16x16 MU-MIMO。注意：MIMO需要收发双方都支持多天线才能发挥作用，单天线设备无法享受空间复用增益。实际速率受天线数量、信号质量、干扰、设备能力等影响，通常远低于理论值。',
-    knowledgeId: 'wlan-wifi6', direction: 'wlan',
+    knowledgeId: 'wlan-wifi6', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-d002', type: 'judge',
     question: 'WLAN直接转发（本地转发）模式下，用户数据不经过AC，由AP直接转发到有线网络。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'WLAN数据转发模式：1.直接转发（Direct Forwarding，本地转发Local Switching）：AP直接将用户数据帧（802.11转802.3，根据VLAN标签）转发到有线网络，不经过AC。控制报文（CAPWAP控制隧道）仍经过AC。优点：性能好（数据不经过AC，AC无瓶颈，AP线速转发）、网络拓扑简单、AC故障不影响已有用户数据。缺点：安全策略分散（用户数据不经过AC，AC上的安全策略/内容过滤无法直接应用，需在AP或上游设备配置）。2.隧道转发（Tunnel Forwarding，集中转发Central Switching）：用户数据通过CAPWAP数据隧道（UDP 5247）封装到AC，由AC统一解封装和转发。优点：集中控制（所有用户数据经过AC，可统一应用安全策略、QoS、内容过滤、流量统计）、便于集中管理审计。缺点：AC可能成为性能瓶颈、延迟稍高、AC故障影响所有用户数据。直接转发是当前企业WLAN主流（AC性能通常不足以承载所有用户数据，尤其高密场景），隧道转发适用于需要集中安全控制或小规模场景。华为AC通过forward-mode命令配置（direct/tunnel），可基于VAP模板配置不同SSID使用不同转发模式。直接转发模式下，AP需要配置业务VLAN（用户数据所属VLAN），AP的上行口需允许这些VLAN通过（Trunk/Hybrid）。隧道转发模式下，用户数据在AC上解封装后从AC的业务VLAN接口转发，AP只需管理VLAN连通AC即可。',
-    knowledgeId: 'wlan-arch', direction: 'wlan',
+    knowledgeId: 'wlan-arch', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-d001', type: 'single',
@@ -2968,14 +2974,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['VTEP将BUM流量复制多份单播发给所有同VNI的VTEP，不需要underlay组播', '利用underlay组播树分发，效率高', '只复制给指定VTEP', '丢弃BUM流量'],
     answer: 'VTEP将BUM流量复制多份单播发给所有同VNI的VTEP，不需要underlay组播',
     explanation: 'VXLAN中BUM流量（Broadcast广播、Unknown unicast未知单播、Multicast组播）处理方式：1.头端复制（Head End Replication，HER）：VTEP收到BUM流量后，将报文复制多份，分别单播发送给所有属于同一VNI的远端VTEP（基于头端复制列表，通过EVPN Type 3路由或静态配置学习）。优点：简单，不需要underlay网络支持组播（数据中心underlay通常不启用组播）。缺点：VTEP数量多时复制开销大，带宽浪费（重复发送多份相同报文），头端VTEP压力大。2.组播（Multicast）：利用underlay三层网络的组播树（PIM等）分发BUM流量，每个VNI映射到一个组播组，VTEP加入对应组播组，BUM流量通过组播树分发。优点：效率高（网络自动复制，不重复发送）。缺点：需要underlay支持组播，配置复杂，数据中心underlay通常不启用组播。EVPN环境下通常用头端复制（因为数据中心underlay不启用组播，用BGP EVPN代替），通过EVPN Type 3路由（Inclusive Multicast Ethernet Tag Route）自动发现同VNI的VTEP并构建头端复制列表，无需手动配置。头端复制列表包含所有同VNI的远端VTEP IP地址，VTEP收到BUM流量后遍历列表逐份发送。头端复制是小规模VXLAN部署的常用方式，大规模部署（VTEP数量多）推荐用组播或EVPN+头端复制（EVPN自动维护列表，减少配置，但复制开销仍在）。BUM流量是VXLAN网络的重要开销，控制面学习（EVPN）可减少未知单播泛洪（MAC地址通过控制面同步，无需数据面学习）。',
-    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-d002', type: 'judge',
     question: 'EVPN作为VXLAN的控制面，通过BGP Type 2路由同步主机MAC和IP地址，无需数据面泛洪学习。',
     options: ['正确', '错误'], answer: '正确',
     explanation: '传统VXLAN（无EVPN）的控制面：数据面学习（Data Plane Learning），VTEP通过泛洪BUM流量和源MAC学习来获取MAC-VTEP映射，类似传统以太网的学习方式，存在泛洪量大、MAC移动检测慢、扩展性差等问题。EVPN（Ethernet VPN，以太网VPN）作为VXLAN的控制面：1.通过BGP（MP-BGP的L2VPN EVPN地址族）在VTEP之间同步主机信息。2.Type 2路由（MAC/IP Advertisement Route）：携带主机的MAC地址、IP地址、VNI、VTEP IP等信息，VTEP收到后直接安装MAC表项和ARP表项，无需数据面泛洪学习。3.控制面学习的优势：减少BUM泛洪（MAC/IP通过控制面同步，无需泛洪学习）、快速收敛（主机移动/故障时通过路由撤销快速更新）、可扩展（BGP控制面支持大规模网络）、支持高级功能（分布式网关、ARP代理、多归接入等）。EVPN其他路由类型：Type 1（ES自动发现，多归接入）、Type 3（VTEP发现/头端复制列表）、Type 4（DF选举，多归接入避免BUM重复）、Type 5（IP前缀路由，分布式网关/外部路由）。EVPN+VXLAN是当前数据中心overlay网络的标准架构（IP Fabric underlay + EVPN/VXLAN overlay），被各大云厂商和企业数据中心广泛采用，替代了传统VXLAN的数据面学习和STP大二层。EVPN最初用于L2VPN（VPWS/VPLS替代），后扩展到VXLAN控制面，成为数据中心网络的核心技术。华为数据中心交换机（CE系列）全面支持EVPN/VXLAN，iMaster NCE-Fabric控制器实现自动化部署。',
-    knowledgeId: 'dcn-evpn', direction: 'dcn',
+    knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dc-d006', type: 'single',
@@ -2983,40 +2989,23 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['解决不同VPN用户使用相同IP地址（地址重叠）的问题，使VPNv4地址全局唯一', '控制VPN路由的导入导出', '加密VPN数据', '选择最优VPN路由'],
     answer: '解决不同VPN用户使用相同IP地址（地址重叠）的问题，使VPNv4地址全局唯一',
     explanation: 'MPLS L3VPN中，RD（Route Distinguisher，路由区分符，8字节）的作用：在用户IPv4地址（4字节）前添加RD，形成12字节的VPNv4地址，使不同VPN用户使用相同的IP地址（地址重叠）时，在公网BGP路由表中仍能区分，保证全局唯一。RD格式：Type 0（2字节Type+2字节AS号+4字节分配值，AS:NN）、Type 1（2字节Type+4字节IP地址+2字节分配值，IP:NN）、Type 2（2字节Type+4字节AS号+2字节分配值）。RD只用于区分地址，不用于控制路由的导入导出（控制导入导出的是RT）。RT（Route Target，路由目标，扩展团体属性，8字节）的作用：控制VPN路由的导入导出。导出（Export RT）：PE将VPN路由发布给对端时，标记Export RT；导入（Import RT）：对端PE根据本地VPN实例的Import RT，只导入RT匹配的路由。RT实现VPN间的路由隔离和互通（不同VPN RT不同则隔离，RT相同则互通）。RD和RT配合：RD解决地址重叠（使VPNv4唯一），RT解决路由隔离（控制哪些路由能进入哪个VPN）。一个VPN实例配置一个RD（也可多个，但通常一个），可配置多个Export RT和Import RT（实现一个VPN与多个VPN互通）。PE上为每个VPN创建独立的VPN实例（VPN Instance），有独立的路由表（VRF，VPN Routing and Forwarding）、转发表、接口，实现不同VPN的路由和数据隔离。',
-    knowledgeId: 'datacom-mpls-vpn', direction: 'datacom',
+    knowledgeId: 'datacom-mpls-vpn', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-d007', type: 'judge',
     question: 'IPv6中，SLAAC（无状态地址自动配置）不需要DHCPv6服务器，主机根据RA报文前缀自动生成地址。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IPv6地址自动配置方式：1.SLAAC（Stateless Address Autoconfiguration，无状态地址自动配置）：主机根据路由器发送的RA（Router Advertisement，路由器通告）报文中的前缀信息（Prefix Information Option），结合自己的接口标识（EUI-64或随机生成），自动生成全球单播IPv6地址，不需要DHCPv6服务器。过程：主机发送RS（Router Solicitation）请求→路由器回复RA（包含前缀、前缀长度、默认网关、MTU、跳数限制等）→主机用前缀+接口标识生成地址→进行DAD（重复地址检测）确认地址唯一→地址可用。SLAAC简单、无状态、扩展性好，但无法分配DNS、域名等其他参数（需RA中的RDNSS/DNSSL选项，或DHCPv6无状态模式补充）。2.DHCPv6有状态模式（Stateful DHCPv6）：DHCPv6服务器分配IPv6地址和其他参数（DNS、域名、SIP服务器等），有状态管理（服务器记录地址分配），适合需要集中管理和精确控制的场景。3.DHCPv6无状态模式（Stateless DHCPv6）：主机用SLAAC生成地址，用DHCPv6获取其他参数（DNS、域名等），结合两者优势。RA报文中的M位（Managed Address Configuration，管理地址配置位）和O位（Other Configuration，其他配置位）决定主机使用哪种方式：M=0,O=0→仅SLAAC；M=0,O=1→SLAAC+无状态DHCPv6；M=1,O=1→有状态DHCPv6。SLAAC是IPv6的特色，简化了地址配置，是IPv6网络的主流方式（尤其家庭和企业网络），DHCPv6用于需要集中管理的场景。EUI-64接口标识：由MAC地址（48位）插入FFFE在中间，并翻转U/L位（第7位）形成64位接口标识，如MAC 00:11:22:33:44:55→EUI-64 02:11:22:FF:FE:33:44:55。为保护隐私，现代操作系统默认使用随机生成的临时接口标识（Privacy Extensions，RFC 4941），而非EUI-64。',
-    knowledgeId: 'datacom-ipv6-basic', direction: 'datacom',
+    knowledgeId: 'datacom-ipv6-basic', direction: 'datacom', difficulty: 'IA',
   },
 
 
-  // ==================== 扩充题库 Batch E ====================
-  {
-    id: 'dc-e001', type: 'single',
-    question: 'OSPF中，NSSA区域与Stub区域的主要区别是？',
-    options: ['NSSA允许引入外部路由（Type 7），Stub不允许', 'NSSA不接收Type 3，Stub接收', 'NSSA不接收Type 5，Stub接收', 'NSSA是骨干区域，Stub不是'],
-    answer: 'NSSA允许引入外部路由（Type 7），Stub不允许',
-    explanation: 'OSPF末梢区域对比：Stub区域：不接收Type 4（ASBR位置）和Type 5（外部路由），但接收Type 3（区域间路由）和Type 1/2（本区域）。Stub区域内不能有ASBR（不能引入外部路由）。Totally Stub：不接收Type 3（除默认路由）、Type 4、Type 5，只接收Type 1/2和默认Type 3，最严格。NSSA（Not-So-Stubby Area，非纯末梢区域）：不接收Type 4和Type 5，但接收Type 3，且允许本区域内有ASBR引入外部路由（生成Type 7 LSA，仅在NSSA内泛洪，到ABR后转换为Type 5发布到其他区域）。NSSA解决了Stub区域不能引入外部路由的限制，适用于需要引入外部路由但又想减少LSA的末节区域。Totally NSSA：不接收Type 3（除默认）、Type 4、Type 5，允许Type 7，是NSSA的更严格版本。四种末梢区域都不能有虚链路（Virtual Link），都不能有ASBR（NSSA除外）。末梢区域的作用：减少LSA数量和路由表规模，提高稳定性，降低路由器资源消耗，适用于只有一个出口的末节区域。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
-  },
-  {
-    id: 'dc-e002', type: 'single',
-    question: 'BGP中，路由反射器（RR）从客户端学到的路由会反射给谁？',
-    options: ['仅反射给其他客户端', '反射给所有客户端和非客户端', '仅反射给非客户端', '不反射，只自己使用'],
-    answer: '反射给所有客户端和非客户端',
-    explanation: 'BGP路由反射器（RR，Route Reflector）的反射规则：1.从客户端（Client）学到的路由：反射给所有其他客户端和所有非客户端（Non-client）。2.从非客户端学到的路由：仅反射给所有客户端，不反射给其他非客户端。3.从EBGP邻居学到的路由：发给所有客户端和非客户端（正常BGP行为）。4.从EBGP学到的路由不反射给EBGP邻居（正常BGP行为，防环）。RR打破了IBGP水平分割（从IBGP学到的路由不再传给其他IBGP），通过反射机制使IBGP邻居无需全互联。RR的防环机制：Originator_ID（标记路由原始发起者，原始发起者收到含自己ID的路由则丢弃）和Cluster_List（记录路由经过的RR簇，RR收到含自己Cluster ID的路由则丢弃）。RR的客户端（Client）：与RR建立IBGP邻居，接受RR反射的路由，客户端之间不需要建立IBGP邻居。非客户端（Non-client）：与RR建立IBGP邻居，但不是RR的客户端，非客户端之间仍需全互联（或被其他RR管理）。一个RR可管理多个客户端，形成一个簇（Cluster），簇ID默认是RR的Router ID，可手动配置。多个RR可组成相同簇（相同Cluster ID），提供冗余备份，避免单点故障。RR是大规模BGP网络的必备技术，运营商网络和大型企业网络广泛使用，替代IBGP全互联（n台路由器需n(n-1)/2条IBGP邻居，扩展性差）。RR可层级部署（RR的RR，即分层路由反射），适用于超大规模网络。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
-  },
-  {
+    {
     id: 'dc-e003', type: 'judge',
     question: 'IS-IS中，DIS（指定中间系统）选举是可抢占的，新加入的高优先级路由器会立即成为DIS。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IS-IS中DIS（Designated IS，指定中间系统）选举特点：1.选举依据：接口优先级（Priority，0-127，默认64，值越大越优先，优先级0也参与选举），优先级相同时System ID大的优先。2.可抢占（Preemptive）：新加入的高优先级路由器会立即抢占成为DIS，不需要等待当前DIS故障。这与OSPF不同（OSPF DR不可抢占，只有DR故障时BDR才成为DR）。3.没有备份DIS（没有BDR）：DIS故障后需要重新选举新DIS，期间有短暂中断。OSPF有BDR（备份指定路由器），DR故障后BDR立即成为DR，无中断。4.DIS负责：生成伪节点（Pseudonode）LSP（简化广播网络链路状态描述）、周期性发送CSNP（完全序列号报文，10秒一次，用于数据库同步）。IS-IS DIS与OSPF DR对比：IS-IS DIS可抢占、无备份、优先级0也参与、生成伪节点LSP；OSPF DR不可抢占、有BDR备份、优先级0不参与选举（DROther）、生成Type 2 Network LSA。两者都是在广播网络（Broadcast）和NBMA网络中选举，点到点（P2P）和点到多点（P2MP）网络不选举。DIS的优先级可通过isis dis-priority命令在接口上配置（0-127），修改后立即生效（可抢占）。DIS选举是IS-IS的重要机制，确保广播网络中链路状态数据库的高效同步和LSA的高效泛洪。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-e004', type: 'single',
@@ -3024,7 +3013,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['域名（Configuration Name）相同', '修订级别（Revision Level）相同', 'VLAN-实例映射关系相同', '交换机的MAC地址相同'],
     answer: '交换机的MAC地址相同',
     explanation: 'MSTP（Multiple Spanning Tree Protocol，802.1s）中，MST域（MST Region）的判定条件（三个条件必须完全相同）：1.域名（Configuration Name，配置名称，32字节）：MST域的名称，标识一个MST域。2.修订级别（Revision Level，修订级别，2字节）：MST域配置的版本号，修改配置后可递增。3.VLAN-实例映射关系（VLAN-to-instance Mapping，VLAN与MSTI的映射关系）：哪些VLAN映射到哪个MSTI实例。这三个条件完全相同的交换机才属于同一个MST域，不同MST域之间通过CST（公共生成树）互通。MAC地址不需要相同（每台交换机MAC地址都不同）。MST域内运行多个MSTI（多生成树实例），每个MSTI独立计算生成树，可映射不同VLAN，实现VLAN负载分担（不同VLAN走不同路径，提高链路利用率）。MSTI仅在MST域内有效，不跨域。MSTP兼容STP和RSTP：与STP/RSTP设备互联时，MSTP端口发送STP/RSTP BPDU（或MSTP BPDU，STP设备将MSTP BPDU视为RSTP BPDU），实现互通。MSTP的优势：兼容STP/RSTP、多实例负载分担、减少VLAN场景端口阻塞、提高链路利用率、可扩展性好，是企业网络的主流生成树协议。华为交换机默认MSTP模式，可通过stp mode命令修改为STP/RSTP/MSTP。MSTP配置：配置域名、修订级别、VLAN-实例映射、MSTI优先级（指定根桥/备份根桥）、端口优先级/路径开销等。MSTP是华为ICT大赛网络赛道的高频考点，需重点掌握MST域配置、MSTI负载分担、与STP/RSTP互通等。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-e005', type: 'single',
@@ -3032,7 +3021,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['静态路由由管理员手动配置，不会自动适应拓扑变化', '静态路由优先级默认60，数值越小优先级越高', '静态路由支持迭代（下一跳非直连时递归查找最终下一跳）', '静态路由不能用于默认路由（0.0.0.0/0）'],
     answer: '静态路由不能用于默认路由（0.0.0.0/0）',
     explanation: '静态路由（Static Route）特点：1.手动配置：由管理员手动配置，不会自动适应拓扑变化，拓扑变化后需手动修改，适合小型稳定网络。2.优先级默认60（华为），数值越小优先级越高，可通过preference参数修改。3.支持迭代（递归查找）：下一跳非直连时，递归查找最终下一跳（通过路由表查找下一跳的出接口）。4.可用于默认路由：ip route-static 0.0.0.0 0.0.0.0 下一跳，静态默认路由是最常用的默认路由方式（企业出口指向ISP）。5.支持浮动静态路由（Floating Static）：配置高优先级（大数值）作为备份，主路由故障时启用。6.支持黑洞路由（Null0）：下一跳为Null0接口，丢弃匹配流量，用于防环路或流量过滤。7.支持永久静态路由（Permanent）：出接口down时仍保留在路由表中（普通静态路由出接口down时撤销）。静态路由的优点：简单、可控、不占用带宽（无路由协议报文）、安全（不广播路由信息）、路由器资源消耗小。缺点：不能自动适应拓扑变化、配置维护工作量大（大规模网络）、容易配置错误、不适合大规模复杂网络。静态路由适用于：小型网络、末节网络（只有一个出口）、默认路由、特定流量的精确控制、与动态路由协议配合（如引入静态路由到OSPF/BGP）。静态路由是华为ICT大赛网络赛道的基础考点，需掌握配置、优先级、迭代、浮动路由、黑洞路由、默认路由等。',
-    knowledgeId: 'datacom-static-route', direction: 'datacom',
+    knowledgeId: 'datacom-static-route', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-e001', type: 'single',
@@ -3040,7 +3029,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['检测应用层协议状态，自动开放动态端口（如FTP数据连接）', '加密应用层数据', '过滤URL', '防病毒'],
     answer: '检测应用层协议状态，自动开放动态端口（如FTP数据连接）',
     explanation: 'ASPF（Application Specific Packet Filter，应用层包过滤，也叫状态检测的应用层扩展）：1.检测应用层协议状态：跟踪应用层协议的协商过程（如FTP的PORT/PASV命令、SIP的邀请/响应、H.323的呼叫建立、RTSP的播放/暂停、DNS的查询/响应等），理解应用层语义。2.自动开放动态端口：很多应用层协议（如FTP主动模式、SIP、H.323、RTSP、Oracle等）在控制连接中协商动态数据端口，数据连接使用临时端口，传统包过滤无法预知这些端口（无法预先开放），ASPF检测控制连接中的协商信息，自动临时开放对应的数据端口（创建临时会话表项），数据传输完成后自动关闭，既保证应用正常工作，又提高安全性（不需要长期开放大范围端口）。3.检测应用层异常：如FTP命令序列异常、SIP消息格式错误、DNS报文异常等，防止应用层攻击。4.支持的协议：FTP、SIP、H.323（H.225/H.245）、RTSP、DNS、HTTP、SMTP、POP3、IMAP、Oracle、MSN/QQ（即时通讯）、PPTP、SQL*Net等。ASPF与状态检测（Stateful Inspection）的关系：状态检测跟踪传输层状态（TCP/UDP/ICMP会话），ASPF进一步跟踪应用层状态（应用层协议协商和动态端口），是状态检测的扩展和增强。华为防火墙默认开启状态检测，ASPF需在安全策略或域间配置中启用（detect ftp/sip/h323等）。ASPF是防火墙的重要功能，确保多通道应用（控制+数据）在严格安全策略下正常工作，是华为ICT大赛安全赛道的高频考点。注意：ASPF只检测应用层控制连接中的协商信息，不进行深度内容检测（DPI），深度内容检测由IPS/AV/URL过滤等UTM功能完成。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-e002', type: 'single',
@@ -3048,14 +3037,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['传输模式不新增IP头（原IP头不变），隧道模式新增外部IP头', '传输模式更安全', '隧道模式只能用于IPv6', '传输模式只能用于网关到网关'],
     answer: '传输模式不新增IP头（原IP头不变），隧道模式新增外部IP头',
     explanation: 'IPSec两种工作模式：1.传输模式（Transport Mode）：不新增外部IP头，原IP头保持不变，IPSec头（AH/ESP）插入在原IP头和传输层头之间。保护的是传输层及以上（TCP/UDP/应用数据），原IP头不被加密（ESP传输模式不加密IP头，AH认证IP头）。适用于主机到主机（End-to-End）通信，两台主机都支持IPSec，直接在两端之间建立IPSec，保护端到端通信。传输模式开销小（不新增IP头），但原IP头明文暴露（可被看到源/目的IP），且不支持NAT（NAT修改IP头会导致AH认证失败，ESP可用NAT-T但传输模式有限制）。2.隧道模式（Tunnel Mode）：新增外部IP头（新的源/目的IP，通常是VPN网关的IP），原IP头（用户的源/目的IP）被加密保护（ESP隧道模式加密整个原始IP包，包括原IP头）。适用于网关到网关（Site-to-Site）VPN，两台VPN网关之间建立IPSec隧道，用户数据在网关处封装，通过公网传输到对端网关解封装，用户主机不需要支持IPSec。隧道模式开销大（新增IP头，MTU减小），但原IP头被加密隐藏（更安全，用户内网拓扑不暴露），支持NAT（NAT-T），是VPN的主流模式。AH和ESP都支持传输模式和隧道模式，但AH不支持NAT（认证整个IP头，NAT修改IP头导致认证失败），ESP支持NAT-T（封装在UDP中）。IPSec VPN通常使用ESP隧道模式（加密+认证+网关到网关+支持NAT）。传输模式用于主机到主机的端到端保护（如服务器之间安全通信），隧道模式用于站点到站点VPN和远程接入VPN。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-e003', type: 'judge',
     question: '入侵防御系统（IPS）与入侵检测系统（IDS）的主要区别是IPS可以实时阻断攻击，IDS只能检测和告警。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IDS（Intrusion Detection System，入侵检测系统）和IPS（Intrusion Prevention System，入侵防御系统）的区别：1.部署方式：IDS通常旁路部署（镜像流量，不串接在网络中），IPS通常串接部署（Inline，流量经过IPS）。2.响应方式：IDS只能检测和告警（发现攻击后发送告警，不阻断流量，因为旁路部署无法阻断），IPS可以实时阻断攻击（发现攻击后直接丢弃或重置连接，因为串接部署可以阻断）。3.实时性：IDS是事后检测（检测到攻击时攻击可能已经发生），IPS是实时防御（在攻击到达目标前阻断）。4.性能要求：IDS对性能要求较低（旁路，不影响业务），IPS对性能要求高（串接，不能成为瓶颈，不能误阻断正常业务）。5.误报影响：IDS误报只产生告警，不影响业务；IPS误报会阻断正常业务，影响较大，所以IPS需要更精确的检测和更谨慎的策略。现代防火墙通常集成IPS功能（UTM/NGFW，下一代防火墙），在防火墙的基础上增加入侵防御、反病毒、URL过滤、应用控制等功能，一台设备实现多种安全防护。IPS检测方法：1.特征匹配（Signature-based）：基于已知攻击特征（漏洞利用代码、恶意软件特征）匹配，准确率高，但只能检测已知攻击。2.异常检测（Anomaly-based）：基于行为基线，检测偏离正常行为的异常，可检测未知攻击（零日攻击），但误报率较高。3.协议分析（Protocol Analysis）：解析应用层协议，检测协议异常和攻击（如SQL注入、XSS、缓冲区溢出）。IPS是华为ICT大赛安全赛道的重要考点，需掌握IPS原理、部署方式、签名管理、响应动作（告警/阻断/重置）、与防火墙联动等。',
-    knowledgeId: 'security-ips', direction: 'security',
+    knowledgeId: 'security-ips', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-e004', type: 'single',
@@ -3063,7 +3052,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['固定长度输出', '单向性（不可逆）', '抗碰撞性', '加密后可解密还原'],
     answer: '加密后可解密还原',
     explanation: '哈希算法（Hash Algorithm，散列算法）特性：1.固定长度输出：任意长度输入映射为固定长度输出（如MD5 128位、SHA-256 256位、SM3 256位）。2.单向性（One-way，不可逆）：从输入容易计算哈希值，但从哈希值无法反推原始输入（计算上不可行）。3.抗碰撞性（Collision Resistance）：难以找到两个不同输入产生相同哈希值（计算上不可行）。4.雪崩效应（Avalanche Effect）：输入微小变化（如一位改变）导致输出巨大变化（约一半位改变）。5.确定性：相同输入始终产生相同输出。哈希算法不是加密算法（加密是可逆的，有密钥，可解密还原；哈希是不可逆的，无密钥，不能还原）。哈希算法用途：1.数据完整性校验：文件下载校验、消息完整性验证（对比哈希值）。2.数字签名：对消息摘要签名（非对称加密签名摘要，不直接签名原始消息，因为非对称加密慢）。3.密码存储：存储密码的哈希值（加盐+慢哈希），不存储明文密码，验证时对比哈希。4.消息认证码（HMAC）：哈希+密钥，实现消息认证和完整性。5.区块链：区块哈希、Merkle树。已不安全的哈希算法：MD5（2004年碰撞攻击，已破解）、SHA-1（2017年实际碰撞，已破解）。仍安全的算法：SHA-2（SHA-256/384/512）、SHA-3（Keccak）、SM3（国密）、BLAKE2/3。注意：密码存储不能直接用MD5/SHA等快速哈希（易被彩虹表/暴力破解），应使用加盐+慢哈希算法（bcrypt、scrypt、Argon2、PBKDF2）。哈希算法是华为ICT大赛安全赛道的基础考点，需掌握常见算法、特性、安全性、应用场景等。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IE',
   },
   {
     id: 'wlan-e001', type: 'single',
@@ -3071,14 +3060,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['开放认证（Open System）', '共享密钥认证（Shared Key，WEP）', 'WPA2-PSK（AES）', 'WPA3-Enterprise（802.1X+SAE）'],
     answer: 'WPA3-Enterprise（802.1X+SAE）',
     explanation: 'WLAN认证方式安全性从低到高：1.开放认证（Open System Authentication）：无认证，任何设备都可关联，完全不安全，仅用于公共热点（配合Portal认证）或测试。2.WEP（Wired Equivalent Privacy，有线等效保密）：共享密钥认证+WEP加密（RC4），已被破解（IV重用、密钥流恢复、FMS攻击），安全性极低，已淘汰。3.WPA-PSK（TKIP）：预共享密钥+TKIP加密（RC4的改进，仍不安全），临时过渡方案，已淘汰。4.WPA2-PSK（AES-CCMP）：预共享密钥+AES-CCMP加密，四次握手，安全性较好，但存在KRACK攻击（密钥重装攻击）和离线字典攻击（PSK被捕获后可暴力破解），适合家庭和小型企业。5.WPA2-Enterprise（802.1X+RADIUS）：企业级认证，每个用户独立账号密码（或证书），RADIUS服务器认证，每个用户独立密钥，安全性高，适合中大型企业。6.WPA3-Enterprise（802.1X+SAE/192位安全模式）：WPA3企业级，使用SAE（Simultaneous Authentication of Equals，对等同时认证，抵抗离线字典攻击和KRACK），192位安全模式（CNSA算法套件，最高安全等级），安全性最高，适合高安全要求场景（政府、金融、军事）。7.WPA3-Personal（SAE）：WPA3个人级，使用SAE替代PSK四次握手，抵抗离线字典攻击，安全性比WPA2-PSK高，适合家庭和小型企业。WPA3是当前最新Wi-Fi安全标准（2018年发布），强制使用AES-CCMP（WPA3-Personal）或AES-GCMP-256（WPA3-Enterprise 192位），支持管理帧保护（PMF，Protected Management Frames，防止解除认证攻击），前向保密（Forward Secrecy）。WLAN安全是华为ICT大赛WLAN赛道的高频考点，需掌握各种认证加密方式、原理、安全性、配置等。',
-    knowledgeId: 'wlan-security', direction: 'wlan',
+    knowledgeId: 'wlan-security', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-e002', type: 'judge',
     question: 'WLAN中，频谱导航（Band Steering）的作用是引导双频终端优先连接5GHz，减轻2.4GHz拥塞。',
     options: ['正确', '错误'], answer: '正确',
     explanation: '频谱导航（Band Steering，也叫频段导航、双频优选）：双频AP同时提供2.4GHz和5GHz两个频段，频谱导航功能引导支持双频的终端（手机、笔记本等）优先连接5GHz频段，将2.4GHz留给仅支持2.4GHz的终端（IoT设备、老设备），从而：1.减轻2.4GHz拥塞（2.4G信道少、干扰大、设备多，容易拥塞）。2.提高整体性能（5G速率高、干扰小、延迟低，双频终端在5G获得更好体验）。3.负载均衡（两个频段合理分配终端，避免2.4G过载而5G空闲）。频谱导航工作原理：1.终端扫描时，AP在2.4GHz延迟响应或不响应Probe Request（探测请求），引导终端去扫描5GHz。2.终端关联2.4GHz时，AP拒绝关联（或先拒绝几次），引导终端关联5GHz。3.如果终端多次尝试2.4G仍不连接5G（可能5G信号弱或终端仅支持2.4G），则允许连接2.4G。4.基于终端的双频能力（支持5G）、信号强度（5G信号足够好）、负载情况（2.4G负载高）综合判断。频谱导航配置：在AP系统模板或VAP模板下配置band-steer enable，可配置拒绝关联次数、5G信号阈值、2.4G负载阈值等参数。频谱导航是企业WLAN的常用功能，尤其高密度场景（会议室、体育场、商场），能显著提升整体性能和用户体验。注意：频谱导航需要终端支持5GHz，仅支持2.4GHz的终端不受影响；频谱导航可能导致终端关联时间稍长（几次拒绝后才允许），但体验提升明显；某些终端可能对频谱导航不友好（反复尝试2.4G），可调整参数或关闭。WLAN射频优化是华为ICT大赛WLAN赛道的高频考点，需掌握频谱导航、负载均衡、漫游优化、信道功率调整、覆盖优化、高密部署等。',
-    knowledgeId: 'wlan-rf', direction: 'wlan',
+    knowledgeId: 'wlan-rf', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-e001', type: 'single',
@@ -3086,14 +3075,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['数据中心内部服务器之间的流量', '数据中心与Internet之间的流量', '数据中心与分支机构之间的流量', '用户访问数据中心的流量'],
     answer: '数据中心内部服务器之间的流量',
     explanation: '数据中心流量分类：1.东西向流量（East-West Traffic）：数据中心内部服务器之间的流量（服务器到服务器），如分布式计算（Hadoop/Spark）、存储访问（SAN/NAS）、虚拟机迁移、微服务通信、数据库复制、应用服务器到数据库服务器等。东西向流量占数据中心总流量的70-80%以上（云计算和分布式应用使得内部流量远大于外部流量）。2.南北向流量（North-South Traffic）：数据中心与外部网络之间的流量（数据中心到Internet/分支机构/用户），如用户访问Web应用、服务器访问Internet、数据中心间互联等。南北向流量占20-30%。东西向流量的特点：流量大、持续增长、模式复杂（多对多通信）、对延迟和带宽敏感、虚拟机动态迁移导致流量模式变化。传统三层架构（核心-汇聚-接入）的问题：东西向流量需要经过核心层（接入→汇聚→核心→汇聚→接入），核心层成为瓶颈，延迟高，带宽不足，STP阻塞冗余链路导致带宽利用率低。Spine-Leaf架构的优势：任意两台服务器通信都是2跳（Leaf→Spine→Leaf），延迟低且一致，ECMP多路径负载分担充分利用所有链路带宽，无阻塞，水平扩展方便，专门优化东西向流量。数据中心网络设计以东西向流量为中心（而不是传统网络以南北向为中心），这是数据中心网络与传统企业网络的核心区别。VXLAN/EVPN大二层、分布式网关、Spine-Leaf、RDMA/RoCE（低延迟存储网络）、网络遥测（Telemetry）等都是为了优化东西向流量。数据中心网络是华为ICT大赛DCN（数据通信网络）赛道的重要方向，需掌握Spine-Leaf、VXLAN、EVPN、SDN、存储网络、网络自动化等。',
-    knowledgeId: 'dcn-arch', direction: 'dcn',
+    knowledgeId: 'dcn-arch', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-e002', type: 'judge',
     question: 'VXLAN中，VNI（VXLAN网络标识符）占24位，支持约1600万个VXLAN网段，远多于VLAN的4094个。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'VXLAN（Virtual Extensible LAN，虚拟可扩展局域网，RFC 7348）中，VNI（VXLAN Network Identifier，VXLAN网络标识符）占24位，支持2^24 = 16,777,216个VXLAN网段（约1600万个），远多于VLAN的4094个（VLAN ID占12位，2^12=4096，可用1-4094）。VNI的作用：1.标识一个VXLAN网段（类似VLAN ID标识VLAN），不同VNI之间二层隔离。2.在VXLAN封装头中携带VNI，对端VTEP根据VNI确定目标VXLAN网段。3.解决VLAN数量不足的问题，满足云计算和多租户数据中心的需求（大量租户需要隔离的二层网络，4094个VLAN远远不够）。VXLAN封装格式：外层以太网头（14字节）+外层IP头（20字节，源/目的VTEP IP）+外层UDP头（8字节，目的端口4789，源端口哈希用于ECMP负载分担）+VXLAN头（8字节，Flags 1字节+Reserved 3字节+VNI 3字节+Reserved 1字节）+原始以太网帧（14字节+载荷+FCS 4字节）。VXLAN头8字节中，VNI占24位（3字节），Flags中I位（第8位）设为1表示VNI有效。VXLAN通过MAC-in-UDP封装，在三层IP网络（underlay）上构建大二层虚拟网络（overlay），解决：1.VLAN数量不足（4094限制）。2.大二层扩展（STP无法支撑大规模二层，VXLAN基于三层underlay，可利用ECMP多路径）。3.虚拟机迁移（IP不变，大二层域内任意迁移，业务不中断）。4.多租户隔离（不同VNI隔离，满足云计算多租户需求）。VXLAN是当前数据中心网络overlay的主流技术，通常与EVPN（控制面）配合使用（IP Fabric + EVPN/VXLAN），被AWS、Azure、Google、阿里云、华为云等所有主流云厂商采用。VXLAN是华为ICT大赛DCN赛道的核心考点，需掌握封装格式、VNI、VTEP、BUM流量处理、头端复制、EVPN控制面、分布式网关等。',
-    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
 
 
@@ -3104,7 +3093,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['连接非骨干区域到骨干区域Area 0，修复不连续的骨干区域', '提高OSPF收敛速度', '加密OSPF报文', '负载均衡'],
     answer: '连接非骨干区域到骨干区域Area 0，修复不连续的骨干区域',
     explanation: 'OSPF虚链路（Virtual Link）：在两台ABR之间建立逻辑链路（穿越一个非骨干区域，称为传输区域Transit Area），将一个非骨干区域逻辑上连接到骨干区域Area 0。作用：1.修复不连续的骨干区域：由于网络合并或设计问题，Area 0被分割成两部分，通过虚链路将两部分逻辑连接，保持骨干区域连续。2.连接远离骨干的区域：一个非骨干区域没有直接连接到Area 0（违反OSPF区域设计规则，所有区域必须直接连接Area 0），通过虚链路逻辑连接到Area 0。虚链路特点：1.穿越一个传输区域（Transit Area，不能是Stub/Totally Stub/NSSA区域，因为这些区域不允许Type 5，虚链路需要Type 5传递）。2.两端必须是ABR（至少有一个接口在Area 0，或通过虚链路连接到Area 0）。3.虚链路属于骨干区域Area 0（逻辑上），在传输区域内通过Type 1/2 LSA计算到对端ABR的路径，然后建立虚邻接。4.虚链路不稳定（依赖传输区域的拓扑），不推荐长期使用，应作为临时修复方案，最终应重新设计网络拓扑使所有区域直接连接Area 0。5.虚链路配置：在两端ABR上配置area <transit-area> virtual-link <peer-router-id>。虚链路是OSPF的重要考点，需掌握作用、适用场景、配置、限制（传输区域不能是末梢区域）等。注意：虚链路不能穿越Stub/Totally Stub/NSSA区域，因为这些区域过滤Type 5 LSA，而虚链路需要传递路由信息。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-f002', type: 'single',
@@ -3112,22 +3101,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['将一个大AS划分为多个子AS，减少IBGP全互联数量', '提高BGP收敛速度', '加密BGP报文', '选择最优路由'],
     answer: '将一个大AS划分为多个子AS，减少IBGP全互联数量',
     explanation: 'BGP联盟（Confederation，也叫联邦）：将一个大的AS（自治系统）划分为多个子AS（Sub-AS，也叫Member AS），子AS之间使用EBGP关系，但对外表现为一个整体AS（联盟AS号，对外可见）。作用：减少IBGP全互联数量（IBGP水平分割导致IBGP邻居需要全互联，n台路由器需n(n-1)/2条IBGP邻居，大规模网络不可扩展）。联盟原理：1.子AS内部：使用IBGP，仍需全互联或使用RR（路由反射器）。2.子AS之间：使用EBGP关系（但行为与普通EBGP不同，Next_Hop、MED、Local_Pref等属性在子AS间保留，类似IBGP），子AS间不需要全互联（EBGP没有水平分割限制）。3.对外：整个联盟使用一个联盟AS号（Confederation ID），外部AS看到的是联盟AS号，不知道内部子AS划分。4.AS_Path属性：子AS号放入AS_Path的AS_CONFED_SEQUENCE/AS_CONFED_SET段，不影响路由优选的AS_Path长度比较（联盟内部AS号不计入AS_Path长度），但用于防环。联盟与RR（路由反射器）对比：1.RR：在一个AS内通过反射器减少IBGP全互联，配置简单，更常用。2.联盟：将AS划分为多个子AS，适合超大规模网络（如运营商），可与RR结合使用（子AS内部用RR）。3.联盟需要修改AS号配置，对外部有影响（联盟AS号），RR对外部透明。华为设备支持联盟，配置：bgp <confederation-id>，confederation id <confederation-id>，confederation peer-as <sub-as-list>。联盟是BGP扩展性的重要技术，是华为ICT大赛网络赛道的考点，需掌握原理、配置、与RR的区别、AS_Path处理等。注意：联盟内子AS号建议使用私有AS号（64512-65534），避免与公网AS号冲突。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-f003', type: 'judge',
     question: 'IS-IS中，ATT位（Attachment位）由L1/2路由器设置在L1 LSP中，通知L1路由器可以通过自己访问其他区域。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IS-IS中ATT位（Attachment Bit，附着位）：1.由L1/2路由器（Level-1-2）在发送的L1 LSP（链路状态PDU）中设置ATT位为1，表示"我连接到Level-2骨干区域，可以通过我访问其他区域"。2.L1路由器（Level-1）收到设置了ATT位的L1 LSP后，知道本区域有L1/2路由器连接到骨干，会生成一条指向最近的L1/2路由器的默认路由（类似OSPF Stub区域的默认路由），将访问其他区域的流量发给L1/2路由器。3.L1/2路由器如果只有L1邻居（没有L2邻居或L2链路down），则不设置ATT位（因为无法访问其他区域）。4.ATT位只在L1 LSP中有效，L2 LSP中没有ATT位。ATT位的作用：实现L1区域访问其他区域的默认路由，简化L1路由器的路由表（L1路由器只需要本区域路由+默认路由，不需要知道其他区域的具体路由）。这与OSPF的Stub区域类似：Stub区域的ABR向Stub区域发布默认路由（Type 3 LSA），Stub区域内路由器通过ABR访问外部。IS-IS的ATT位机制更简单（不需要额外的LSA，只需在LSP中设置一位）。路由渗透（Route Leakage）：L1/2路由器可以将Level-2的具体路由（而非仅默认路由）发布到L1区域（通过设置ATT位和发布具体路由），解决次优路径问题（L1路由器可能选择不是最优的L1/2路由器，因为只根据最近默认路由，而不知道其他区域的具体路由通过哪个L1/2更优）。ATT位是IS-IS分层路由的重要机制，是华为ICT大赛网络赛道的考点，需掌握ATT位的设置者、作用、L1路由器的行为、与OSPF默认路由的对比等。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
-  },
-  {
-    id: 'dc-f004', type: 'single',
-    question: 'RSTP中，替代端口（Alternate Port）的作用是？',
-    options: ['根端口的备份，根端口故障时快速切换为根端口', '指定端口的备份', '连接终端的端口', '被阻塞的端口，永远不转发'],
-    answer: '根端口的备份，根端口故障时快速切换为根端口',
-    explanation: 'RSTP/MSTP端口角色：1.根端口（Root Port）：到根桥路径开销最小的端口，处于Forwarding状态，每台非根桥有且只有一个根端口。2.指定端口（Designated Port）：每条链路到根桥路径开销小的一端的端口，处于Forwarding状态，根桥的所有端口都是指定端口。3.替代端口（Alternate Port）：根端口的备份端口，提供到根桥的替代路径，处于Discarding状态。当根端口故障时，替代端口立即成为新的根端口并进入Forwarding（无需重新计算，快速收敛）。替代端口收到的是更优的对端BPDU（对端是指定端口，本端不是根端口也不是指定端口）。4.备份端口（Backup Port）：指定端口的备份端口，提供到同一网段的备份路径，处于Discarding状态。当指定端口故障时，备份端口成为新的指定端口。备份端口收到的是更优的本端BPDU（本端交换机在同一网段有另一个端口是指定端口）。5.边缘端口（Edge Port）：连接终端，不参与STP，直接Forwarding。RSTP相比STP的端口角色改进：STP只有根端口、指定端口、阻塞端口（Blocking），阻塞端口不区分是根端口备份还是指定端口备份，故障时需要重新计算（30-50秒）。RSTP将阻塞端口细分为替代端口和备份端口，明确了备份关系，故障时可快速切换（秒级）。替代端口是根端口的备份（最常见的冗余场景，交换机有两条上行链路，一条根端口，一条替代端口），备份端口是指定端口的备份（较少见，交换机两个端口连接到同一集线器/共享介质）。RSTP快速收敛机制：P/A协商（指定端口快速进入Forwarding）、边缘端口（终端快速接入）、替代/备份端口（故障快速切换）、更短的BPDU超时（6秒vs20秒）。RSTP/MSTP端口角色是华为ICT大赛网络赛道的高频考点，需掌握各角色定义、状态、切换机制等。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-f005', type: 'single',
@@ -3135,7 +3116,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['将多个物理接口捆绑成一个逻辑接口，提高带宽和可靠性', '成员接口可以是不同速率的接口', '成员接口必须具有相同的速率、双工模式、VLAN配置', '支持手工负载分担和LACP模式'],
     answer: '成员接口可以是不同速率的接口',
     explanation: '链路聚合（Link Aggregation，华为叫Eth-Trunk，LACP协议标准IEEE 802.3ad/802.1AX）：将多个物理接口捆绑成一个逻辑接口（Eth-Trunk接口），实现：1.带宽叠加：成员接口带宽叠加（如4个GE捆绑成4GE逻辑接口），提高带宽。2.负载分担：流量在成员接口间负载分担（基于源/目的MAC、IP、端口等哈希算法），提高链路利用率。3.冗余备份：某个成员接口故障时，流量自动切换到其他成员接口，提高可靠性，无需等待STP收敛（毫秒级切换）。成员接口要求（必须一致）：1.相同速率（如都是GE或都是10GE，不能GE和10GE混合）。2.相同双工模式（全双工，半双工不支持链路聚合）。3.相同VLAN配置（Access/Trunk/Hybrid模式、允许通过的VLAN、PVID等必须一致）。4.相同接口类型（都是以太网接口，不能是串行接口等）。5.成员接口不能配置IP地址（IP配置在Eth-Trunk逻辑接口上）。6.成员接口不能有其他配置（如静态MAC、端口安全等，需在Eth-Trunk上配置）。链路聚合模式：1.手工负载分担模式（Manual）：手动配置成员接口，不使用LACP协议，所有活动接口都参与负载分担，配置简单，但不能自动检测故障（只能检测物理故障，不能检测单向故障等）。2.LACP模式（Link Aggregation Control Protocol，链路聚合控制协议）：使用LACP协议（IEEE 802.3ad）动态协商，自动选择活动接口（可设置最大活动接口数，其余为备份），支持M:N冗余（M个活动接口，N个备份接口），能检测单向故障和协议故障，更可靠，推荐使用。LACP模式下，活动接口数达到上限后，新加入的接口为备份状态，活动接口故障时备份接口自动切换为活动。LACP优先级：系统优先级（选举主动端，值小优先，默认32768）、接口优先级（选举活动接口，值小优先，默认32768）。链路聚合是华为ICT大赛网络赛道的高频考点，需掌握原理、成员接口要求、模式（手工/LACP）、配置、负载分担方式、与STP的关系（Eth-Trunk逻辑接口参与STP，成员接口不单独参与）等。注意：不同速率接口不能加入同一Eth-Trunk，这是硬性要求。',
-    knowledgeId: 'datacom-link-aggregation', direction: 'datacom',
+    knowledgeId: 'datacom-link-aggregation', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-f001', type: 'single',
@@ -3143,7 +3124,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['记录NAT Server映射关系，允许外网主动访问内网服务器', '记录会话表', '记录安全策略', '记录用户认证信息'],
     answer: '记录NAT Server映射关系，允许外网主动访问内网服务器',
     explanation: '防火墙Server-Map表（服务器映射表，也叫Server Map）：记录NAT Server（服务器映射，也叫目的NAT/静态NAT）的映射关系，用于允许外网主动访问内网服务器。作用：1.NAT Server配置：将内网服务器的私网IP+端口映射到公网IP+端口，外网用户访问公网IP+端口时，防火墙将目的地址转换为内网服务器私网IP+端口，转发给内网服务器。2.Server-Map表生成：配置NAT Server后，防火墙生成Server-Map表项，记录公网IP+端口→私网IP+端口的映射关系，以及允许的协议。3.流量匹配：外网访问内网服务器的流量匹配Server-Map表，防火墙进行目的NAT转换，并创建会话表，后续流量按会话表转发。4.与安全策略的关系：Server-Map表只做地址映射，流量仍需匹配安全策略（允许相应的源/目的/端口）才能通过（除非配置了"无需安全策略检查"或Server-Map自带允许）。Server-Map表类型：1.静态Server-Map：由NAT Server配置生成，永久存在（直到配置删除）。2.动态Server-Map：由ASPF（应用层包过滤）检测应用层协议协商（如FTP主动模式、SIP、H.323等）动态生成，临时存在（数据传输完成后删除），用于自动开放动态端口。Server-Map表与会话表（Session Table）的区别：1.Server-Map表：记录映射关系（NAT Server或ASPF动态端口），是预定义的允许规则，匹配首包后创建会话。2.会话表：记录每个活动连接的状态（五元组、NAT转换、超时、统计等），后续包直接匹配会话表快速转发。NAT Server是企业网络常用功能（对外发布Web、邮件、FTP等服务器），Server-Map表是其核心机制。华为防火墙配置：nat server protocol tcp global <公网IP> <公网端口> inside <私网IP> <私网端口>，可配置no-reverse（不允许反向访问，即内网服务器主动访问外网时不做源NAT转换）、vrrp（关联VRRP，主备切换时映射关系切换）等。Server-Map表是华为ICT大赛安全赛道的考点，需掌握NAT Server原理、Server-Map表生成、与安全策略关系、静态/动态Server-Map区别等。',
-    knowledgeId: 'security-nat', direction: 'security',
+    knowledgeId: 'security-nat', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-f002', type: 'single',
@@ -3151,14 +3132,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['ACL（访问控制列表）', '路由表', '安全策略', 'NAT规则'],
     answer: 'ACL（访问控制列表）',
     explanation: 'IPSec感兴趣流（Interesting Traffic）：由ACL（Access Control List，访问控制列表）定义，指定哪些流量需要IPSec保护（加密/认证），哪些流量按普通方式转发。1.匹配感兴趣流的流量：进入IPSec处理流程，封装为IPSec报文（AH/ESP），通过IPSec隧道转发到对端。2.不匹配感兴趣流的流量：按普通路由方式转发，不经过IPSec处理。感兴趣流配置：在IPSec策略视图下通过security acl <acl-number>引用ACL。ACL规则：permit表示匹配的流量需要IPSec保护，deny表示不需要保护（普通转发）。感兴趣流方向：源和目的要正确配置（本端子网到对端子网），对端的感兴趣流应该是镜像的（源和目的相反），否则可能只有一个方向被保护或建立不了IPSec SA。感兴趣流的作用：1.触发IKE协商：当有匹配感兴趣流的流量需要转发时，如果IPSec SA尚未建立，则触发IKE协商（阶段一+阶段二）建立SA。2.区分保护/非保护流量：只有匹配的流量才加密，其他流量正常转发，提高效率（不需要保护的流量不增加加密开销）。3.多VPN场景：不同的感兴趣流对应不同的IPSec策略，实现多个VPN隧道（不同子网走不同隧道）。感兴趣流粒度：1.粗粒度（大网段，如192.168.0.0/16到10.0.0.0/8）：SA数量少，配置简单，但保护范围大（不需要保护的流量也被加密）。2.细粒度（主机到主机，如192.168.1.1/32到10.1.1.1/32）：SA数量多（每对主机一个SA），保护精确，但配置复杂，SA数量多消耗资源。通常建议用粗粒度（网段到网段），减少SA数量。IPSec策略模式：1.策略模式（ISAKMP/Policy-based）：使用感兴趣流（ACL）定义保护流量，手动配置对端IP和感兴趣流，适合站点到站点VPN。2.模板模式（Template）：对端（动态IP，如拨号用户）不配置感兴趣流和对端IP，由本端定义，对端动态接入，适合远程接入VPN。3.路由模式（Route-based，也叫Tunnel接口）：不使用感兴趣流，而是创建Tunnel接口（IPSec隧道接口），路由指向Tunnel接口的流量自动被IPSec保护，配置更灵活（支持动态路由、多VPN），是当前主流。华为防火墙支持策略模式和模板模式（路由模式在V500R005后支持）。感兴趣流是IPSec的核心概念，是华为ICT大赛安全赛道的高频考点，需掌握定义、配置、作用、粒度选择、与策略模式关系等。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-f003', type: 'judge',
     question: '防火墙中，安全区域（Security Zone）的安全级别数值越大表示越可信，Local区域安全级别为100。',
     options: ['正确', '错误'], answer: '正确',
     explanation: '华为防火墙安全区域（Security Zone）：将接口划分到不同安全区域，基于安全区域配置安全策略（而不是基于接口），简化配置和管理。安全级别（Security Level）：1-100的数值，表示区域的可信程度，数值越大越可信。默认安全区域：1.Local（本地区域，安全级别100）：防火墙本身（防火墙的接口地址、防火墙发起的流量、访问防火墙本身的流量都属于Local区域），安全级别最高。2.Trust（信任区域，安全级别85）：通常用于内网（企业内部网络，可信）。3.DMZ（隔离区，安全级别50）：通常用于放置对外服务器（Web、邮件、DNS等，介于可信和不可信之间）。4.Untrust（非信任区域，安全级别5）：通常用于外网（Internet，不可信）。自定义安全区域：可创建自定义安全区域（如生产区、办公区、 guests区等），安全级别1-100自定义，满足复杂网络分区需求。安全区域规则：1.一个接口只能加入一个安全区域（接口加入区域后，该接口的流量属于该区域）。2.同区域内流量默认允许（不需要安全策略），不同区域间流量默认拒绝（需要安全策略允许）。3.流量方向：从高级别区域到低级别区域为出方向（Outbound，如Trust→Untrust，内网访问外网），从低级别到高级别为入方向（Inbound，如Untrust→DMZ，外网访问服务器）。4.安全策略基于源区域、目的区域、源/目的IP、端口、协议、应用、用户、时间等匹配。安全区域是华为防火墙的核心概念，与传统包过滤基于接口的方式不同，安全区域使策略配置更清晰、更易管理（按区域而非按接口，接口变化不影响策略）。安全级别只用于定义方向和默认行为，不直接用于策略匹配（策略匹配基于区域名称，不是级别）。注意：Local区域是防火墙本身，访问防火墙的管理流量（如SSH、Web管理、Ping防火墙接口）属于到Local区域的流量，需要安全策略允许（或开启接口管理访问权限）。安全区域是华为ICT大赛安全赛道的基础考点，需掌握默认区域、安全级别、流量方向、与安全策略关系等。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-f004', type: 'single',
@@ -3166,7 +3147,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['FTP', 'SSH', 'HTTP', 'SNMPv1'],
     answer: 'SSH',
     explanation: 'SSH（Secure Shell，安全外壳）：用于网络设备和服务器的安全远程管理，替代不安全的Telnet（明文传输，包括用户名密码，易被窃听和篡改）。SSH特点：1.加密传输：所有数据（包括认证、命令、输出）都加密传输，防止窃听。2.身份认证：支持密码认证和公钥认证（更安全，免密码），防止身份伪造。3.完整性校验：通过MAC（消息认证码）保证数据完整性，防止篡改。4.端口转发：支持本地端口转发、远程端口转发、动态端口转发（SOCKS代理），可加密其他应用流量。5.SFTP（SSH File Transfer Protocol）：基于SSH的安全文件传输，替代不安全的FTP。SSH版本：SSH1（已淘汰，有安全漏洞）、SSH2（当前标准，更安全高效）。SSH默认端口22，使用TCP。SSH工作过程：1.版本协商：客户端和服务器协商SSH版本。2.算法协商：协商加密算法（AES、3DES、ChaCha20等）、认证算法（RSA、ECDSA、Ed25519等）、MAC算法（HMAC-SHA256等）、压缩算法。3.密钥交换：通过DH（Diffie-Hellman）或ECDH交换生成会话密钥（非对称加密交换对称密钥）。4.服务器认证：客户端验证服务器公钥（首次连接时提示确认，后续自动验证，防止中间人攻击）。5.用户认证：密码认证或公钥认证。6.交互会话：加密传输命令和输出。其他安全管理协议：1.HTTPS（HTTP over TLS）：Web管理界面的安全协议，替代HTTP。2.SNMPv3：简单网络管理协议v3，支持认证和加密，替代不安全的SNMPv1/v2c（明文community字符串）。3.Netconf/RESTCONF over SSH/TLS：网络配置协议，安全传输。4.SFTP/SCP：安全文件传输，替代FTP/TFTP（TFTP无认证无加密，仅用于本地网络设备升级）。不安全的协议：Telnet（明文远程管理）、FTP（明文文件传输）、HTTP（明文Web）、SNMPv1/v2c（明文管理）、TFTP（无认证文件传输），这些协议应在生产环境中禁用，改用安全版本。安全远程管理是华为ICT大赛安全赛道的考点，需掌握SSH原理、配置、与Telnet对比、其他安全管理协议等。',
-    knowledgeId: 'security-management', direction: 'security',
+    knowledgeId: 'security-management', direction: 'security', difficulty: 'IE',
   },
   {
     id: 'wlan-f001', type: 'single',
@@ -3174,14 +3155,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['将信道划分为多个子信道（RU），同时与多个用户通信，提高多用户效率和降低延迟', '增加发射功率', '扩展频段到6GHz', '简化认证流程'],
     answer: '将信道划分为多个子信道（RU），同时与多个用户通信，提高多用户效率和降低延迟',
     explanation: 'OFDMA（Orthogonal Frequency Division Multiple Access，正交频分多址）是Wi-Fi 6（802.11ax）的核心技术，从4G/5G移动通信引入，是Wi-Fi 6相比Wi-Fi 5的最大改进之一。OFDMA原理：1.将信道（如20MHz）划分为多个更小的子信道（RU，Resource Unit，资源单元），如26/52/106/242/484/996/2x996子载波等不同大小的RU。2.同时与多个用户通信：AP将不同的RU分配给不同的用户（或同一用户的不同业务），多个用户同时传输数据，而不是传统Wi-Fi的轮流传输（TDMA，时分多址，一个用户占满整个信道传输，其他用户等待）。3.提高多用户效率：多用户同时传输，减少等待时间，提高信道利用率，尤其在高密度场景（多用户、小包业务如语音、游戏）效果显著。4.降低延迟：用户不需要等待整个信道空闲，小数据包可以分配小RU快速传输，降低接入延迟和抖动。5.灵活分配：根据用户数据量和QoS需求分配不同大小的RU（大数据用户分配大RU，小数据用户分配小RU），提高资源利用率。OFDMA与MU-MIMO的区别：1.OFDMA：频域多用户（不同用户用不同子信道/RU），适合多用户小包、低延迟场景，提高效率。2.MU-MIMO：空间域多用户（不同用户用不同空间流/天线），适合多用户大数据包、高吞吐量场景，提高吞吐量。3.Wi-Fi 6同时支持OFDMA和上下行MU-MIMO，两者结合，在频域和空间域同时多用户，性能最优。4.Wi-Fi 5（802.11ac）只支持下行MU-MIMO，不支持OFDMA和上行MU-MIMO。OFDMA是Wi-Fi 6的标志性技术，是华为ICT大赛WLAN赛道的高频考点，需掌握原理、RU划分、与MU-MIMO区别、优势（多用户效率、低延迟、高密度）、应用场景等。Wi-Fi 6其他关键技术：上下行MU-MIMO、1024-QAM（调制密度提高25%）、BSS Coloring（BSS着色，减少同频干扰）、TWT（目标唤醒时间，降低功耗）、空间复用（SR，提高频谱利用率）等。',
-    knowledgeId: 'wlan-wifi6', direction: 'wlan',
+    knowledgeId: 'wlan-wifi6', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-f002', type: 'judge',
     question: 'WLAN中，DHCP Option43是AP发现AC的常用方式，DHCP服务器在Option43字段中携带AC的IP地址。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'FIT AP（瘦AP）发现AC（接入控制器）的方式：1.广播方式（Broadcast）：AP发送CAPWAP Discover广播报文，同二层网络的AC回应，适合AC和AP在同一网段（二层组网），简单但跨三层不行。2.DHCP Option43方式：DHCP服务器在Option43字段中携带AC的IP地址列表，AP从DHCP获取IP地址时同时获取AC地址，适合跨三层组网，是企业网络最常用的方式。3.DNS方式：AP通过解析特定域名（如hwac.com，可配置）获取AC IP地址，需DNS服务器配置对应记录，适合大规模网络（AC地址变化时只需更新DNS记录）。4.静态配置方式：在AP上手动配置AC IP地址（通过AP命令行或Web界面），适合固定环境或测试，配置工作量大。5.组播方式：AP发送CAPWAP Discover组播报文（224.0.1.140），AC回应，较少用。DHCP Option43格式：厂商特定选项，不同厂商格式不同。华为Option43格式：Type（1字节，固定0x01）+Length（1字节）+Value（AC IP地址列表，每个IP 4字节，可多个）。如AC IP为192.168.1.1，Option43值为0104C0A80101（01=Type，04=Length，C0A80101=192.168.1.1的十六进制）。AP上线流程：1.获取IP地址（DHCP或静态）。2.发现AC（广播/Option43/DNS/静态）。3.建立CAPWAP控制隧道（Discover→Join→Configure→Data Check→Run，UDP 5246，DTLS加密）。4.下载版本（如AP版本与AC不一致，自动升级）。5.下载配置（VAP模板、射频模板、安全模板等）。6.正常工作（提供无线接入，用户数据转发）。AP发现AC是WLAN基础配置，是华为ICT大赛WLAN赛道的高频考点，需掌握各种发现方式、Option43配置、AP上线流程、CAPWAP隧道等。注意：如果AP发现多个AC，会选择优先级最高的AC（可配置AC优先级，通过CAPWAP Discover报文中的优先级字段），实现AC负载分担和冗余备份（双AC热备/冷备）。',
-    knowledgeId: 'wlan-arch', direction: 'wlan',
+    knowledgeId: 'wlan-arch', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-f001', type: 'single',
@@ -3189,14 +3170,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['跨子网流量在源Leaf直接路由，无需绕行集中网关，延迟低无瓶颈', '配置更简单', '安全性更高', '兼容性更好'],
     answer: '跨子网流量在源Leaf直接路由，无需绕行集中网关，延迟低无瓶颈',
     explanation: 'VXLAN/EVPN网络三层网关模式：1.集中式网关（Centralized Gateway）：所有VNI的三层网关都在一台设备上（通常是Spine或专用网关设备，如华为CE12800/防火墙），虚拟机的默认网关指向集中网关。跨子网流量路径：源虚拟机→源Leaf（二层封装VXLAN）→集中网关（解封装，三层路由，重新封装VXLAN）→目的Leaf→目的虚拟机。优点：网关集中管理，配置简单，便于集中安全策略控制（所有跨子网流量经过网关，可统一防火墙/IPS/审计）。缺点：集中网关是性能瓶颈（所有跨子网流量都经过，东西向流量大时网关带宽和转发能力不足）、单点故障（网关故障所有跨子网通信中断）、延迟高（流量绕行网关，多经过几跳）、东西向流量效率低。2.分布式网关（Distributed Gateway）：每台Leaf都是所有VNI的三层网关，虚拟机的默认网关在本地Leaf上（Anycast Gateway，任播网关，所有Leaf的网关IP和MAC相同）。跨子网流量路径：源虚拟机→源Leaf（本地三层路由，直接封装VXLAN到目的Leaf）→目的Leaf→目的虚拟机。流量在源Leaf直接路由，无需绕行集中网关。优点：延迟低（2跳，与同子网相同）、无瓶颈（分布式转发，每台Leaf只处理本地流量，水平扩展）、无单点故障（Leaf故障只影响本地服务器）、东西向流量效率高（适合数据中心东西向流量为主的场景）。缺点：配置复杂（每台Leaf都要配置所有VNI网关和EVPN）、安全策略分散（跨子网流量不经过集中设备，安全控制需在Leaf上分布式部署或引入服务链）。Anycast Gateway（任播网关）：所有Leaf的三层网关IP和MAC地址相同，虚拟机无论迁移到哪台Leaf，默认网关都不变，无需重新配置，实现无缝迁移。分布式网关通过EVPN Type 2路由（携带主机IP地址）同步主机路由，每台Leaf学习到所有虚拟机的IP-VTEP映射，跨子网时直接查主机路由（32位主机路由）封装到目的Leaf。分布式网关是当前数据中心VXLAN/EVPN的主流方案（中大型数据中心、东西向流量大），集中式网关适合小型数据中心或需要集中安全控制的场景。EVPN支持两种网关模式，可根据需求选择。分布式网关是华为ICT大赛DCN赛道的高频考点，需掌握原理、Anycast Gateway、与集中式对比、EVPN Type 2主机路由、流量路径等。',
-    knowledgeId: 'dcn-vxlan-gateway', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-gateway', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-f002', type: 'judge',
     question: 'EVPN中，Type 5路由（IP Prefix Route）用于通告IP前缀路由，支持分布式网关和外部路由引入。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'EVPN（Ethernet VPN）路由类型（RFC 7432及扩展）：1.Type 1（Ethernet Auto-Discovery Route，ES自动发现路由）：多归接入（Multi-homing）场景下发现以太网段（ES，Ethernet Segment）成员，用于快速收敛和别名（Aliasing，负载分担）。携带ESI（Ethernet Segment Identifier，以太网段标识）、EVPN实例标签等。2.Type 2（MAC/IP Advertisement Route，MAC/IP地址通告路由）：同步主机的MAC地址和IP地址（IP可选），实现控制面MAC学习（无需数据面泛洪）、ARP代理/抑制、分布式网关主机路由同步。携带MAC地址、IP地址、VNI、VTEP IP、MPLS标签、ESI等。3.Type 3（Inclusive Multicast Ethernet Tag Route，包含组播以太网标签路由）：发现同VNI的VTEP，构建头端复制（HER）列表，用于BUM流量转发。携带VNI（以太网标签）、VTEP IP、组播地址（如用组播）等。4.Type 4（Ethernet Segment Route，以太网段路由）：多归接入场景下选举DF（Designated Forwarder，指定转发器），避免BUM流量重复转发。携带ESI、VTEP IP、DF选举算法等。5.Type 5（IP Prefix Route，IP前缀路由）：通告IP前缀路由（如外部路由、汇聚路由、默认路由），用于：a.分布式网关场景下通告外部路由（数据中心访问外部网络的路由，通过边界Leaf/防火墙引入）。b.通告汇聚路由（汇总路由，减少主机路由数量）。c.通告默认路由（0.0.0.0/0，引导外部流量）。d.跨子网路由（某些实现中用Type 5而非Type 2的IP字段）。携带IP前缀、前缀长度、VNI、VTEP IP、MPLS标签、ESI（可选）、网关IP（可选）等。Type 5路由是EVPN的重要扩展（RFC 7916），使EVPN不仅能处理二层（MAC），还能处理三层（IP前缀），实现纯EVPN的三层网络（不需要额外的路由协议），是分布式网关和数据中心互联（DCI）的关键。EVPN路由类型是华为ICT大赛DCN赛道的高频考点，需掌握每种类型的作用、携带信息、应用场景，尤其是Type 2（MAC/IP同步）、Type 3（VTEP发现/头端复制）、Type 5（IP前缀/外部路由）。注意：Type 2的IP地址字段是主机IP（/32或/128），用于主机路由；Type 5是任意前缀长度，用于网段路由/外部路由/汇总路由。',
-    knowledgeId: 'dcn-evpn', direction: 'dcn',
+    knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
 
 
@@ -3207,7 +3188,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['骨干区域Area 0', '普通区域', 'Stub区域', 'NSSA区域'],
     answer: 'Stub区域',
     explanation: 'OSPF末梢区域限制：1.Stub区域：不允许存在ASBR（不能引入外部路由，因为Stub区域不接收Type 5外部LSA，如果有ASBR引入外部路由，Type 5无法在Stub区域内泛洪，外部路由不可达）。Stub区域内可以有ABR（连接Area 0），但不能有ASBR。2.Totally Stub区域：同样不允许ASBR，比Stub更严格（还不接收Type 3除默认路由）。3.NSSA区域：允许存在ASBR，可以引入外部路由（生成Type 7 LSA，仅在NSSA区域内泛洪，到ABR转换为Type 5）。NSSA就是为了解决Stub区域不能引入外部路由的限制而设计的。4.Totally NSSA区域：允许ASBR（Type 7），但不接收Type 3除默认路由。5.普通区域（非末梢区域）：允许ASBR，接收Type 5外部路由。6.骨干区域Area 0：允许ASBR，是所有区域的中心，必须连续。末梢区域共同限制：a.不能有虚链路（Virtual Link）穿越（虚链路需要Type 5传递，末梢区域过滤Type 5）。b.不能有ASBR（Stub/Totally Stub，NSSA除外）。c.所有路由器必须一致配置为末梢区域（否则邻居关系建立失败，因为末梢区域标志位在Hello报文中携带，两端必须一致）。d.ABR会向末梢区域发布默认路由（Type 3 Summary LSA，0.0.0.0/0），引导外部流量。OSPF区域类型是华为ICT大赛网络赛道的高频考点，需掌握每种区域的特点（允许/不允许的LSA类型、是否允许ASBR、是否有默认路由、适用场景）、配置命令（stub、nssa、stub no-summary、nssa no-summary等）、ABR行为等。注意：NSSA区域的ASBR引入外部路由生成Type 7，ABR将Type 7转换为Type 5发布到其他区域，转换时可设置Metric、Metric-Type、Forwarding Address等。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-g002', type: 'single',
@@ -3215,14 +3196,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Local_Pref', 'MED', 'AS_Path', 'Community'],
     answer: 'AS_Path',
     explanation: 'BGP属性分类：1.公认必遵（Well-known Mandatory）：所有BGP路由器都必须识别，每条更新消息必须包含，缺少则报错。包括：Origin（起源，i/e/?）、AS_Path（AS路径，经过的AS列表，防环+优选）、Next_Hop（下一跳，到达目的的BGP下一跳IP）。2.公认自由决定（Well-known Discretionary）：所有BGP路由器都能识别，但不一定每条更新都包含，可选择是否使用。包括：Local_Pref（本地优先级，影响本AS出站，值大优先，默认100）、Atomic_Aggregate（原子聚合，提示路由被聚合，丢失了具体路由信息）。3.可选过渡（Optional Transitive）：不要求所有路由器识别，但如果不识别，应原样传递给其他邻居（可过渡）。包括：Community（团体，标记一组路由，便于策略控制）、Aggregator（聚合者，指示聚合路由的路由器AS和Router ID）。4.可选非过渡（Optional Non-transitive）：不要求所有路由器识别，如果不识别，可忽略不传递。包括：MED（多出口区分符，影响相邻AS入站，值小优先）、Originator_ID（发起者ID，RR防环）、Cluster_List（簇列表，RR防环）、MP_REACH_NLRI（多协议可达NLRI，MP-BGP扩展，如VPNv4、IPv6）、MP_UNREACH_NLRI（多协议不可达NLRI）、Extended Communities（扩展团体，如RT/RD用于VPN）等。AS_Path是公认必遵属性，作用：1.防环：BGP路由器收到包含自己AS号的AS_Path的路由时，丢弃该路由（防止AS间环路）。2.路由优选：AS_Path越短越优先（BGP优选规则第5条，在Weight、Local_Pref、本地始发之后比较）。3.路径信息：记录路由经过的AS，可用于策略控制（如根据AS_Path过滤或设置属性）。AS_Path类型：AS_SEQUENCE（有序AS列表，最常见）、AS_SET（无序AS集合，聚合路由时使用，防止环路）、AS_CONFED_SEQUENCE/AS_CONFED_SET（联盟内部AS号，不计入AS_Path长度，仅用于联盟内防环）。BGP属性分类是华为ICT大赛网络赛道的考点，需掌握每种属性的分类、作用、默认值、传递范围等。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-g003', type: 'judge',
     question: 'IS-IS中，CSNP（完全序列号报文）由DIS在广播网络中周期性发送，用于数据库同步。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IS-IS报文类型（PDU，Protocol Data Unit）：1.IIH（IS-to-IS Hello PDU，IS到IS Hello报文）：用于发现和维护邻居关系，类似OSPF的Hello。分为L1 IIH（Level-1，组播01:80:C2:00:00:14）、L2 IIH（Level-2，组播01:80:C2:00:00:15）、P2P IIH（点到点，组播01:80:C2:00:00:13）。IIH携带：System ID、区域地址、优先级、保持时间、接口IP等。2.LSP（Link State PDU，链路状态PDU）：描述路由器的链路状态信息，类似OSPF的LSA。分为L1 LSP和L2 LSP，携带：System ID、序列号、校验和、生存时间、邻居列表、IP前缀、度量值等。LSP在区域内泛洪（L1 LSP在L1区域，L2 LSP在骨干）。3.CSNP（Complete Sequence Number PDU，完全序列号PDU）：包含本地链路状态数据库（LSDB）中所有LSP的摘要（LSP ID、序列号、校验和），用于数据库同步。在广播网络中，DIS（指定中间系统）周期性发送CSNP（默认10秒），其他路由器对比CSNP发现自己缺失的LSP，发送PSNP请求。在点到点网络中，邻居建立后双方互发CSNP（只发一次，不是周期性）。4.PSNP（Partial Sequence Number PDU，部分序列号PDU）：包含部分LSP的摘要，用于：a.请求缺失的LSP（路由器发现CSNP中有自己没有的LSP，发送PSNP请求该LSP）。b.确认收到的LSP（点到点网络中，收到LSP后发送PSNP确认，因为点到点没有DIS泛洪机制，需要显式确认）。CSNP和PSNP是IS-IS数据库同步的核心机制，类似OSPF的DD（数据库描述）、LSR（链路状态请求）、LSU（链路状态更新）、LSAck（链路状态确认）。IS-IS报文直接封装在数据链路层（以太网类型0x88FE），不使用IP协议号或UDP/TCP端口。IS-IS报文类型是华为ICT大赛网络赛道的考点，需掌握每种报文的作用、发送者、周期、与OSPF对应关系等。注意：广播网络中DIS周期性发CSNP（10秒），点到点网络中只在邻居建立时发一次CSNP（后续用PSNP请求和确认）。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-g004', type: 'single',
@@ -3230,7 +3211,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['每个MSTI独立计算生成树，可映射不同VLAN，实现负载分担', '所有MSTI共享一棵生成树', 'MSTI可以跨MST域', 'MSTI 0是用户自定义实例'],
     answer: '每个MSTI独立计算生成树，可映射不同VLAN，实现负载分担',
     explanation: 'MSTP（Multiple Spanning Tree Protocol，802.1s）中MSTI（Multiple Spanning Tree Instance，多生成树实例）：1.独立计算：每个MSTI独立运行RSTP算法，独立计算生成树，有自己的根桥、根端口、指定端口，互不影响。2.VLAN映射：每个VLAN映射到一个MSTI（一个MSTI可包含多个VLAN，一个VLAN只能属于一个MSTI），映射关系在MST域内一致。3.负载分担：不同VLAN映射到不同MSTI，各MSTI的根桥和拓扑不同，不同VLAN的流量走不同路径，实现链路负载分担（如VLAN 10走MSTI 1，根桥为SW1；VLAN 20走MSTI 2，根桥为SW2，两条上行链路都被利用）。4.仅在域内有效：MSTI仅在MST域内有效，不跨域（域间通过CST公共生成树互通，MST域对外表现为一个虚拟桥）。5.MSTI 0（IST，Internal Spanning Tree，内部生成树）：默认实例，所有未显式映射的VLAN都属于MSTI 0，MSTI 0在域内运行，域间表现为CST的一部分，是MSTP的基础实例（其他MSTI的拓扑基于IST计算）。用户自定义实例为MSTI 1-4094（实际支持数量取决于设备，通常16-64个）。MSTP配置：1.配置MST域：域名（region-name）、修订级别（revision-level）、VLAN-实例映射（instance <id> vlan <vlan-range>）。2.配置MSTI根桥：stp instance <id> root primary（自动设置优先级为4096的倍数，确保成为根桥）/root secondary（备份根桥），或stp instance <id> priority <priority>手动设置优先级。3.配置端口参数：stp instance <id> cost <cost>（路径开销）、stp instance <id> port priority <priority>（端口优先级）。MSTP优势：兼容STP/RSTP、多实例负载分担、减少VLAN场景端口阻塞、提高链路利用率、可扩展性好，是企业网络的主流生成树协议。MSTI是MSTP的核心概念，是华为ICT大赛网络赛道的高频考点，需掌握原理、VLAN映射、负载分担配置、与CST/IST关系、域间互通等。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-g005', type: 'single',
@@ -3238,7 +3219,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['基本ACL只匹配源IP地址，编号范围2000-2999', '高级ACL可匹配源/目的IP、端口、协议等，编号范围3000-3999', 'ACL规则按顺序匹配，匹配到第一条即执行，不再继续匹配', 'ACL可以直接用于数据转发，不需要被其他功能引用'],
     answer: 'ACL可以直接用于数据转发，不需要被其他功能引用',
     explanation: 'ACL（Access Control List，访问控制列表）：定义一组规则（匹配条件+动作），用于匹配流量，但ACL本身不能直接用于数据转发，必须被其他功能引用才能生效（如流量过滤、QoS、NAT、路由策略、IPSec感兴趣流等）。ACL类型（华为）：1.基本ACL（Basic ACL，编号2000-2999）：只匹配源IP地址，用于粗略过滤（如禁止某个源IP访问）。2.高级ACL（Advanced ACL，编号3000-3999）：可匹配源IP、目的IP、源端口、目的端口、协议号（TCP/UDP/ICMP等）、ICMP类型、DSCP优先级、TCP标志位等，用于精确过滤，是最常用的ACL。3.二层ACL（Layer 2 ACL，编号4000-4999）：匹配源MAC、目的MAC、以太网类型、VLAN ID、802.1p优先级等二层信息。4.用户自定义ACL（User-defined ACL，编号5000-5999）：自定义匹配报文偏移位置和内容，非常灵活但配置复杂。5.命名ACL（Named ACL）：用名称代替编号，便于记忆和管理，可包含基本/高级规则。ACL匹配原则：1.按顺序匹配（Top-Down）：规则按配置顺序从上到下匹配，匹配到第一条规则即执行该规则的动作（permit/deny），不再继续匹配后续规则。2.默认拒绝（Implicit Deny）：所有规则都不匹配时，默认执行deny（拒绝），但具体行为取决于引用ACL的功能（如流量过滤默认拒绝，QoS流分类默认不匹配则不处理）。3.规则ID：每条规则有一个ID（默认步长5，如5、10、15），可在指定ID前插入新规则，便于维护。ACL动作：permit（允许，匹配的流量通过/处理）、deny（拒绝，匹配的流量丢弃/不处理）。ACL应用场景：1.流量过滤（Traffic Filter）：在接口上应用ACL，过滤进出流量（替代传统包过滤防火墙）。2.QoS流分类（Traffic Classifier）：用ACL匹配特定流量，进行QoS处理（限速、标记、队列调度）。3.NAT：用ACL匹配需要NAT转换的流量（源NAT的ACL）。4.路由策略（Route-Policy）：用ACL匹配路由，进行路由过滤或属性修改。5.IPSec感兴趣流：用ACL定义需要IPSec保护的流量。6.用户登录控制：用ACL限制Telnet/SSH/HTTP管理访问的源IP。ACL是华为ICT大赛网络赛道的基础考点，需掌握类型、编号范围、匹配原则、配置、应用场景等。注意：ACL本身不生效，必须被引用；高级ACL可匹配五元组，是最常用的；规则顺序很重要（精确规则放上面，宽泛规则放下面）。',
-    knowledgeId: 'datacom-acl', direction: 'datacom',
+    knowledgeId: 'datacom-acl', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-g001', type: 'single',
@@ -3246,7 +3227,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['主设备故障时，备设备自动切换为主，保证业务不中断', '主备设备之间通过心跳线同步会话表和配置', '主备切换时所有会话都需要重新建立', '支持负载分担模式（两台设备同时转发，互为备份）'],
     answer: '主备切换时所有会话都需要重新建立',
     explanation: '防火墙双机热备（HRP，Huawei Redundancy Protocol，华为冗余协议）：1.主备模式（Active/Standby）：一台主设备（Active）转发流量，一台备设备（Standby）不转发，实时同步会话表和配置。主设备故障时，备设备自动切换为主（毫秒级，VGMP统一管理），由于会话表已同步，已有会话不需要重新建立，业务不中断（用户无感知）。2.负载分担模式（Active/Active）：两台设备同时转发流量（各自承担一部分流量），互为备份，一台故障时另一台接管所有流量，会话表实时同步。3.心跳线（Heartbeat）：主备设备之间通过专用心跳线（或业务口复用）同步：a.配置同步（主设备配置自动同步到备设备，命令hrp auto-sync config）。b.会话表同步（实时同步新建会话，主备切换时已有会话不中断）。c.状态同步（接口状态、VLAN状态、ARP表、MAC表、Server-Map表等）。4.VGMP（VRRP Group Management Protocol，VRRP组管理协议）：统一管理多个VRRP组（主备状态一致，避免部分组主部分组备导致的异常），监控接口/链路状态，故障时触发主备切换。5.主备切换触发条件：a.主设备整机故障（断电/死机）。b.主设备上行/下行接口故障（监控接口，故障时降低优先级触发切换）。c.主设备业务板卡故障。d.手动强制切换（hrp switch active/standby）。6.会话表同步：HRP实时同步会话表（包括TCP/UDP/ICMP会话、NAT转换信息、ASPF动态会话等），主备切换时已有会话保持，不需要重新建立，保证业务不中断。这是防火墙双机热备的关键优势（与路由器VRRP不同，VRRP只切换网关，会话表不同步，TCP会话可能中断）。注意：某些状态无法同步（如正在进行的IKE协商、部分动态协议状态），切换时可能需要重新建立，但已建立的IPSec SA和会话会同步。双机热备是华为ICT大赛安全赛道的高频考点，需掌握主备/负载分担模式、心跳线、VGMP、会话同步、切换触发、配置等。',
-    knowledgeId: 'security-ha', direction: 'security',
+    knowledgeId: 'security-ha', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-g002', type: 'single',
@@ -3254,14 +3235,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['握手消息更少（4条vs6+3条），更快', '支持MOBIKE（移动性，IP变化时保持连接）', '更安全（抵抗DoS攻击、Cookie验证）', '支持更多加密算法'],
     answer: '支持更多加密算法',
     explanation: 'IKEv2（Internet Key Exchange version 2，RFC 7296）相比IKEv1的改进：1.握手更简单快速：IKEv2只需4条消息（IKE_SA_INIT 2条+IKE_AUTH 2条）同时建立IKE SA和第一个IPSec SA，而IKEv1需要主模式6条+快速模式3条=9条（野蛮模式3条+快速模式3条=6条）。IKEv2建立连接更快，延迟更低。2.更安全：a.抵抗DoS攻击：IKEv2在IKE_SA_INIT响应中包含Cookie，请求方必须在后续消息中返回Cookie，防止伪造源IP的DoS攻击（IKEv1主模式没有这个机制，容易被DoS）。b.更强的密钥派生：IKEv2使用更安全的密钥派生函数（SK_d/SK_a/SK_e分离），密钥更新更安全。c.内置NAT-T检测：IKEv2内置NAT穿越检测，IKEv1需要额外协商。3.支持MOBIKE（Mobility and Multihoming，移动性和多宿主，RFC 4555）：IKEv2扩展支持MOBIKE，当客户端IP地址变化时（如Wi-Fi切换到4G、移动设备移动），保持IPSec连接不中断，不需要重新协商。IKEv1不支持MOBIKE，IP变化时连接中断需重新建立。4.可靠性更高：IKEv2所有消息都有确认机制（请求/响应配对，Message ID），丢失时重传，IKEv1阶段二没有可靠传输（快速模式消息丢失可能导致SA不一致）。5.支持更多功能：IKEv2支持EAP认证（可扩展认证协议，如EAP-TLS、EAP-MSCHAPv2，与802.1X/RADIUS集成）、支持初始联系人（Initial Contact，删除旧SA）、支持配置载荷（Configuration Payload，分配IP/DNS，用于远程接入VPN）。加密算法方面：IKEv1和IKEv2都支持相同的加密算法（AES、3DES、DES、SM4等）、认证算法（SHA-256、SHA-1、MD5、SM3等）、DH组（1/2/5/14/19/20/21等），IKEv2并不支持更多加密算法（算法是独立的，不是IKE版本决定的）。IKEv2是当前推荐使用的IKE版本（更安全、更快、更可靠、支持移动性），华为防火墙和路由器都支持IKEv2，是华为ICT大赛安全赛道的考点，需掌握IKEv1与IKEv2的区别、IKEv2优势、MOBIKE、EAP认证等。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-g003', type: 'judge',
     question: '防火墙中，UTM（统一威胁管理）功能包括IPS、反病毒、URL过滤、应用控制等，都在防火墙设备上集成实现。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'UTM（Unified Threat Management，统一威胁管理）：将多种安全功能集成在一台防火墙设备上，统一管理和处理，替代传统的多台独立安全设备（防火墙+IDS+防毒墙+URL过滤网关等）。UTM功能包括：1.IPS（Intrusion Prevention System，入侵防御系统）：检测和阻断网络攻击（漏洞利用、缓冲区溢出、SQL注入、XSS、扫描、暴力破解等），基于特征匹配和协议分析，实时阻断攻击。2.反病毒（Antivirus，AV）：检测和清除文件中的病毒、木马、蠕虫、恶意软件，基于病毒特征库和启发式分析，支持HTTP/FTP/SMTP/POP3/IMAP等协议的文件扫描。3.URL过滤（URL Filtering）：根据URL分类库（如赌博、暴力、社交、娱乐等）控制用户访问的网站，提高工作效率、防止恶意网站、满足合规要求。4.应用控制（Application Control）：基于DPI（深度包检测）识别应用（如微信、抖音、BT下载、在线视频等），控制应用的使用（禁止/限速/记录），比传统端口控制更精确（应用可使用非标准端口）。5.内容过滤（Content Filtering）：过滤网页内容、邮件内容、文件类型等（如禁止上传特定文件类型、过滤敏感关键词）。6.数据防泄漏（DLP，Data Loss Prevention）：检测和防止敏感数据（如身份证号、银行卡号、商业机密）外泄。7.威胁情报（Threat Intelligence）：基于云威胁情报，实时检测最新威胁（C2服务器、恶意IP、恶意域名）。NGFW（Next-Generation Firewall，下一代防火墙）= 传统防火墙（状态检测+ACL+NAT+VPN）+ UTM功能（IPS/AV/URL过滤/应用控制）+ 应用识别+ 用户识别+ 深度集成，是当前企业网络边界安全的主流设备。华为USG系列防火墙支持UTM功能，通过 license 激活（部分功能需要license和特征库升级服务）。UTM处理流程：流量先经过防火墙基础处理（状态检测、安全策略、NAT），匹配安全策略后，如果策略引用了UTM配置文件（IPS/AV/URL过滤等），则进入UTM引擎进行深度检测，检测通过后转发，发现威胁则阻断/告警。UTM是华为ICT大赛安全赛道的重要考点，需掌握各UTM功能的原理、配置、与安全策略关系、性能影响（UTM深度检测会降低转发性能，需考虑设备性能）等。注意：UTM功能需要特征库定期升级（IPS特征库、病毒库、URL分类库），才能检测最新威胁，通常需要订阅服务。',
-    knowledgeId: 'security-utm', direction: 'security',
+    knowledgeId: 'security-utm', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-g004', type: 'single',
@@ -3269,7 +3250,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['数字证书由CA签发，证明公钥与身份的绑定关系', '数字证书格式遵循X.509标准', '数字证书可以无限期使用，不会过期', '验证证书时需要验证CA签名、有效期、是否被撤销'],
     answer: '数字证书可以无限期使用，不会过期',
     explanation: '数字证书（Digital Certificate）：由CA（Certificate Authority，证书颁发机构）签发，将用户/设备的公钥与其身份（姓名、组织、域名、邮箱等）绑定，用CA的私钥签名，证明公钥的合法性和所有者身份。1.格式标准：X.509 v3标准（最常用），包含：版本（Version）、序列号（Serial Number，CA内唯一）、签名算法（Signature Algorithm，如SHA256withRSA、SM3withSM2）、颁发者（Issuer，CA的DN）、有效期（Validity，Not Before+Not After，有明确的起止时间，不是无限期）、主体（Subject，证书所有者的DN）、主体公钥信息（Subject Public Key Info，公钥算法+公钥）、扩展（Extensions，如密钥用法、增强型密钥用法、主题备用名称SAN、CRL分发点、颁发者信息访问等）、签名（CA的签名值）。2.有效期：数字证书有明确的有效期（Not Before到Not After），过期后证书失效，需要更新（renew）。常见有效期：SSL/TLS服务器证书1年（CA/B论坛规定最长1年）、代码签名证书1-3年、个人邮件证书1年、设备证书可更长（如3-5年）、根证书有效期通常10-20年（根证书是信任锚点，自签名，有效期长）。3.证书验证：验证数字证书时需要：a.验证CA签名（用CA的公钥验证证书签名，确保证书未被篡改，确实由该CA签发）。b.验证有效期（当前时间在Not Before和Not After之间，证书未过期）。c.验证是否被撤销（检查CRL证书撤销列表或OCSP在线证书状态协议，确认证书未被CA提前撤销，如私钥泄露、身份变更等）。d.验证证书用途（密钥用法/增强型密钥用法是否匹配，如服务器认证证书不能用于代码签名）。e.验证证书链（从终端证书到根证书，逐级验证，确保信任链完整）。f.验证主体身份（域名/名称是否匹配，如访问https://www.example.com，证书的CN或SAN必须包含www.example.com）。4.证书撤销：证书在有效期内可能被提前撤销（如私钥泄露、员工离职、域名变更等），通过CRL（Certificate Revocation List，证书撤销列表，CA定期发布）或OCSP（Online Certificate Status Protocol，在线证书状态协议，实时查询）查询。数字证书是PKI（公钥基础设施）的核心，应用于HTTPS/TLS、IPSec、802.1X（EAP-TLS）、代码签名、电子邮件加密（S/MIME）、电子签名、VPN等。数字证书是华为ICT大赛安全赛道的考点，需掌握X.509格式、CA、有效期、验证过程、撤销机制、PKI应用等。注意：证书不是无限期的，必须定期更新；根证书通常预装在操作系统/浏览器中，作为信任锚点。',
-    knowledgeId: 'security-pki', direction: 'security',
+    knowledgeId: 'security-pki', direction: 'security', difficulty: 'IP',
   },
 
 
@@ -3280,14 +3261,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['WPA', 'WPA2', 'WPA3', 'WEP'],
     answer: 'WPA3',
     explanation: 'WPA3（Wi-Fi Protected Access 3，Wi-Fi保护访问3，2018年发布）是当前最新的Wi-Fi安全标准，相比WPA2的主要改进：1.SAE（Simultaneous Authentication of Equals，对等同时认证，基于Dragonfly密钥交换算法）：替代WPA2-PSK的四次握手（4-Way Handshake），抵抗离线字典攻击（Offline Dictionary Attack）。WPA2-PSK中，攻击者捕获四次握手报文后，可以离线暴力破解PSK（弱密码容易被破解）；WPA3-SAE中，每次认证使用不同的随机数，攻击者无法离线破解，必须在线尝试（在线尝试会被检测和限制），大大提高安全性。2.前向保密（Forward Secrecy，也叫完美前向保密PFS）：即使长期密钥（PSK或证书）泄露，之前的会话密钥也不会被破解（因为每次会话使用独立的临时密钥）。WPA2不强制前向保密，WPA3强制。3.管理帧保护（PMF，Protected Management Frames，802.11w）：WPA3强制启用PMF，保护管理帧（解除认证、解除关联、信标等），防止欺骗解除认证攻击（Deauthentication Attack，攻击者发送伪造的解除认证帧让用户掉线）。WPA2中PMF是可选的。4.192位安全模式（WPA3-Enterprise 192-bit）：WPA3企业级提供192位安全套件（CNSA，Commercial National Security Algorithm Suite），使用AES-256-GCMP加密、SHA-384哈希、ECDH P-384密钥交换、ECDSA P-384签名，满足政府、金融、军事等高安全要求。5.易连接（Easy Connect，也叫Device Provisioning Protocol，DPP）：简化IoT设备的Wi-Fi配置（通过NFC或二维码配置，不需要输入密码），提高IoT设备安全性。WPA3版本：1.WPA3-Personal（个人级，SAE）：替代WPA2-PSK，适合家庭和小型企业。2.WPA3-Enterprise（企业级，802.1X+SAE/EAP）：替代WPA2-Enterprise，适合中大型企业，支持192位安全模式。WPA3向下兼容WPA2（支持WPA3的AP可以同时支持WPA2，允许老设备连接），但WPA3功能需要AP和终端都支持才能生效。WEP（已破解，不安全）、WPA（TKIP，已淘汰）、WPA2（AES-CCMP，当前主流，但有KRACK和离线字典攻击风险）、WPA3（最新，最安全）。WLAN安全是华为ICT大赛WLAN赛道的高频考点，需掌握各代安全标准、加密算法、认证方式、WPA3新特性（SAE、前向保密、PMF）等。',
-    knowledgeId: 'wlan-security', direction: 'wlan',
+    knowledgeId: 'wlan-security', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'wlan-h002', type: 'judge',
     question: 'WLAN中，802.11r快速漫游（FT）通过PMK-R0/R1密钥层次，漫游时无需重新进行802.1X认证，实现毫秒级切换。',
     options: ['正确', '错误'], answer: '正确',
     explanation: '802.11r（Fast BSS Transition，快速BSS切换，也叫FT，Fast Transition）：WLAN漫游优化标准，减少漫游时的认证和密钥协商时间，实现毫秒级快速切换，避免语音/视频等实时业务中断。传统漫游（无802.11r）：终端漫游到新AP时，需要重新进行完整的802.1X认证（企业级WPA/WPA2，与RADIUS服务器通信，数百毫秒到1秒）+四次握手（4-Way Handshake，生成PTK），耗时长，可能导致语音通话中断或视频卡顿。802.11r快速漫游原理：1.PMK密钥层次：a.PMK-R0（R0密钥）：由认证服务器（RADIUS）或AC生成，存储在R0密钥持有者（R0KH，通常是AC或认证服务器），是整个漫游域的根密钥。b.PMK-R1（R1密钥）：由PMK-R0派生，存储在R1密钥持有者（R1KH，通常是AP），每个AP有自己的PMK-R1。c.PTK（Pairwise Transient Key，成对临时密钥）：由PMK-R1派生，用于加密终端与AP之间的数据。2.预认证（Pre-authentication）：终端在漫游前，通过当前AP与目标AP预认证，获取目标AP的PMK-R1（或PMK-R0的派生材料）。3.快速切换：漫游时，终端与目标AP直接使用PMK-R1协商PTK（只需2次FT消息交换，而非完整的802.1X认证+四次握手），实现<50ms快速切换。802.11r两种模式：1.Over-the-DS（通过分布式系统）：终端通过当前AP与目标AP通信（预认证和FT请求都通过当前AP转发），终端不需要离开当前AP信道，更常用。2.Over-the-Air（直接无线）：终端直接与目标AP通信（离开当前AP信道，直接发送FT请求给目标AP），切换稍慢但更直接。802.11r与802.11k（Radio Resource Measurement，无线资源测量，帮助终端快速发现邻居AP，减少扫描时间）和802.11v（BSS Transition Management，BSS过渡管理，AC/AP指导终端漫游到更优AP，实现负载均衡和优化覆盖）配合（合称802.11k/v/r），实现智能快速漫游，是企业WLAN的重要功能，特别适合VoWiFi（Voice over WiFi）、视频会议等实时业务。802.11r需要AP和终端都支持才能生效（大多数现代智能手机和笔记本支持）。华为AC支持802.11r，可在安全模板下配置ft enable，支持Over-the-DS和Over-the-Air模式，可与802.11k/v配合实现智能漫游。WLAN漫游是华为ICT大赛WLAN赛道的高频考点，需掌握漫游类型（同AC/跨AC、二层/三层）、802.11r原理、PMK密钥层次、FT消息、与802.11k/v配合等。',
-    knowledgeId: 'wlan-roaming', direction: 'wlan',
+    knowledgeId: 'wlan-roaming', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-h001', type: 'single',
@@ -3295,14 +3276,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['underlay是底层物理网络（IP Fabric），overlay是在underlay之上构建的虚拟网络（VXLAN）', 'underlay是虚拟网络，overlay是物理网络', 'underlay和overlay是同一层', 'underlay用于用户数据，overlay用于管理数据'],
     answer: 'underlay是底层物理网络（IP Fabric），overlay是在underlay之上构建的虚拟网络（VXLAN）',
     explanation: '数据中心网络underlay/overlay架构：1.Underlay网络（底层网络）：物理网络基础设施，由交换机（Spine/Leaf）、路由器、链路组成，运行传统三层路由协议（OSPF/IS-IS/BGP），提供IP连通性和ECMP多路径负载分担。Underlay的作用：为overlay提供高速、可靠、无阻塞的IP传输通道，只负责将IP报文从一个VTEP传输到另一个VTEP，不关心虚拟机、租户、VLAN等逻辑信息。Underlay特点：简单、稳定、高性能、可扩展（Spine-Leaf架构，水平扩展），通常不做复杂策略（如ACL、QoS），只做高速转发。2.Overlay网络（叠加网络）：在underlay之上构建的虚拟网络，通过隧道封装（如VXLAN、NVGRE、GRE）将原始二层帧封装在IP报文中，在underlay三层网络上传输，构建大二层虚拟网络。Overlay的作用：提供大二层扩展（虚拟机迁移IP不变）、多租户隔离（不同VNI隔离）、灵活的网络服务（分布式网关、服务链、负载均衡等），满足云计算和多租户数据中心需求。Overlay特点：灵活、可扩展、与物理网络解耦（虚拟机迁移不影响物理网络）、支持多租户、软件定义（可通过控制器自动化配置）。3.两者关系：a.Underlay是基础，overlay依赖underlay提供IP连通性（VXLAN报文是UDP/IP报文，需要underlay路由转发）。b.Overlay是上层服务，在underlay之上提供虚拟网络功能，不改变underlay拓扑。c.两者独立扩展：underlay通过增加Spine/Leaf扩展带宽和接入，overlay通过增加VNI和VTEP扩展租户和虚拟网络。d.常见组合：IP Fabric（OSPF/IS-IS/BGP）underlay + EVPN/VXLAN overlay，是当前数据中心网络的标准架构。4.VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）：是underlay和overlay的边界点，负责VXLAN封装（overlay→underlay，将原始帧封装为VXLAN UDP/IP报文）和解封装（underlay→overlay，剥离VXLAN头恢复原始帧）。VTEP可以在物理交换机（硬件VTEP，Leaf交换机）、虚拟交换机（软件VTEP，如OVS）、智能网卡（SmartNIC，卸载封装）上实现。5.underlay网络设计：a.Spine-Leaf架构（Clos架构），任意两台服务器2跳，ECMP多路径。b.underlay路由协议：OSPF（简单，适合中小规模）、IS-IS（高效，适合大规模）、eBGP（最稳定，无环路，适合超大规模，云厂商首选）。c.underlay不启用STP（三层网络无环路，用ECMP替代STP，充分利用所有链路）。d.underlay不启用组播（通常用头端复制HER替代组播，简化underlay）。6.overlay网络设计：a.VXLAN封装（MAC-in-UDP，UDP 4789）。b.EVPN控制面（BGP EVPN，Type 2/3/5路由）。c.分布式网关（Anycast Gateway，每台Leaf都是网关）。d.多租户隔离（VNI，每个租户一个或多个VNI）。underlay/overlay是数据中心网络的核心概念，是华为ICT大赛DCN赛道的高频考点，需掌握两者定义、关系、常见技术组合、VTEP作用、underlay路由协议选择等。',
-    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
   {
     id: 'dcn-h002', type: 'judge',
     question: 'SD-WAN（软件定义广域网）相比传统MPLS VPN，可使用Internet链路降低成本，并通过智能选路保证关键应用体验。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'SD-WAN（Software Defined Wide Area Network，软件定义广域网）：基于SDN技术的广域网解决方案，是当前企业广域网改造的主流方向。相比传统MPLS VPN的优势：1.降低成本：可使用廉价的Internet链路（宽带、4G/5G、LTE）替代或补充昂贵的MPLS专线，混合链路（Hybrid WAN，MPLS+Internet+4G/5G），降低广域网成本（通常可降低30-50%，MPLS专线月租费高）。2.智能选路（Application-aware Routing）：基于应用识别（DPI深度包检测，识别具体应用如Office 365、Zoom、SAP等）和链路质量（延迟、丢包、抖动、带宽利用率），动态选择最优链路（关键应用走MPLS或高质量Internet，普通应用走普通Internet），提高用户体验和链路利用率。传统MPLS VPN只能基于目的地址选路，不感知应用和链路质量。3.集中管理和自动化：云管平台（Controller）统一配置、监控、运维，零接触部署（ZTP，Zero Touch Provisioning，设备上电自动获取配置），减少运维成本和部署时间。传统MPLS VPN需要在每台CE/PE上手动配置，复杂且耗时。4.应用优化：内置应用识别、QoS、TCP优化、缓存、压缩、FEC（前向纠错）、报文复制等，提升应用体验（尤其跨广域网的应用）。5.安全集成：集成防火墙、IPS、URL过滤、加密等安全功能（SASE，Secure Access Service Edge，安全访问服务边缘，将SD-WAN与安全服务融合，云原生安全），传统MPLS VPN需要额外部署安全设备。6.灵活扩展：支持多种链路类型（MPLS、Internet、4G/5G、卫星），快速开通新分支（天级 vs MPLS的周/月级），支持云应用访问（直接访问云服务，不需要绕行总部）。SD-WAN与传统MPLS VPN对比：| 维度 | 传统MPLS VPN | SD-WAN | |---|---|---| | 链路 | 仅MPLS专线 | 混合链路（MPLS+Internet+4G/5G） | | 成本 | 高（MPLS专线贵） | 低（利用廉价Internet） | | 选路 | 基于目的地址，静态 | 基于应用+链路质量，动态智能 | | 部署 | 慢（手动配置，周/月级） | 快（ZTP零接触，天级） | | 管理 | 分布式（每台设备配置） | 集中式（云管平台） | | 安全 | 需额外安全设备 | 集成安全（SASE） | | 云应用 | 绕行总部 | 直接访问（云网关） | SD-WAN不是要完全替代MPLS，而是混合使用（关键业务仍可用MPLS，普通业务用Internet），根据业务需求灵活选择。SD-WAN适用于：多分支企业、云应用多的企业、需要快速开通分支的企业、对广域网成本敏感的企业。SD-WAN是华为ICT大赛DCN/网络赛道的考点，需掌握原理、与MPLS对比、智能选路、ZTP、SASE、应用场景等。华为SD-WAN解决方案：AR路由器（CPE）+ iMaster NCE-WAN控制器，支持混合链路、智能选路、应用优化、安全集成等。',
-    knowledgeId: 'dcn-sdn-basic', direction: 'dcn',
+    knowledgeId: 'dcn-sdn-basic', direction: 'dcn', difficulty: 'IP',
   },
   {
     id: 'dc-h001', type: 'single',
@@ -3310,14 +3291,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['MED', 'Local_Pref（本地优先级）', 'AS_Path', 'Origin'],
     answer: 'Local_Pref（本地优先级）',
     explanation: 'BGP路径属性对比：1.Local_Pref（Local Preference，本地优先级）：公认自由决定属性，默认100，值越大越优先。作用：影响本AS的出站流量（本AS内路由器选择从哪个出口出去访问外部网络）。Local_Pref仅在IBGP邻居之间传递，不传给EBGP邻居（在本AS内有效，外部AS看不到）。配置：在入口路由器（从EBGP收到路由时）根据策略设置Local_Pref（如对重要前缀设置高Local_Pref，引导流量从特定出口出去）。2.MED（Multi-Exit Discriminator，多出口区分符，也叫Metric）：可选非过渡属性，默认0，值越小越优先。作用：影响相邻AS的入站流量（告诉对端AS从哪个入口进入本AS更优）。MED只在相邻两个AS之间传递，默认不跨AS（收到的MED只用于本AS与相邻AS的比较，不会传给第三个AS），除非配置always-compare-med。配置：在出口路由器（向EBGP邻居发布路由时）根据策略设置MED（如希望对端从特定入口进入，设置该入口的MED较小）。3.AS_Path（AS路径）：公认必遵属性，路由经过的AS列表，越短越优先。作用：防环（收到包含自己AS号的路由则丢弃）和路由优选（AS_Path短的优先）。可通过AS_Path前置（AS-Path Prepend，在路由前添加多次自己的AS号，使AS_Path变长，降低优先级）控制入站流量。4.Origin（起源）：公认必遵属性，IGP（i，最优先）> EGP（e）> Incomplete（?，最不优先）。作用：标识路由来源，影响路由优选。Local_Pref vs MED对比：| 属性 | 影响方向 | 优先级方向 | 传递范围 | 默认值 | |---|---|---|---|---| | Local_Pref | 本AS出站 | 值大优先 | IBGP内 | 100 | | MED | 相邻AS入站 | 值小优先 | 相邻AS间 | 0 | 简单记忆：Local_Pref管"出去"（出站，从本AS哪个出口出去），值大优先；MED管"进来"（入站，对端从哪个入口进来），值小优先。BGP流量工程：1.出站流量控制：主要用Local_Pref（在本AS入口设置，影响本AS内路由器选择出口）。2.入站流量控制：主要用MED（告诉对端从哪个入口进来）和AS_Path前置（使某些入口的路由AS_Path变长，降低优先级），但入站流量控制更难（因为对端AS的策略不受本AS控制，MED只是建议，对端可以忽略）。BGP属性和流量工程是华为ICT大赛网络赛道的高频考点，需掌握各属性的作用、默认值、传递范围、优先级方向、配置方法、流量工程应用等。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-h002', type: 'judge',
     question: 'OSPF中，SPF算法（最短路径优先）基于链路状态数据库（LSDB）计算最短路径树，以自己为根节点。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'OSPF（Open Shortest Path First，开放最短路径优先）是链路状态路由协议，使用SPF算法（Shortest Path First，最短路径优先，也叫Dijkstra算法，由荷兰计算机科学家Edsger Dijkstra提出）计算最短路径。OSPF工作过程：1.发现邻居：通过Hello报文发现和维护邻居关系（2-Way状态）。2.建立邻接：通过DD/LSR/LSU/LSAck报文交换链路状态信息，同步链路状态数据库（LSDB，Link State Database），达到Full状态。3.泛洪LSA：拓扑变化时，通过LSU报文泛洪LSA（链路状态通告），确保所有路由器的LSDB一致（链路状态协议的关键：所有路由器有相同的LSDB，即相同的网络拓扑图）。4.SPF计算：每台路由器基于自己的LSDB（完整的网络拓扑图），以自己为根节点，运行SPF算法（Dijkstra算法）计算最短路径树（Shortest Path Tree），得到到每个目的网络的最短路径和下一跳。5.生成路由：将SPF计算结果写入路由表（OSPF路由，优先级10）。SPF算法特点：a.以自己为根：每台路由器独立计算，以自己为根节点，得到从自己到所有目的的最短路径。b.基于完整拓扑：链路状态协议中，每台路由器都有完整的网络拓扑（LSDB），可以独立计算最短路径，不像距离矢量协议（RIP）只知道邻居的路由（传闻式路由，容易环路和计数到无穷）。c.计算复杂度：Dijkstra算法时间复杂度O(N^2)（N为节点数），区域内路由器数量多时SPF计算开销大，所以OSPF划分区域（Area）减少每台路由器的LSDB规模和SPF计算范围（区域内计算Type 1/2，区域间用Type 3不跑SPF，外部用Type 5不跑SPF）。d.触发计算：拓扑变化时触发SPF计算（可配置SPF计算延迟和保持时间，避免频繁计算），但只有变化的区域需要重新计算（其他区域不受影响）。OSPF区域划分的原因：1.减少LSDB规模（每台路由器只需维护本区域+其他区域的汇总路由，不需要所有区域的详细拓扑）。2.减少SPF计算范围（区域内拓扑变化只触发本区域SPF，不影响其他区域）。3.减少LSA泛洪范围（Type 1/2只在本区域泛洪）。4.支持末梢区域（Stub/Totally Stub/NSSA）进一步减少LSA和路由表。5.提高网络稳定性和可扩展性。SPF算法和链路状态原理是华为ICT大赛网络赛道的基础考点，需掌握OSPF工作过程、LSDB、LSA类型、SPF计算、区域划分原因等。注意：OSPF区域内路由（Intra-area，Type 1/2）通过SPF计算，区域间路由（Inter-area，Type 3）和外部路由（External，Type 5/7）不通过SPF计算（直接作为叶子节点挂在最短路径树上，类似距离矢量），所以区域间和外部路由可能有环路风险（OSPF通过区域设计和防环机制避免）。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
 
 
@@ -3328,7 +3309,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['IIH（Hello报文）', 'LSP（链路状态PDU）', 'CSNP（完全序列号PDU）', 'PSNP（部分序列号PDU）'],
     answer: 'LSP（链路状态PDU）',
     explanation: 'IS-IS PDU（Protocol Data Unit，协议数据单元）类型：1.IIH（IS-to-IS Hello PDU，IS到IS Hello报文）：用于发现和维护邻居关系，类似OSPF的Hello报文。分为L1 IIH（组播01:80:C2:00:00:14）、L2 IIH（组播01:80:C2:00:00:15）、P2P IIH（组播01:80:C2:00:00:13）。携带System ID、区域地址、优先级、保持时间、接口IP等。2.LSP（Link State PDU，链路状态PDU）：描述路由器的链路状态信息，类似OSPF的LSA（链路状态通告）。分为L1 LSP（在L1区域内泛洪）和L2 LSP（在骨干区域泛洪）。携带：System ID（发送路由器）、伪节点ID（Pseudonode ID，0表示普通LSP，非0表示伪节点LSP，由DIS生成）、序列号（Sequence Number，越大越新）、剩余生存时间（Remaining Lifetime，默认1200秒=20分钟，超时后从LSDB删除）、校验和（Checksum）、邻居列表（Neighbor ID+度量）、IP前缀（IP Reachability，IP可达性信息，包含前缀和度量）等。LSP在区域内泛洪，所有路由器的LSDB（链路状态数据库）包含本区域所有LSP，基于LSP运行SPF算法计算最短路径。3.CSNP（Complete Sequence Number PDU，完全序列号PDU）：包含本地LSDB中所有LSP的摘要（LSP ID+序列号+校验和），用于数据库同步。在广播网络中，DIS周期性发送CSNP（默认10秒），其他路由器对比发现缺失的LSP，发送PSNP请求。在点到点网络中，邻居建立后双方互发CSNP（只发一次）。4.PSNP（Partial Sequence Number PDU，部分序列号PDU）：包含部分LSP的摘要，用于：a.请求缺失的LSP（路由器发现CSNP中有自己没有的LSP，发送PSNP请求）。b.确认收到的LSP（点到点网络中，收到LSP后发送PSNP确认，因为点到点没有DIS泛洪机制，需要显式确认）。LSP与OSPF LSA对比：| IS-IS LSP | OSPF LSA | |---|---| | 直接封装在数据链路层 | 封装在IP中（协议号89） | | L1/L2两种类型 | Type 1-7多种类型 | | 伪节点LSP由DIS生成 | Type 2 Network LSA由DR生成 | | 序列号+生存时间+校验和 | 序列号+年龄+校验和 | | 区域内泛洪 | 区域内/域内泛洪（不同类型范围不同） | IS-IS PDU类型是华为ICT大赛网络赛道的考点，需掌握每种PDU的作用、发送者、与OSPF对应关系等。注意：LSP是链路状态信息的载体，类似OSPF的LSA；CSNP/PSNP用于数据库同步，类似OSPF的DD/LSR/LSU/LSAck。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-i002', type: 'single',
@@ -3336,7 +3317,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['VRRP将多台路由器组成一个虚拟路由器，对外提供虚拟IP和虚拟MAC', 'Master路由器负责转发流量，Backup路由器在Master故障时接管', 'VRRP优先级默认100，优先级255保留给虚拟IP所有者', 'VRRP可以实现负载分担，同一时间多台路由器同时转发同一虚拟IP的流量'],
     answer: 'VRRP可以实现负载分担，同一时间多台路由器同时转发同一虚拟IP的流量',
     explanation: 'VRRP（Virtual Router Redundancy Protocol，虚拟路由冗余协议，RFC 5798，华为默认VRRPv3支持IPv4/IPv6）：1.虚拟路由器（Virtual Router）：将多台路由器组成一个虚拟路由器，对外提供一个虚拟IP（VIP，Virtual IP）和虚拟MAC（VMAC，Virtual MAC，00-00-5E-00-01-{VRID}，VRID为虚拟路由器ID，1-255）。局域网内主机的默认网关指向虚拟IP，不需要感知实际转发的路由器。2.角色：a.Master（主路由器）：优先级最高的路由器成为Master，负责转发以虚拟MAC为目的的流量，响应ARP请求（回复虚拟MAC），周期性发送VRRP通告报文（Advertisement，默认1秒，组播224.0.0.18，IPv6为FF02::12）。b.Backup（备份路由器）：其他路由器为Backup，不转发流量，不响应ARP，只监听Master的通告报文。如果在Master_Down_Interval（默认3倍通告间隔+偏移时间，约3.6秒）内未收到Master通告，则认为Master故障，优先级最高的Backup抢占成为新Master，接管虚拟IP和MAC，继续转发流量，实现网关冗余。3.优先级（Priority）：1-254，默认100，值越大越优先。优先级255保留给虚拟IP所有者（IP Address Owner，物理接口IP=虚拟IP的路由器，自动成为Master且不可被抢占，优先级自动为255）。优先级0用于Master主动放弃（发送优先级0的通告，Backup立即接管）。4.抢占模式（Preempt）：默认开启，高优先级Backup发现自己优先级高于Master时，抢占成为Master。可配置抢占延迟（Preempt Delay，避免网络震荡时频繁切换，默认0秒立即抢占）。5.认证（Authentication）：VRRPv2支持明文认证和MD5认证（防止非法路由器加入VRRP组或发送伪造通告），VRRPv3取消了认证（认为安全应由上层协议保证，如IPSec）。6.跟踪（Track）：a.跟踪接口/链路（Interface Track）：Master上行接口故障时，降低优先级（如降低10），让Backup接管，避免黑洞（Master还在但上行断了，流量发给Master但无法转发）。b.跟踪BFD（BFD Track）：BFD快速检测故障（毫秒级），联动VRRP快速切换（亚秒级），比等待Master_Down_Interval（3.6秒）快得多。c.跟踪路由（Route Track）：路由消失时降低优先级。VRRP限制：1.同一时间只有Master转发流量（主备模式），Backup不转发，所以VRRP本身不能实现同一虚拟IP的负载分担（同一时间只有一台转发）。2.要实现负载分担，需要配置多个VRRP组（不同VRID，不同虚拟IP），不同VLAN/网段的网关指向不同VRRP组的虚拟IP，不同VRRP组的Master在不同路由器上，从而实现不同网段的流量分担（如VLAN 10网关VRRP 1的Master在SW1，VLAN 20网关VRRP 2的Master在SW2，两台交换机都转发部分流量）。这叫VRRP负载分担模式（多VRRP组），但每个VRRP组本身仍是主备。3.VRRPv2仅支持IPv4，VRRPv3支持IPv4和IPv6。4.VRRP不能检测上行故障（需配置Track）。VRRP与HSRP（Cisco私有，热备份路由器协议）、GLBP（Cisco私有，网关负载均衡协议，支持同一虚拟IP的真正负载分担，AVG分配虚拟MAC，AVF转发）类似，VRRP是IETF标准，华为支持。VRRP是华为ICT大赛网络赛道的高频考点，需掌握原理、虚拟IP/MAC、Master/Backup、优先级、抢占、认证、Track、负载分担（多VRRP组）、配置等。注意：VRRP本身是主备，不是负载分担；负载分担需要多个VRRP组。',
-    knowledgeId: 'datacom-vrrp', direction: 'datacom',
+    knowledgeId: 'datacom-vrrp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-i001', type: 'single',
@@ -3344,14 +3325,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['源NAT（NAT Outbound，PAT）', '目的NAT（NAT Server，服务器映射）', '静态NAT（一对一）', '黑洞NAT（Null0）'],
     answer: '目的NAT（NAT Server，服务器映射）',
     explanation: '防火墙NAT（Network Address Translation，网络地址转换）类型：1.源NAT（Source NAT，也叫NAT Outbound，出方向NAT）：转换报文的源IP地址，用于内网用户访问外网（内网私有IP→公网IP）。包括：a.No-PAT（不转换端口，多对多，从公网地址池动态分配，内网主机数不超过公网IP数）。b.PAT（Port Address Translation，端口地址转换，也叫NAPT，多对一，多个内网主机共享一个或少量公网IP，通过不同源端口区分，最常用，大幅节省公网IP）。c.Smart NAT（智能NAT，No-PAT+PAT，No-PAT地址用完后自动使用PAT，兼顾性能和地址利用率）。d.三元组NAT（IP+端口+协议，固定映射，便于P2P应用，如视频会议）。e.Easy IP（直接使用出接口IP作为公网IP，适合拨号/动态IP场景，如家庭宽带）。源NAT只转换源IP（和端口），目的IP不变，用于内网主动访问外网。2.目的NAT（Destination NAT，也叫NAT Inbound，入方向NAT，华为叫NAT Server服务器映射）：转换报文的目的IP地址（和端口），用于外网用户主动访问内网服务器（公网IP→内网服务器私网IP）。配置：nat server protocol tcp global <公网IP> <公网端口> inside <私网IP> <私网端口>，将公网IP+端口映射到内网服务器私网IP+端口。外网用户访问公网IP+端口时，防火墙将目的地址转换为内网服务器私网IP+端口，转发给内网服务器；内网服务器回复时，源地址（私网IP+端口）被转换为公网IP+端口（反向NAT，No-PAT，因为NAT Server生成的Server-Map表项包含反向映射）。NAT Server生成Server-Map表（服务器映射表），记录公网IP+端口→私网IP+端口的映射，允许外网主动访问（普通源NAT只允许内网主动访问外网，外网不能主动访问内网，因为没有公网到私网的映射）。NAT Server是企业对外发布服务器（Web、邮件、FTP、DNS等）的常用方式。3.静态NAT（Static NAT）：一对一固定映射，内网IP与公网IP一一对应，不转换端口，既支持内网主动访问外网，也支持外网主动访问内网（因为映射是双向的、固定的）。静态NAT不节省公网IP（需要与内网主机相同数量的公网IP），主要用于需要外网主动访问的服务器（但NAT Server更灵活，可端口映射，一个公网IP映射多个服务器不同端口）。4.黑洞NAT（Blackhole NAT，Null0）：下一跳为Null0接口的路由，匹配的流量被丢弃，用于防环路（如聚合路由的防环）或流量过滤，不是真正的NAT转换。5.Twice NAT（两次NAT，也叫双向NAT）：同时转换源IP和目的IP，用于源和目的地址重叠的场景（如两个内网使用相同IP段，VPN互联时地址冲突），或需要同时转换源和目的的场景。NAT Server与源NAT的区别：| 类型 | 转换方向 | 转换内容 | 用途 | 主动访问方向 | |---|---|---|---|---| | 源NAT（PAT） | 出方向（内网→外网） | 源IP+源端口 | 内网用户访问外网 | 内网主动访问外网 | | 目的NAT（NAT Server） | 入方向（外网→内网） | 目的IP+目的端口 | 外网访问内网服务器 | 外网主动访问内网 | | 静态NAT | 双向 | IP（不转端口） | 服务器固定映射 | 双向都可 | NAT是华为ICT大赛安全赛道的高频考点，需掌握各种NAT类型、原理、配置、Server-Map表、与安全策略关系、NAT穿越（IPSec NAT-T）等。注意：NAT Server是目的NAT，允许外网主动访问内网；源NAT（PAT）只允许内网主动访问外网。',
-    knowledgeId: 'security-nat', direction: 'security',
+    knowledgeId: 'security-nat', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-i002', type: 'judge',
     question: '802.1X认证中，认证系统（Authenticator，交换机/AP）在用户认证通过前，端口只允许EAPoL报文通过，其他流量被阻塞。',
     options: ['正确', '错误'], answer: '正确',
     explanation: '802.1X（IEEE 802.1X，端口-based网络访问控制）是一种基于端口的网络访问控制协议，用于企业网络的用户认证和准入控制。802.1X体系结构：1.客户端（Supplicant，请求者）：用户终端（PC、手机、笔记本等），运行802.1X客户端软件（Windows自带、iNode、AnyConnect等），发起认证请求，发送EAPoL报文。2.认证系统（Authenticator，认证者）：交换机、AP、AC等网络接入设备，控制端口的访问权限。在用户认证通过前，端口处于未授权状态（Unauthorized），只允许EAPoL（EAP over LAN，802.1X认证报文，目的MAC 01-80-C2-00-00-03，类型0x888E）通过，其他所有流量（HTTP、DHCP、TCP/IP数据等）都被阻塞，用户无法访问网络资源。认证通过后，端口变为授权状态（Authorized），允许正常流量通过。3.认证服务器（Authentication Server）：RADIUS服务器（Remote Authentication Dial-In User Service，远程认证拨号用户服务），存储用户账号密码和策略，验证客户端身份，返回认证结果（接受/拒绝）和授权信息（VLAN、ACL、超时时间等）。认证系统与认证服务器之间使用RADIUS协议（UDP 1812认证、1813计费）。802.1X认证流程（EAP中继方式，最常用）：1.客户端发起认证：客户端发送EAPoL-Start（EAPOL开始）报文，或认证系统检测到端口up后主动发起认证（发送EAP-Request/Identity请求身份）。2.身份请求：认证系统发送EAP-Request/Identity（EAP请求/身份）给客户端，请求用户名。3.身份响应：客户端回复EAP-Response/Identity（EAP响应/身份），携带用户名。4.封装RADIUS：认证系统将EAP-Response/Identity封装为RADIUS Access-Request（访问请求）报文，发送给RADIUS服务器。5.RADIUS挑战：RADIUS服务器验证用户名，选择认证方法（如EAP-PEAP、EAP-TLS、EAP-MSCHAPv2等），发送RADIUS Access-Challenge（访问挑战，携带EAP-Request）给认证系统。6.转发EAP：认证系统解封装，将EAP-Request转发给客户端。7.客户端响应：客户端根据EAP方法进行响应（如输入密码、证书验证），发送EAP-Response给认证系统。8.封装转发：认证系统封装为RADIUS Access-Request转发给RADIUS服务器。9.认证结果：RADIUS服务器验证通过后，发送RADIUS Access-Accept（访问接受，携带授权信息如VLAN、ACL、Session-Timeout等）；验证失败发送Access-Reject（访问拒绝）。10.授权端口：认证系统收到Access-Accept后，发送EAP-Success（EAP成功）给客户端，端口变为授权状态，允许正常流量通过，应用授权信息（动态VLAN、动态ACL等）。收到Access-Reject则发送EAP-Failure，端口保持未授权。802.1X端口控制模式（Port Control）：1.自动模式（Auto，默认）：端口自动发起802.1X认证，认证通过后开放。2.强制授权（Force Authorized）：不进行认证，端口始终允许所有流量通过（相当于关闭802.1X）。3.强制非授权（Force Unauthorized）：端口始终拒绝所有流量（始终关闭）。802.1X扩展功能：1.Guest VLAN（访客VLAN）：认证失败或无客户端的用户可访问Guest VLAN（有限资源，如Internet、自助注册），是802.1X的扩展功能。2.Critical VLAN（关键VLAN/故障VLAN）：RADIUS服务器不可达时，用户可访问Critical VLAN，保证基本网络访问（如内网资源）。3.Restart VLAN（重认证VLAN）：重认证失败时用户进入的VLAN。4.动态VLAN（Dynamic VLAN）：RADIUS返回Tunnel-Private-Group-ID属性，动态将用户端口加入指定VLAN，不同用户认证后进入不同VLAN。5.动态ACL（Dynamic ACL）：RADIUS返回Filter-ID属性，动态应用ACL，控制用户访问权限。6.双因素认证（2FA）：结合密码+证书/短信/令牌，提高安全性。7.MAC旁路（MAC Authentication Bypass，MAB）：不支持802.1X的设备（如打印机、IP电话、摄像头等IoT设备），通过MAC地址认证（认证系统学习MAC地址，作为用户名/密码发送给RADIUS验证），不需要客户端软件。8.Web认证（Portal认证）：不支持802.1X的设备，通过Web页面输入账号密码认证，常用于访客网络。802.1X是华为ICT大赛安全赛道的高频考点，需掌握体系结构（Supplicant/Authenticator/Server）、EAPoL、认证流程、端口控制模式、RADIUS、Guest VLAN/Critical VLAN、动态VLAN/ACL、MAB、与Portal认证区别等。注意：认证通过前只允许EAPoL通过，其他流量阻塞；EAPoL目的MAC是组播01-80-C2-00-00-03，不会被交换机转发（只在本地端口处理）。',
-    knowledgeId: 'security-8021x', direction: 'security',
+    knowledgeId: 'security-8021x', direction: 'security', difficulty: 'IP',
   },
 
 
@@ -3362,7 +3343,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Type 1 Router LSA', 'Type 3 Summary LSA', 'Type 5 AS External LSA', 'Type 7 NSSA External LSA'],
     answer: 'Type 5 AS External LSA',
     explanation: 'OSPF LSA（Link State Advertisement，链路状态通告）类型详解：1.Type 1 Router LSA（路由器LSA）：每台路由器生成，描述本路由器的接口状态、链路类型、度量值、邻居等，仅在本区域内泛洪。2.Type 2 Network LSA（网络LSA）：DR（指定路由器）生成，描述广播/NBMA网络中所有连接的路由器，仅在本区域内泛洪。3.Type 3 Summary LSA（网络汇总LSA）：ABR（区域边界路由器）生成，描述区域间路由（将本区域Type 1/2汇总为Type 3发布到其他区域，或将其他区域Type 3汇总后发布到本区域），可跨区域泛洪。4.Type 4 Summary LSA（ASBR汇总LSA）：ABR生成，描述ASBR的位置（ASBR的Router ID和到达ASBR的路径），用于让其他区域的路由器知道如何到达ASBR（因为Type 5 LSA只携带ASBR的Router ID，不携带路径，需要Type 4辅助）。5.Type 5 AS External LSA（AS外部LSA）：ASBR（自治系统边界路由器）生成，描述外部路由（从其他协议/静态/直连引入OSPF的路由），在整个OSPF域泛洪（除Stub、Totally Stub、NSSA、Totally NSSA区域，这些区域不接收Type 5）。Type 5携带：外部路由前缀、度量值（Metric）、度量类型（Metric-Type，E1/E2）、转发地址（Forwarding Address）、外部路由标签（Route Tag）等。6.Type 7 NSSA External LSA（NSSA外部LSA）：NSSA区域的ASBR生成，描述外部路由，仅在NSSA区域内泛洪（不跨区域），到ABR后转换为Type 5 LSA发布到其他区域。Type 7解决了Stub区域不能引入外部路由的限制（NSSA=Not-So-Stubby Area，"不那么末梢的区域"）。LSA泛洪范围对比：| LSA类型 | 生成者 | 泛洪范围 | 内容 | |---|---|---|---| | Type 1 | 每台路由器 | 本区域 | 路由器链路状态 | | Type 2 | DR | 本区域 | 广播网络路由器列表 | | Type 3 | ABR | 可跨区域 | 区域间路由 | | Type 4 | ABR | 可跨区域 | ASBR位置 | | Type 5 | ASBR | 整个域（除末梢区域） | 外部路由 | | Type 7 | NSSA ASBR | NSSA区域内 | NSSA外部路由 | Type 5外部路由度量类型：1.E2（External Type 2，默认）：外部度量值固定为ASBR设置的值，不叠加OSPF内部路径开销，即所有路由器看到的外部路由度量值相同（都是ASBR设置的Metric）。适用于外部路由的度量值比内部路径更重要的场景（如默认路由）。2.E1（External Type 1）：外部度量值=ASBR设置的外部Metric+到达ASBR的OSPF内部路径开销，即不同路由器看到的外部路由度量值不同（离ASBR越远度量值越大）。适用于需要考虑内部路径开销的场景（如多个出口选择最优的）。E1比E2更精确（考虑内部路径），E2更简单（固定度量）。OSPF LSA类型是华为ICT大赛网络赛道的高频考点，需掌握每种LSA的生成者、泛洪范围、内容、作用，以及末梢区域对LSA的过滤，Type 5/7的区别和转换，E1/E2度量类型等。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-j002', type: 'single',
@@ -3370,7 +3351,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['减少路由表规模，隐藏明细路由，提高稳定性', '提高路由收敛速度', '加密路由信息', '选择最优路由'],
     answer: '减少路由表规模，隐藏明细路由，提高稳定性',
     explanation: 'BGP路由聚合（Aggregation，也叫路由汇总Route Summarization）：将多条明细路由（更具体的前缀，如192.168.1.0/24、192.168.2.0/24、192.168.3.0/24）汇总为一条更粗的路由（如192.168.0.0/16），减少路由表规模。作用：1.减少路由表规模：互联网BGP路由表已超过100万条，聚合可大幅减少路由数量，降低路由器内存和CPU消耗，提高转发效率。2.隐藏明细路由：聚合后只发布汇总路由，不发布明细路由，隐藏内部网络拓扑，提高安全性和稳定性（明细路由震荡不影响汇总路由，减少路由震荡传播）。3.提高稳定性：明细路由的up/down不会导致汇总路由变化（只要有一条明细存在，汇总路由就存在），减少路由更新和网络震荡。4.节省带宽：减少BGP路由更新报文数量，节省链路带宽。BGP聚合方式：1.静态聚合（Static Aggregation）：手动配置汇总路由（aggregate命令），当路由表中存在至少一条明细路由时，发布汇总路由。可选择是否抑制明细路由（suppress-policy，抑制明细只发布汇总，或选择性抑制）。2.自动聚合（Auto Summary）：有类网络边界自动汇总（如将192.168.1.0/24自动汇总为192.168.0.0/16），只适用于有类网络，不推荐（可能导致不精确路由和环路），华为默认关闭。3.明细路由抑制：聚合后默认仍发布明细路由（除非配置suppress-policy抑制），可通过as-set选项保留明细路由的AS_Path信息（防止环路和路由丢失）。聚合相关属性：1.Atomic_Aggregate（原子聚合，公认自由决定属性）：提示下游路由器该路由是聚合路由，可能丢失了明细路由的信息（如AS_Path、Community），下游不应再分解该聚合路由。2.Aggregator（聚合者，可选过渡属性）：记录执行聚合的路由器的AS号和Router ID，便于追踪聚合来源。3.AS_SET：聚合时使用as-set选项，将所有明细路由的AS_Path合并为AS_SET（无序集合），保留AS信息，防止环路（如果聚合后AS_Path为空，可能导致路由环路，因为接收方无法检测AS是否经过）。但AS_SET会导致聚合路由的AS_Path包含所有明细AS，可能影响路由优选（AS_Path长度）。4.Community：聚合时可设置Community属性（如NO_EXPORT，限制聚合路由不发布给EBGP邻居）。聚合的风险：1.路由黑洞：聚合路由发布后，如果所有明细路由都消失，但聚合路由仍存在（因为静态聚合路由可能手动配置且不自动撤销），导致流量被转发到不存在的网络（黑洞）。解决：使用动态聚合（只有存在明细时才发布汇总），或配合黑洞路由（Null0）防止环路。2.次优路由：聚合后隐藏明细，可能导致次优路径（因为接收方只有汇总路由，不知道明细的最优路径）。3.环路风险：聚合时如果不保留AS_Path（as-set），可能导致环路（接收方无法检测AS是否经过）。BGP路由聚合是华为ICT大赛网络赛道的高频考点，需掌握聚合作用、配置方式（aggregate/suppress-policy/as-set）、Atomic_Aggregate/Aggregator属性、AS_SET作用、聚合风险（黑洞/次优/环路）等。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'wlan-j001', type: 'single',
@@ -3378,7 +3359,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['信道调整（Channel Assignment）用于减少同频干扰，自动或手动分配信道', '功率调整（Power Control）用于平衡覆盖和干扰，高密度场景适当降低功率', '2.4GHz有13个信道，其中1、6、11是三个不重叠信道', '5GHz信道更多，所以5GHz穿墙能力比2.4GHz强'],
     answer: '5GHz信道更多，所以5GHz穿墙能力比2.4GHz强',
     explanation: 'WLAN射频（Radio Frequency，RF）优化：1.信道调整（Channel Assignment）：为AP分配信道，减少同频干扰（同频干扰会降低吞吐量和增加延迟）。a.自动信道调整（Auto Channel）：AC通过检测环境干扰，自动为AP分配最优信道（周期性或触发式调整），是企业WLAN的常用功能。b.手动信道规划：根据场地规划信道，2.4GHz用1、6、11三个不重叠信道蜂窝部署，5GHz用更多信道复用（如36/40/44/48、149/153/157/161）。c.信道宽度：2.4GHz建议20MHz（信道少，40MHz干扰大），5GHz可20/40/80MHz（信道多，高带宽），高密度场景建议20/40MHz（减少干扰，增加信道复用）。2.功率调整（Power Control，TPC Transmit Power Control）：调整AP发射功率，平衡覆盖和干扰。a.高密度场景（会议室、体育场）：适当降低功率（如50%），减小覆盖范围，增加信道复用，减少同频干扰，避免远距离弱信号关联（低速率拖慢整体性能）。b.覆盖场景（仓库、开阔区）：适当提高功率，保证覆盖。c.自动功率调整（Auto Power）：AC根据邻居AP信号强度和用户接入情况，自动调整功率（邻居AP信号强则降低功率，弱则提高）。3.2.4GHz频段：a.中国支持13个信道（1-13），但只有1、6、11三个不重叠信道（信道间隔25MHz，每个信道22MHz带宽，1/6/11间隔5个信道=25MHz，不重叠）。b.其他信道（2-5、7-10、12-13）都会与相邻信道重叠，造成邻频干扰。c.2.4GHz信道少，高密度场景容易拥塞和干扰（蓝牙、微波炉、邻居Wi-Fi都用2.4G）。4.5GHz频段：a.中国支持更多信道（36-64、149-165等，共约20+个不重叠20MHz信道），干扰小，速率高。b.5GHz频率高，波长短，穿墙能力弱（穿透损耗大，混凝土墙衰减严重），覆盖范围小。c.5GHz信道多≠穿墙能力强，恰恰相反，5GHz穿墙能力比2.4GHz弱（频率越高穿透能力越弱，但绕射能力越差）。d.2.4GHz频率低，波长长，绕射能力强，穿墙能力强，覆盖范围大。5.其他射频优化：a.频谱导航（Band Steering）：引导双频终端优先连接5GHz，减轻2.4G拥塞。b.负载均衡（Load Balancing）：在AP间或射频间均衡用户数量，避免单个AP过载。c.漫游优化：802.11k/v/r快速漫游，调整漫游阈值（RSSI阈值），引导终端及时漫游到更优AP。d.射频调优（Radio Calibration）：AC定期或触发式调整信道和功率，适应环境变化。e.禁用低速率（Disable Low Rate）：禁用1/2/5.5/11Mbps等低速率，减少低速率用户占用信道时间，提高整体性能（但可能影响覆盖边缘的老设备）。f.RTS/CTS阈值：调整RTS/CTS阈值，减少隐藏节点冲突（高密度场景适当降低阈值）。g.帧聚合（A-MPDU/A-MSDU）：802.11n/ac/ax的帧聚合技术，提高传输效率。WLAN射频优化是华为ICT大赛WLAN赛道的高频考点，需掌握信道规划（2.4G 1/6/11、5G更多信道）、功率调整、频段对比（2.4G穿墙强/信道少，5G速率高/穿墙弱/信道多）、频谱导航、负载均衡、漫游优化、高密度部署等。注意：5GHz信道多但穿墙能力弱，这是常见考点和易错点。',
-    knowledgeId: 'wlan-rf', direction: 'wlan',
+    knowledgeId: 'wlan-rf', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-j001', type: 'single',
@@ -3386,7 +3367,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Leaf交换机连接服务器，同时连接所有Spine交换机', 'Spine交换机不连接服务器，只连接Leaf交换机', '任意两台服务器通信经过3跳（Leaf→Spine→Spine→Leaf）', '通过ECMP等价多路径实现负载分担和高可用'],
     answer: '任意两台服务器通信经过3跳（Leaf→Spine→Spine→Leaf）',
     explanation: 'Spine-Leaf（叶脊）架构（也叫Clos架构，由Charles Clos在1953年提出，用于电话交换网络，后应用于数据中心网络）：1.Leaf（叶节点，接入层）：a.连接服务器（TOR，Top of Rack，柜顶交换机，放置在服务器机架顶部）。b.同时连接到所有Spine节点（Full Mesh全互联，每台Leaf与每台Spine都有链路）。c.是服务器的网关（三层网关，分布式网关模式下每台Leaf都是所有VNI的网关）。d.Leaf之间不直接互联（只通过Spine互联）。2.Spine（脊节点，核心层）：a.不连接服务器（Spine只连接Leaf，不直接连接服务器）。b.连接所有Leaf节点，提供高带宽的东西向交换。c.Spine之间不直接互联（Spine只与Leaf互联，Spine之间不需要链路，因为任意两台Leaf之间通过任意一台Spine都能到达，2跳）。3.路径和跳数：a.任意两台服务器通信路径：服务器→源Leaf→任意一台Spine→目的Leaf→目的服务器。b.在网络设备层面经过2跳（Leaf→Spine→Leaf），不是3跳。c.延迟低且可预测（无论哪两台服务器通信都是2跳，不会因为位置不同而延迟不同，这是Spine-Leaf相比传统三层架构的重要优势）。4.ECMP（Equal-Cost Multi-Path，等价多路径）：a.从源Leaf到目的Leaf，经过每台Spine都是等价路径（相同开销），ECMP将流量负载分担到所有Spine链路上，充分利用所有带宽。b.基于五元组（源/目的IP、源/目的端口、协议）哈希计算选择路径，同一流（相同五元组）走同一路径，保证按序到达；不同流走不同路径，实现负载分担。c.某条Spine链路或Spine设备故障时，ECMP自动将流量切换到其他健康路径，实现快速收敛和高可用（毫秒级，不需要STP收敛）。5.无阻塞（Non-blocking）：a.Leaf的上行带宽（到所有Spine的总带宽）≥下行带宽（所有服务器的总带宽），即收敛比（Oversubscription Ratio）≤1:1（无阻塞）或≤3:1（轻度收敛，可接受）。b.传统三层架构收敛比高（如核心层带宽不足，东西向流量瓶颈），Spine-Leaf通过增加Spine数量和链路带宽实现低收敛比。6.水平扩展（Horizontal Scaling）：a.增加Leaf：增加接入端口密度（连接更多服务器）。b.增加Spine：增加东西向带宽（更多ECMP路径，更高总带宽）。c.任意扩展不影响现有拓扑，无需重新设计网络（传统三层架构扩展需要重新规划核心和汇聚）。7.underlay路由协议：a.Spine-Leaf的underlay（底层网络）通常运行eBGP（外部BGP，每台设备一个AS号，AS_PATH防环，ECMP天然支持，最稳定，云厂商首选）或OSPF/IS-IS（IGP，配置简单）。b.underlay不启用STP（三层网络无环路，用ECMP替代STP，充分利用所有链路，STP会阻塞冗余链路浪费带宽）。c.underlay通常不启用组播（VXLAN BUM流量用头端复制HER替代组播，简化underlay）。Spine-Leaf与传统三层架构（核心-汇聚-接入）对比：| 维度 | 传统三层架构 | Spine-Leaf架构 | |---|---|---| | 路径跳数 | 同汇聚2跳，跨汇聚3-4跳，不一致 | 固定2跳，一致 | | 东西向带宽 | 核心层瓶颈，收敛比高 | 无阻塞/低收敛，ECMP充分利用 | | 链路利用率 | STP阻塞冗余链路，利用率低 | ECMP利用所有链路，利用率高 | | 扩展 | 扩展复杂，需重新设计 | 水平扩展，增加Leaf/Spine即可 | | 故障收敛 | STP收敛慢（30-50秒） | ECMP/路由收敛快（毫秒级） | | 适用场景 | 南北向为主的企业网络 | 东西向为主的数据中心 | Spine-Leaf是当前数据中心网络的标准架构，被AWS、Azure、Google、Facebook、阿里云、华为云等所有主流云厂商采用，是华为ICT大赛DCN赛道的核心考点，需掌握架构特点（Leaf/Spine角色、2跳、ECMP、无阻塞、水平扩展）、与传统三层对比、underlay路由协议、收敛比等。注意：任意两台服务器通信是2跳（Leaf→Spine→Leaf），不是3跳，这是常见易错点。',
-    knowledgeId: 'dcn-arch', direction: 'dcn',
+    knowledgeId: 'dcn-arch', direction: 'dcn', difficulty: 'IE',
   },
 
 
@@ -3397,7 +3378,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['流量控制（防止发送方发送过快导致接收方缓冲区溢出）', '拥塞控制（防止网络拥塞）', '差错控制（检测和重传丢失报文）', '连接管理（三次握手/四次挥手）'],
     answer: '流量控制（防止发送方发送过快导致接收方缓冲区溢出）',
     explanation: 'TCP滑动窗口（Sliding Window）：1.流量控制（Flow Control）：接收方通过TCP首部的窗口大小（Window Size）字段告知发送方自己的接收缓冲区大小，发送方根据窗口大小控制发送速率，确保发送的数据不超过接收方的处理能力，防止接收方缓冲区溢出。2.滑动窗口机制：发送方维护一个发送窗口（已发送但未确认的报文+可发送的报文），接收方维护一个接收窗口（可接收的报文范围）。窗口随确认报文（ACK）滑动，已确认的报文移出窗口，新的报文可进入窗口发送。3.窗口大小：接收方根据缓冲区剩余空间动态调整窗口大小（0表示接收方缓冲区满，发送方停止发送，等待接收方窗口更新）。4.与拥塞控制的区别：a.流量控制（滑动窗口）：端到端，防止发送方过快导致接收方溢出，由接收方窗口大小控制。b.拥塞控制（Congestion Control）：全局性，防止网络拥塞，由发送方根据网络状况（丢包、延迟）调整拥塞窗口（cwnd），包括慢启动（Slow Start）、拥塞避免（Congestion Avoidance）、快速重传（Fast Retransmit）、快速恢复（Fast Recovery）等算法。c.发送方实际发送窗口=min(接收方窗口rwnd, 拥塞窗口cwnd)，取两者较小值。5.其他TCP机制：a.差错控制：通过校验和（Checksum）、确认（ACK）、超时重传（Retransmission Timeout，RTO）、快速重传（收到3个重复ACK立即重传，不等超时）实现可靠传输。b.连接管理：三次握手建立连接，四次挥手释放连接，SYN/FIN标志位，ISN初始序列号。c.按序交付：通过序列号（Sequence Number）保证数据按序到达，乱序报文暂存缓冲区，等缺失报文到达后按序交付应用层。d.全双工：TCP连接双方可同时发送和接收数据，双方独立维护序列号和窗口。TCP是面向连接的、可靠的、基于字节流的传输层协议，滑动窗口是TCP流量控制的核心机制，是华为ICT大赛网络赛道的基础考点，需掌握滑动窗口原理、流量控制与拥塞控制的区别、窗口大小、慢启动/拥塞避免等。',
-    knowledgeId: 'datacom-tcp-udp', direction: 'datacom',
+    knowledgeId: 'datacom-tcp-udp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-k002', type: 'single',
@@ -3405,7 +3386,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['DNS使用UDP 53端口进行域名解析，响应超过512字节时使用TCP 53', 'DNS递归查询（Recursive Query）由DNS服务器替客户端查询，返回最终结果', 'DNS迭代查询（Iterative Query）由DNS服务器返回下一个可查询的服务器地址，客户端自行查询', 'DNS缓存只能在客户端缓存，DNS服务器不能缓存'],
     answer: 'DNS缓存只能在客户端缓存，DNS服务器不能缓存',
     explanation: 'DNS（Domain Name System，域名系统）：将域名（如www.example.com）解析为IP地址（如93.184.216.34），是互联网的核心服务。1.传输协议：a.默认使用UDP 53端口（查询响应小，一次交互即可，UDP效率高）。b.响应超过512字节（如区域传输AXFR/IXFR、大量记录）时使用TCP 53端口（TCP可靠，支持大数据传输）。c.DNSSEC（DNS安全扩展）签名后响应可能超过512字节，也会使用TCP或EDNS0（扩展DNS，支持更大UDP报文）。2.查询方式：a.递归查询（Recursive Query）：客户端向本地DNS服务器（递归解析器）发送查询，本地DNS服务器替客户端查询（从根服务器开始，逐级查询），最终返回最终结果（IP地址或不存在）。客户端只需一次查询，由本地DNS服务器完成所有工作。通常客户端→本地DNS服务器是递归查询。b.迭代查询（Iterative Query，也叫反复查询）：DNS服务器向其他DNS服务器查询时，对方返回"我不知道，但你可以去问XX服务器"（下一个可查询的服务器地址，如根服务器返回顶级域服务器地址，顶级域服务器返回权威服务器地址），查询方自行继续查询。通常本地DNS服务器→根/顶级域/权威服务器是迭代查询。3.DNS缓存（DNS Cache）：a.客户端缓存：操作系统和浏览器缓存DNS解析结果，减少重复查询，提高速度（缓存时间由TTL决定）。b.DNS服务器缓存（递归解析器缓存）：本地DNS服务器缓存查询过的域名结果，后续相同域名查询直接返回缓存，不需要再次逐级查询，大幅提高解析速度和减少根/权威服务器负载。c.权威服务器不缓存（权威服务器是域名记录的原始来源，直接返回配置的记录）。d.缓存时间由TTL（Time To Live，生存时间）决定，TTL过期后缓存删除，需要重新查询。4.DNS服务器类型：a.根服务器（Root Server）：全球13组根服务器（A-M，实际数百台实例），存储顶级域（.com/.org/.cn等）的权威服务器地址。b.顶级域服务器（TLD Server，Top Level Domain）：存储.com/.org/.cn等顶级域下的域名权威服务器地址。c.权威服务器（Authoritative Server）：存储具体域名的DNS记录（A/AAAA/CNAME/MX/NS/TXT等），是域名记录的原始来源。d.递归解析器（Recursive Resolver，本地DNS服务器）：替客户端逐级查询，缓存结果，如运营商DNS、公共DNS（8.8.8.8 Google、1.1.1.1 Cloudflare、223.5.5.5阿里）。5.DNS记录类型：a.A（Address）：域名→IPv4地址。b.AAAA：域名→IPv6地址。c.CNAME（Canonical Name）：域名→另一个域名（别名，如www.example.com→example.com）。d.MX（Mail Exchange）：邮件交换服务器，用于邮件路由。e.NS（Name Server）：域名的权威DNS服务器。f.TXT：文本记录，用于SPF（反垃圾邮件）、DKIM（邮件签名）、域名验证等。g.PTR（Pointer）：IP→域名（反向解析）。h.SRV（Service）：服务位置记录（如_sip._tcp.example.com，用于SIP/XMPP等）。i.SOA（Start of Authority）：区域起始授权记录，包含区域版本、刷新时间、重试时间、过期时间、最小TTL等。6.DNS查询过程（以www.example.com为例）：a.客户端检查本地缓存（浏览器/操作系统），有则直接返回。b.无缓存则向本地DNS服务器（递归解析器）发送递归查询。c.本地DNS服务器检查缓存，有则返回。d.无缓存则向根服务器发送迭代查询，根返回.com顶级域服务器地址。e.本地DNS向.com顶级域服务器查询，返回example.com权威服务器地址。f.本地DNS向example.com权威服务器查询，返回www.example.com的A记录（IP地址）。g.本地DNS将结果缓存（TTL时间），返回给客户端。h.客户端缓存结果，使用IP地址访问目标服务器。DNS是华为ICT大赛网络赛道的基础考点，需掌握DNS原理、UDP/TCP端口、递归/迭代查询、缓存机制（客户端和服务器都缓存）、服务器类型、记录类型、查询过程等。注意：DNS服务器（递归解析器）也会缓存，这是常见易错点。',
-    knowledgeId: 'datacom-application-layer', direction: 'datacom',
+    knowledgeId: 'datacom-application-layer', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-k001', type: 'single',
@@ -3413,7 +3394,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['会话表记录五元组（源/目的IP、源/目的端口、协议）、状态、超时、NAT信息等', '首包匹配安全策略后创建会话表，后续包直接匹配会话表快速转发', 'TCP会话建立后永久有效，不会超时删除', '不同协议/状态有不同的超时时间（如TCP ESTABLISHED 1200秒，UDP 120秒）'],
     answer: 'TCP会话建立后永久有效，不会超时删除',
     explanation: '防火墙会话表（Session Table，也叫会话表项）：状态检测防火墙的核心，记录每个活动连接的状态信息，实现快速转发和状态跟踪。1.会话表内容：a.五元组（5-Tuple）：源IP、目的IP、源端口、目的端口、协议号（TCP/UDP/ICMP等），唯一标识一个会话。b.会话状态：TCP的状态机（SYN、SYN-ACK、ESTABLISHED、FIN、CLOSE-WAIT等）、UDP的会话状态（UP/DOWN）、ICMP的请求/响应状态。c.超时时间（Timeout）：会话剩余生存时间，超时后删除会话表项。d.NAT信息：如果经过NAT转换，记录转换前后的地址/端口（源NAT、目的NAT、NAT Server等）。e.安全策略：匹配的安全策略ID。f.统计信息：字节数、包数、开始时间、最后活动时间。g.接口信息：入接口、出接口。h.应用信息：识别的应用类型（如HTTP、FTP、微信等，通过DPI识别）。2.会话表建立：a.首包（第一个报文）到达防火墙，匹配安全策略（源/目的区域、IP、端口、协议、应用、用户、时间等）。b.安全策略允许（Permit），则创建会话表项，记录五元组、状态、NAT转换等信息，转发报文。c.安全策略拒绝（Deny），则丢弃报文，不创建会话。d.后续报文（同一会话的后续包）直接匹配会话表（五元组匹配），不需要再次匹配安全策略，直接按会话表信息转发（包括NAT转换、出接口等），性能高（硬件线速转发）。3.会话表超时：a.会话表项不是永久有效的，有超时时间，超时后自动删除（释放资源）。b.不同协议/状态有不同的超时时间（华为防火墙默认值）：- TCP SYN状态：30秒（半连接超时，防止SYN Flood占满会话表）。- TCP ESTABLISHED状态：1200秒（20分钟，正常建立的会话，长时间无数据则超时删除）。- TCP FIN状态：10秒（收到FIN后等待关闭）。- UDP会话：120秒（2分钟，UDP无连接，基于最后活动时间超时）。- ICMP会话：20秒。- DNS会话：30秒（DNS查询响应快，超时短）。- HTTP会话：120秒（可基于应用调整）。c.超时时间可根据需求调整（如长连接应用需要更长超时，可配置长连接策略）。d.会话表项数量是防火墙的重要性能指标（最大并发连接数，如每秒新建连接数CPS、最大并发连接数），会话表满后新连接无法建立（被丢弃），所以SYN Flood等攻击会占满会话表导致拒绝服务。4.会话表与状态检测：a.状态检测（Stateful Inspection）：只检查首包（匹配安全策略），后续包按会话表转发，同时跟踪协议状态（TCP状态机、应用层协议状态如FTP动态端口）。b.状态检测能检测异常报文（如未建立连接直接发数据、非法TCP标志位、伪造的ACK等），丢弃异常报文，提高安全性。c.ASPF（应用层包过滤）：进一步检测应用层协议状态（FTP/SIP/H.323等），自动开放动态端口，创建动态会话表项。5.会话表查看：华为防火墙通过display firewall session table命令查看会话表，可按协议、源/目的IP、接口等过滤，显示详细会话信息（五元组、状态、超时、NAT、包数/字节数等）。会话表是华为ICT大赛安全赛道的高频考点，需掌握会话表内容、建立过程（首包查策略，后续查会话）、超时机制（不同协议不同超时，不是永久有效）、状态检测、性能指标（并发连接数/CPS）、与安全策略关系等。注意：会话表会超时删除，不是永久有效，这是常见易错点。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'wlan-k001', type: 'single',
@@ -3421,7 +3402,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['WMM将流量分为4个接入类别（AC）：AC_VO（语音）、AC_VI（视频）、AC_BE（尽力而为）、AC_BK（背景）', 'AC_VO优先级最高，AC_BK优先级最低', '优先级通过AIFS（仲裁帧间间隔）、ECW（竞争窗口）、TXOP（传输机会）参数区分', 'WMM只能在5GHz使用，2.4GHz不支持WMM'],
     answer: 'WMM只能在5GHz使用，2.4GHz不支持WMM',
     explanation: 'WMM（Wi-Fi Multimedia，Wi-Fi多媒体，基于IEEE 802.11e标准）：WLAN的QoS（服务质量）基础，为不同业务提供差异化服务，保证语音/视频等实时业务的低延迟和低丢包。1.接入类别（Access Category，AC）：WMM将流量分为4个优先级队列（从高到低）：a.AC_VO（Voice，语音）：最高优先级，低延迟、低丢包、低抖动，用于VoWiFi电话、实时语音等。b.AC_VI（Video，视频）：次高优先级，用于视频会议、流媒体视频、监控视频等。c.AC_BE（Best Effort，尽力而为）：默认优先级，用于网页浏览、文件下载、邮件等普通业务。d.AC_BK（Background，背景）：最低优先级，用于后台下载、软件更新、备份等不敏感业务。2.QoS参数（区分优先级的机制）：a.AIFS（Arbitration Inter-Frame Space，仲裁帧间间隔）：发送数据前需要等待的空闲时间，AIFS越小等待越短，优先级越高（AC_VO的AIFS最小，AC_BK最大）。b.ECW（Exponent of Contention Window，竞争窗口指数）：冲突后随机退避的时间范围，ECW越小竞争窗口越小，冲突概率越低，优先级越高（AC_VO的ECW最小，AC_BK最大）。c.TXOP（Transmission Opportunity，传输机会）：获得信道后可连续发送的最大时间（可连续发送多个帧），TXOP越大可发送的数据越多，AC_VO/AC_VI的TXOP较大（高优先级可连续发送更多），AC_BK的TXOP为0（每次只能发一个帧）。3.用户优先级映射（UP，User Priority，802.1p，0-7）：以太网帧的802.1p优先级（0-7）映射到WMM AC：- UP 7（Network Control，网络控制）、UP 6（Voice，语音）→AC_VO。- UP 5（Video，视频）、UP 4（Controlled Load，受控负载）→AC_VI。- UP 0（Best Effort，尽力而为）、UP 3（Excellent Effort，优秀尽力而为）→AC_BE。- UP 1（Background，背景）、UP 2（Spare，备用）→AC_BK。4.WMM适用频段：WMM在2.4GHz和5GHz都支持（802.11e是MAC层QoS，与频段无关），不是只能在5GHz使用。a.802.11n（Wi-Fi 4）及以后的标准都支持WMM（WMM是802.11n的强制要求，不支持WMM不能使用802.11n的高吞吐量）。b.802.11ac（Wi-Fi 5）、802.11ax（Wi-Fi 6）都支持WMM，并增强了QoS（如Wi-Fi 6的OFDMA进一步提高多用户QoS）。c.老的802.11a/b/g设备可能不支持WMM（但现在几乎所有设备都支持）。5.WMM其他功能：a.WMM-PS（WMM Power Save，WMM省电）：更高效的省电机制，结合U-APSD（Unscheduled Automatic Power Save Delivery，非调度自动省电交付），终端在休眠期间缓存下行数据，唤醒后批量接收，延长电池寿命，适合语音等实时业务（语音包小但频繁，U-APSD可快速响应）。b.准入控制（Admission Control，TSPEC）：语音/视频业务可请求带宽预留（TSPEC，流量规格），AP根据资源情况决定是否准入，保证已准入业务的QoS（防止过多语音业务导致拥塞）。c.流量分类：AP根据端口/协议/应用将流量映射到不同AC队列（如SIP/RTP端口映射到AC_VO，HTTP端口映射到AC_BE），也可根据用户配置的QoS策略映射。6.WMM与其他QoS技术：a.WMM是无线侧QoS（空口资源调度），有线侧QoS（802.1p/DSCP）需要端到端配合（有线侧优先级映射到无线侧WMM AC，保证端到端QoS）。b.Wi-Fi 6的OFDMA与WMM配合：OFDMA在频域多用户，WMM在时域优先级，两者结合提供更优的多用户QoS。c.Airtime Fairness（空口时间公平）：保证不同速率的用户获得相同的空口时间（而非相同的帧数），防止低速率用户拖慢整体性能，与WMM配合优化整体性能。WMM是华为ICT大赛WLAN赛道的高频考点，需掌握4个AC类别及优先级、QoS参数（AIFS/ECW/TXOP）、802.1p映射、WMM-PS/U-APSD、适用频段（2.4G和5G都支持）等。注意：WMM在2.4GHz和5GHz都支持，不是只能在5GHz，这是常见易错点。',
-    knowledgeId: 'wlan-qos', direction: 'wlan',
+    knowledgeId: 'wlan-qos', direction: 'wlan', difficulty: 'IP',
   },
 
 
@@ -3432,14 +3413,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['OSPF度量值基于接口带宽，默认Cost=100Mbps/接口带宽', '10GE接口默认Cost为1，GE接口默认Cost为1', '可通过ip ospf cost命令手动修改接口Cost', 'OSPF选路时优先选择度量值（Cost）最小的路径'],
     answer: '10GE接口默认Cost为1，GE接口默认Cost为1',
     explanation: 'OSPF度量值（Metric，也叫Cost，开销）：1.计算方式：OSPF接口Cost默认基于带宽计算，公式为Cost=参考带宽/接口带宽。默认参考带宽（Reference Bandwidth）为100Mbps（100000000bps）。a.GE（1Gbps=1000Mbps）接口：Cost=100Mbps/1000Mbps=0.1，但OSPF Cost最小为1（整数，不能小于1），所以GE接口默认Cost=1。b.10GE（10Gbps）接口：Cost=100Mbps/10000Mbps=0.01，同样最小为1，所以10GE接口默认Cost=1。c.FE（100Mbps）接口：Cost=100Mbps/100Mbps=1。d.E1（2Mbps）接口：Cost=100Mbps/2Mbps=50。e.串行接口（如64kbps）：Cost=100Mbps/0.064Mbps=1562。2.问题：默认参考带宽100Mbps导致GE和10GE接口Cost都为1（无法区分，因为都小于1取整为1），在高速网络中无法区分不同带宽的链路（如GE和10GE都为1，OSPF认为等价，可能选择GE而非10GE，次优路径）。3.解决：调整参考带宽（auto-cost reference-bandwidth命令），如设置为10000Mbps（10Gbps），则：a.GE接口：Cost=10000Mbps/1000Mbps=10。b.10GE接口：Cost=10000Mbps/10000Mbps=1。c.这样GE和10GE的Cost不同，能区分带宽，选择更优路径。d.参考带宽建议设置为网络中最高接口带宽（如100GE网络设置为100000Mbps），确保所有接口Cost>1且可区分。e.注意：参考带宽必须在整个OSPF域内统一设置（所有路由器一致），否则不同路由器计算的Cost不一致，导致路由计算错误。4.手动修改：可通过ip ospf cost <cost>命令在接口上手动设置Cost（1-65535），手动设置的Cost优先于自动计算的Cost，用于精确控制路径（如希望某条链路优先，设置更小Cost；或希望某条链路作为备份，设置更大Cost）。5.OSPF选路：a.区域内路由（Intra-area，Type 1/2 LSA）：通过SPF算法计算最短路径，选择Cost最小的路径（Cost=路径上所有出接口Cost之和）。b.区域间路由（Inter-area，Type 3 LSA）：Cost=ABR到目的的Cost+本路由器到ABR的Cost，选择Cost最小的。c.外部路由（External，Type 5/7 LSA）：- E2（External Type 2，默认）：Cost=外部度量值（固定，不叠加内部路径），所有路由器看到的Cost相同。- E1（External Type 1）：Cost=外部度量值+到达ASBR的内部路径Cost，不同路由器Cost不同。- 选路时E1优先于E2（如果同时有E1和E2到同一目的，E1优先，因为E1更精确）。d.等价路径（Equal Cost）：如果有多条路径Cost相同，OSPF支持等价多路径（ECMP），负载分担（默认最多4条，可通过maximum load-balancing命令调整）。6.与其他协议度量对比：a.RIP：跳数（Hop Count，最大15跳）。b.IS-IS：接口度量（默认10，可配置，窄度量63，宽度量16777215）。c.BGP：多属性（AS_Path、Local_Pref、MED等，不是单一度量）。d.静态路由：无度量（优先级决定）。OSPF度量值是华为ICT大赛网络赛道的高频考点，需掌握Cost计算方式（参考带宽/接口带宽）、默认参考带宽100Mbps的问题（GE/10GE都为1）、调整参考带宽、手动设置Cost、E1/E2外部路由度量、等价多路径等。注意：默认参考带宽100Mbps下GE和10GE Cost都为1，这是常见考点和易错点。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-l002', type: 'judge',
     question: 'BGP中，EBGP邻居默认需要直连（TTL=1），如果EBGP邻居非直连（多跳），需要配置ebgp-max-hop。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'BGP邻居（Peer）类型：1.EBGP（External BGP，外部BGP）：不同AS之间的BGP邻居，用于AS之间交换路由信息。a.默认EBGP邻居需要直连（直连链路，同一网段），因为EBGP发送的BGP报文TTL=1（生存时间为1，只能经过1跳，防止非直连的EBGP连接和路由环路）。b.如果EBGP邻居非直连（多跳，如通过其他路由器、或使用Loopback接口建立EBGP邻居），需要配置ebgp-max-hop <跳数>命令（如peer <ip> ebgp-max-hop 2），允许BGP报文TTL>1，支持多跳EBGP。c.EBGP多跳的应用场景：- 使用Loopback接口建立EBGP邻居（提高稳定性，Loopback接口不随物理接口down而down，需要IGP或静态路由保证Loopback互通，同时配置ebgp-max-hop）。- 非直连的EBGP邻居（如两台EBGP路由器之间隔了其他设备，但不在同一AS，需要多跳）。- 建立更稳定的EBGP连接（多路径，一条物理链路故障仍可通过其他路径到达Loopback）。2.IBGP（Internal BGP，内部BGP）：同一AS内部的BGP邻居，用于AS内部传递EBGP路由。a.IBGP邻居默认TTL=255（不受跳数限制，因为IBGP在AS内部，可跨多跳，不需要直连）。b.IBGP邻居通常使用Loopback接口建立（提高稳定性，物理接口故障不影响BGP邻居，只要Loopback可达），需要IGP（OSPF/IS-IS）保证Loopback互通。c.IBGP邻居不需要配置ebgp-max-hop（因为TTL=255，天然支持多跳）。3.BGP邻居建立条件：a.IP可达：邻居IP地址必须路由可达（EBGP直连或多跳配置ebgp-max-hop，IBGP通过IGP可达）。b.AS号正确：对端AS号必须与本地配置的peer-as一致（EBGP对端AS不同，IBGP对端AS相同）。c.TCP 179端口可达：BGP使用TCP 179，防火墙/ACL必须允许TCP 179。d.源地址正确：BGP报文源地址必须与对端配置的邻居地址一致（使用Loopback建立邻居时需要配置peer <ip> connect-interface LoopBack0，指定源接口）。e.没有被安全策略/ACL拒绝。4.BGP邻居状态机：a.Idle（空闲）：初始状态，未发起连接。b.Connect（连接）：发起TCP连接，等待TCP连接建立。c.Active（活跃）：TCP连接失败，重试连接（如果反复在Connect/Active之间，说明TCP连接有问题，如IP不可达、端口被禁、AS号错误）。d.OpenSent（Open报文已发送）：TCP连接建立，发送Open报文，等待对端Open报文。e.OpenConfirm（Open报文确认）：收到对端Open报文，参数协商成功，等待Keepalive报文。f.Established（已建立）：收到Keepalive，邻居关系建立，开始交换Update报文（路由更新）。5.BGP报文类型：a.Open（打开）：协商参数（版本、AS号、Hold Time、Router ID、能力如MP-BGP、路由刷新等），建立邻居时发送。b.Keepalive（保持连接）：周期性发送（默认Hold Time的1/3，如Hold Time 180秒则Keepalive 60秒），维持邻居关系，防止超时断开。c.Update（更新）：发布路由（可达路由，带路径属性）或撤销路由（不可达路由），是BGP路由信息的载体。d.Notification（通知）：错误通知，发生错误时发送，然后断开邻居关系（如AS号错误、 Hold Time超时、路由属性错误等）。e.Route-Refresh（路由刷新）：请求对端重新发送路由（策略变化后刷新路由，无需重置邻居，软复位）。BGP邻居建立是华为ICT大赛网络赛道的高频考点，需掌握EBGP/IBGP区别、EBGP直连/多跳（ebgp-max-hop）、Loopback建立邻居（connect-interface）、邻居状态机、报文类型、邻居建立条件和故障排查等。注意：EBGP默认TTL=1需要直连，非直连需配置ebgp-max-hop，这是常见考点和易错点。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'sec-l001', type: 'single',
@@ -3447,7 +3428,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['IKE SA用于保护IKE协商（阶段二），IPSec SA用于保护用户数据', 'IKE SA默认生命周期86400秒（24小时），IPSec SA默认3600秒（1小时）', '一个IKE SA只能建立一个IPSec SA', 'IPSec SA是单向的，每个方向一个SA（inbound/outbound）'],
     answer: '一个IKE SA只能建立一个IPSec SA',
     explanation: 'IPSec SA（Security Association，安全联盟）：IPSec通信双方约定的安全参数集合（加密算法、认证算法、密钥、封装模式、生命周期等），是IPSec通信的基础。1.IKE SA（IKE安全联盟，阶段一SA）：a.作用：保护IKE协商过程（阶段二的快速模式协商），加密和认证IKE报文，防止窃听和篡改。b.数量：一对IKE邻居之间只有一个IKE SA（双向，一个IKE SA保护两个方向的IKE报文）。c.生命周期：默认86400秒（24小时），可通过ike sa duration命令修改（180-604800秒）。d.建立：IKEv1阶段一（主模式6条/野蛮模式3条）或IKEv2的IKE_SA_INIT+IKE_AUTH（4条）建立。2.IPSec SA（IPSec安全联盟，阶段二SA）：a.作用：保护用户数据（加密和认证业务报文，ESP/AH）。b.数量：一个IKE SA可以建立多个IPSec SA（不同的感兴趣流/不同的协议/不同的方向），如同时保护多个子网的流量、同时有ESP和AH、同时有IPv4和IPv6等。c.单向性：IPSec SA是单向的，每个方向一个SA（inbound入方向SA和outbound出方向SA），一对邻居之间有两个IPSec SA（一个入一个出，参数相同但方向不同，SPI不同）。d.生命周期：默认3600秒（1小时），或按流量计算（如10GB/100GB，默认184549353KB≈180GB），可通过ipsec sa duration time/volume命令修改。e.建立：IKEv1阶段二（快速模式3条）或IKEv2的CREATE_CHILD_SA（在IKE SA建立后创建第一个IPSec SA，后续可创建更多）。3.SPI（Security Parameter Index，安全参数索引）：a.32位数值，唯一标识一个SA（在同一台路由器上，SPI+目的IP+协议号唯一标识一个SA）。b.每个SA有一个SPI，发送方在IPSec报文头中携带SPI，接收方根据SPI查找对应的SA（解密/验证参数）。c.IKE SA的SPI由IKE协商生成，IPSec SA的SPI由IKE协商生成（或手动配置）。4.SA生命周期和重协商（Rekey）：a.SA有生命周期，到期前自动重新协商（Rekey），生成新的SA和密钥，旧SA在一段时间后删除（平滑过渡，不中断业务）。b.重协商保证密钥定期更新，提高安全性（即使密钥泄露，影响时间有限）。c.IKE SA重协商时，所有IPSec SA也会重新协商（因为IKE SA保护IPSec SA协商）。d.IPSec SA重协商不需要重新建立IKE SA（在现有IKE SA保护下快速协商新的IPSec SA）。5.IPSec SA与感兴趣流：a.每个IPSec SA对应一条感兴趣流（ACL规则），不同的感兴趣流建立不同的IPSec SA。b.粗粒度感兴趣流（大网段）SA数量少，细粒度感兴趣流（主机到主机）SA数量多。c.SA数量是IPSec VPN的重要性能指标（最大SA数、每秒新建SA数），SA过多会消耗设备资源（内存、CPU）。6.手动SA vs IKE动态SA：a.手动SA（Manual）：手动配置SPI、密钥、加密/认证算法，不使用IKE协商，配置复杂，密钥不自动更新，安全性低，适合简单场景或设备不支持IKE时。b.IKE动态SA（ISAKMP）：通过IKE自动协商SA和密钥，自动更新，配置简单，安全性高，是主流方式。IPSec SA是华为ICT大赛安全赛道的高频考点，需掌握IKE SA与IPSec SA的区别（作用、数量、生命周期、单向/双向）、SPI、SA生命周期和重协商、感兴趣流与SA数量、手动/动态SA等。注意：一个IKE SA可以建立多个IPSec SA（不是只能一个），IPSec SA是单向的（每个方向一个），这是常见易错点。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-l001', type: 'single',
@@ -3455,7 +3436,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['CAPWAP控制隧道使用UDP 5246端口，数据隧道使用UDP 5247端口', '控制隧道用于配置管理和状态上报，数据隧道用于用户数据转发（隧道转发模式）', '直接转发模式下不建立CAPWAP数据隧道，用户数据由AP直接转发', 'CAPWAP隧道只能在AP和AC之间建立，不能跨三层网络'],
     answer: 'CAPWAP隧道只能在AP和AC之间建立，不能跨三层网络',
     explanation: 'CAPWAP（Control And Provisioning of Wireless Access Points，无线接入点控制与供应协议，RFC 5415）：FIT AP架构中AP与AC之间的通信协议，基于UDP。1.CAPWAP隧道类型：a.控制隧道（Control Tunnel）：UDP 5246端口，使用DTLS（Datagram Transport Layer Security，数据报传输层安全）加密，传输AP与AC之间的控制报文（配置下发、状态上报、固件升级、漫游管理、统计信息、事件通知等）。控制隧道必须建立（AP上线的必要条件）。b.数据隧道（Data Tunnel）：UDP 5247端口，可选DTLS加密，传输用户数据报文（隧道转发模式下，用户数据通过CAPWAP数据隧道封装到AC转发）。数据隧道仅在隧道转发模式下建立，直接转发模式下不建立。2.数据转发模式：a.直接转发（Direct Forwarding，本地转发Local Switching）：用户数据由AP直接转发到有线网络（根据VLAN标签转发），不经过AC，不建立CAPWAP数据隧道（只建立控制隧道）。优点：性能好（数据不经过AC，AC无瓶颈）、网络拓扑简单、AC故障不影响已有用户数据。缺点：安全策略分散（用户数据不经过AC，AC上的安全策略/内容过滤无法直接应用）。b.隧道转发（Tunnel Forwarding，集中转发Central Switching）：用户数据通过CAPWAP数据隧道封装到AC，由AC统一解封装和转发，建立CAPWAP数据隧道。优点：集中控制（所有用户数据经过AC，可统一应用安全策略、QoS、内容过滤、流量统计）、便于集中管理审计。缺点：AC可能成为性能瓶颈、延迟稍高、AC故障影响所有用户数据。3.CAPWAP跨三层网络：a.CAPWAP隧道可以跨三层网络建立（AP和AC可以在不同网段，通过三层路由可达），这是企业WLAN的常见部署方式（AC在核心机房，AP在各个楼层/园区，跨三层网络）。b.AP发现AC的方式支持跨三层：DHCP Option43（携带AC IP，跨三层最常用）、DNS（解析域名获取AC IP，跨三层）、静态配置（手动配置AC IP，跨三层）。c.广播方式只支持同二层（广播报文不跨三层），跨三层网络不能用广播发现AC。d.CAPWAP隧道本身是UDP报文（IP网络可路由），只要AP和AC之间IP可达，就能建立CAPWAP隧道，不受物理距离和网络层次限制。4.CAPWAP DTLS加密：a.控制隧道默认使用DTLS加密（可配置关闭，默认开启），保证控制报文安全（防止窃听、篡改、伪造）。b.数据隧道可选DTLS加密（默认关闭，因为用户数据通常已通过WPA2/WPA3加密，再加密会增加开销，可根据安全需求开启）。c.DTLS基于PSK（预共享密钥）或证书认证，AC和AP之间协商加密参数（加密算法、认证算法、密钥）。5.AP上线流程（CAPWAP状态机）：a.发现（Discovery）：AP发送CAPWAP Discover报文（广播/单播），AC回应Discover Response（携带AC优先级、负载等信息）。b.加入（Join）：AP选择最优AC（优先级高、负载低），发送Join Request，AC回应Join Response（配置参数、DTLS参数），建立CAPWAP控制隧道。c.配置（Configure）：AC向AP下发配置（固件版本、射频配置、VAP配置、安全配置等），AP确认。d.数据检查（Data Check）：协商数据隧道参数（如使用隧道转发，建立数据隧道）。e.运行（Run）：AP正常工作，提供无线接入，周期性发送Keepalive（默认30秒）维持CAPWAP隧道，AC周期性发送配置更新和收集统计。6.CAPWAP隧道维护：a.Keepalive（保活）：AP周期性发送Keepalive报文（默认30秒），AC回应，维持隧道状态。如果连续3个Keepalive无回应（默认90秒），则认为AC故障，AP重新发现AC。b.隧道切换：AP发现更优AC（优先级更高）或当前AC故障时，可切换到其他AC（双AC热备/冷备场景）。c.CAPWAP分片：CAPWAP报文可能超过MTU（加上CAPWAP头和外层IP头），需要分片或调整MTU（建议AC和AP之间链路MTU≥1500，或启用PMTU发现）。CAPWAP是华为ICT大赛WLAN赛道的高频考点，需掌握CAPWAP控制/数据隧道端口（5246/5247）、直接/隧道转发区别、DTLS加密、AP上线流程、跨三层部署（CAPWAP可跨三层，不是只能同二层）等。注意：CAPWAP隧道可以跨三层网络建立（通过DHCP Option43/DNS/静态配置发现AC），不是只能在同二层，这是常见易错点。',
-    knowledgeId: 'wlan-arch', direction: 'wlan',
+    knowledgeId: 'wlan-arch', direction: 'wlan', difficulty: 'IP',
   },
 
 
@@ -3466,7 +3447,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['NET格式为Area ID + System ID + NSEL，NSEL为00表示路由器本身', 'System ID占6字节，同一区域内必须唯一', 'Area ID占1-13字节，同一L1区域内必须相同', '一台路由器只能配置一个NET，不能配置多个NET'],
     answer: '一台路由器只能配置一个NET，不能配置多个NET',
     explanation: 'IS-IS NET（Network Entity Title，网络实体标题）：IS-IS路由器的网络层地址，格式为Area ID（区域ID，1-13字节）+ System ID（系统ID，6字节）+ NSEL（网络服务选择器，1字节）。1.Area ID（区域ID）：1-13字节，标识IS-IS区域，同一L1区域内所有路由器的Area ID必须相同。Area ID通常为3字节（如49.0001，49是AFI，0001是区域ID），也可更长。2.System ID（系统ID）：6字节，唯一标识一台路由器，同一区域内必须唯一（不同区域System ID可以相同，但建议全局唯一）。System ID通常由IP地址转换而来（如192.168.001.001→1921.6800.1001），或用MAC地址，或手动配置。3.NSEL（Network Service Access Point Selector，网络服务接入点选择器）：1字节，值为00表示该NET对应路由器本身（IS本身），非00表示主机或特定服务（如CLNP传输层协议）。IS-IS路由器的NET的NSEL必须为00。4.NET长度：8-20字节（Area ID 1-13 + System ID 6 + NSEL 1），通常为10字节（Area ID 3 + System ID 6 + NSEL 1）。5.多NET配置：一台路由器可以配置多个NET（最多3个，华为设备默认最多3个，可通过max-area-address命令调整），多个NET的System ID必须相同，Area ID可以不同。多NET用于区域迁移（如从Area 1迁移到Area 2，同时配置两个Area ID的NET，平滑过渡，避免中断），或路由器同时属于多个区域（L1/2路由器连接多个L1区域）。注意：多个NET的System ID必须相同（同一台路由器只有一个System ID），Area ID可以不同。6.NET与OSPF Router ID对比：a.OSPF Router ID：32位（4字节，点分十进制格式），手动配置或自动选举（Loopback最大IP>物理接口最大IP），全局唯一。b.IS-IS System ID：48位（6字节，十六进制格式），必须手动配置（不能自动选举），区域内唯一（建议全局唯一）。c.IS-IS NET包含Area ID（OSPF区域在接口上配置，不在Router ID中）。7.NET配置示例：a.命令：network-entity 49.0001.0000.0000.0001.00（49.0001是Area ID，0000.0000.0001是System ID，00是NSEL）。b.格式：Area ID用点分十六进制（每2字节一组，如49.0001），System ID用点分十六进制（每2字节一组，如0000.0000.0001），NSEL为2位十六进制（00）。8.NET相关命令：a.display isis lsdb：查看链路状态数据库（LSP）。b.display isis peer：查看IS-IS邻居。c.display isis route：查看IS-IS路由。d.display isis interface：查看IS-IS接口。IS-IS NET是华为ICT大赛网络赛道的高频考点，需掌握NET格式（Area ID+System ID+NSEL）、各字段长度和作用、System ID唯一性、多NET配置（最多3个，System ID相同，Area ID可不同）、与OSPF Router ID对比、配置命令等。注意：一台路由器可以配置多个NET（最多3个），不是只能一个，这是常见易错点。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-m002', type: 'single',
@@ -3474,7 +3455,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['STP（802.1D）收敛慢（30-50秒），端口状态有Blocking/Listening/Learning/Forwarding', 'RSTP（802.1w）收敛快（秒级），端口状态简化为Discarding/Learning/Forwarding', 'MSTP（802.1s）兼容STP/RSTP，支持多实例负载分担', 'MSTP实例可以跨MST域，不同MST域的实例可以直接互通'],
     answer: 'MSTP实例可以跨MST域，不同MST域的实例可以直接互通',
     explanation: '生成树协议演进：1.STP（Spanning Tree Protocol，生成树协议，IEEE 802.1D）：a.端口状态：Disabled（禁用）、Blocking（阻塞，不转发数据，不学习MAC，只收BPDU）、Listening（监听，不转发数据，不学习MAC，收/发BPDU，15秒Forward Delay）、Learning（学习，不转发数据，学习MAC，收/发BPDU，15秒Forward Delay）、Forwarding（转发，正常转发数据，学习MAC，收/发BPDU）。b.收敛慢：Blocking→Forwarding需要经过Listening（15秒）+Learning（15秒）=30秒，拓扑变化收敛30-50秒。c.端口角色：根端口（Root Port）、指定端口（Designated Port）、阻塞端口（Blocking Port，不区分备份类型）。d.无快速收敛机制，边缘端口需手动配置PortFast（Cisco）或边缘端口（华为）。2.RSTP（Rapid Spanning Tree Protocol，快速生成树协议，IEEE 802.1w）：a.端口状态简化：Discarding（丢弃，合并STP的Disabled/Blocking/Listening，不转发数据，不学习MAC）、Learning（学习，不转发数据，学习MAC）、Forwarding（转发，正常转发）。b.收敛快：通过P/A（Proposal/Agreement，提议/同意）协商机制，点到点链路上端口快速进入Forwarding（无需等30秒），秒级收敛。c.端口角色细化：根端口（Root Port）、指定端口（Designated Port）、替代端口（Alternate Port，根端口备份）、备份端口（Backup Port，指定端口备份）、边缘端口（Edge Port，连接终端，直接Forwarding）。d.更短的BPDU超时：Hello Time 2秒，超时3倍=6秒（STP的Max Age 20秒），故障检测更快。e.兼容STP：与STP设备互联时退化为STP速度。3.MSTP（Multiple Spanning Tree Protocol，多生成树协议，IEEE 802.1s）：a.兼容STP/RSTP：MSTP域与STP/RSTP设备互联时，MSTP端口发送STP/RSTP BPDU（或MSTP BPDU，STP设备视为RSTP BPDU），实现互通。b.多实例负载分担：MST域内运行多个MSTI（Multiple Spanning Tree Instance，多生成树实例），每个MSTI独立计算生成树，不同VLAN映射到不同MSTI，实现VLAN流量负载分担（不同VLAN走不同路径，提高链路利用率）。c.MSTI仅在MST域内有效，不跨域（不同MST域的MSTI不能直接互通，域间通过CST公共生成树互通，MST域对外表现为一个虚拟桥）。d.MST域判定条件：域名（Configuration Name）、修订级别（Revision Level）、VLAN-实例映射关系三者完全相同。e.CIST（Common and Internal Spanning Tree，公共和内部生成树）：CIST = CST（Common Spanning Tree，域间公共生成树）+ IST（Internal Spanning Tree，域内MSTI 0，内部生成树），是整个网络的总生成树。4.对比总结：| 协议 | 标准 | 收敛速度 | 端口状态 | 负载分担 | 兼容 | |---|---|---|---|---|---| | STP | 802.1D | 慢（30-50秒） | 5种状态 | 不支持（单生成树） | - | | RSTP | 802.1w | 快（秒级） | 3种状态 | 不支持（单生成树） | 兼容STP | | MSTP | 802.1s | 快（秒级） | 3种状态 | 支持（多实例） | 兼容STP/RSTP | 5.MSTP域间互通：a.不同MST域之间通过CST（公共生成树）互通，CST将每个MST域视为一个虚拟桥，域间运行CST（类似RSTP的单生成树）。b.MSTI（MSTI 1-4094）仅在域内有效，不跨域；MSTI 0（IST）在域内运行，域间表现为CST的一部分。c.不同MST域的VLAN映射可以不同（每个域独立配置VLAN-实例映射），域间通过CST保证无环路。d.MSTP域与STP/RSTP域互通时，MSTP域对外表现为一个RSTP桥（发送RSTP BPDU），STP/RSTP域看不到MSTI。生成树协议是华为ICT大赛网络赛道的高频考点，需掌握STP/RSTP/MSTP的区别、端口状态/角色、收敛机制（P/A协商）、MSTP域配置和判定、MSTI不跨域（域间通过CST互通）、负载分担配置等。注意：MSTI仅在MST域内有效，不跨域，不同MST域通过CST互通，这是常见易错点。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'sec-m001', type: 'single',
@@ -3482,7 +3463,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['非对称加密使用公钥/私钥对，公钥加密私钥解密，或私钥签名公钥验证', 'RSA是常见的非对称加密算法，基于大整数分解难题', 'ECC（椭圆曲线密码）比RSA密钥短但安全性更高', '非对称加密速度快，适合加密大量数据'],
     answer: '非对称加密速度快，适合加密大量数据',
     explanation: '非对称加密（Asymmetric Encryption，也叫公钥加密Public Key Encryption）：1.原理：使用一对密钥（公钥Public Key和私钥Private Key），公钥公开，私钥保密。a.公钥加密，私钥解密（加密/解密）：用接收方公钥加密数据，只有接收方私钥能解密，保证机密性（只有接收方能解密）。b.私钥签名，公钥验证（数字签名）：用发送方私钥对消息摘要签名，接收方用发送方公钥验证，保证身份认证和不可否认（只有私钥持有者能签名）。c.公钥和私钥数学相关，但从公钥无法推导出私钥（计算上不可行）。2.常见算法：a.RSA（Rivest-Shamir-Adleman）：基于大整数分解难题（两个大素数相乘容易，分解乘积难），最常用，支持加密和签名，密钥长度1024/2048/3072/4096位（2048位当前安全，1024位已不安全）。b.ECC（Elliptic Curve Cryptography，椭圆曲线密码）：基于椭圆曲线离散对数难题，密钥短（256位ECC≈3072位RSA安全性），计算量小，性能高，适合移动设备和物联网，支持加密和签名（ECDSA签名、ECDH密钥交换）。c.DSA（Digital Signature Algorithm，数字签名算法）：仅用于数字签名，不支持加密，基于离散对数难题，密钥长度1024/2048位（已逐渐被RSA/ECC替代）。d.DH（Diffie-Hellman，迪菲-赫尔曼）：密钥交换算法，不是加密算法，双方在不安全信道上协商出共享密钥（不直接传输密钥），基于离散对数难题，用于IPSec/TLS的密钥交换。e.SM2（中国国密椭圆曲线密码）：中国国家密码管理局发布的椭圆曲线公钥密码算法，基于ECC，支持加密和签名，256位密钥，符合中国密码法要求，国内合规场景必须使用。3.非对称加密特点：a.速度慢：非对称加密计算复杂（大整数运算、椭圆曲线运算），速度比对称加密慢得多（RSA比AES慢约1000倍），不适合加密大量数据。b.密钥管理简单：不需要安全信道传输密钥（公钥公开，私钥本地保存），解决了对称加密的密钥分发问题。c.功能丰富：支持加密、数字签名、密钥交换，对称加密只支持加密。d.密钥长度：非对称加密密钥长度比对称加密长（RSA 2048位 vs AES 256位），因为非对称加密基于数学难题（需要更长密钥保证安全性）。4.混合加密（Hybrid Encryption）：实际应用中结合非对称加密和对称加密的优势：a.用非对称加密交换对称密钥（如RSA加密AES密钥，或DH协商AES密钥）。b.用对称密钥加密大量数据（AES加密实际数据，速度快）。c.这是HTTPS/TLS、IPSec IKE、PGP、SSH等几乎所有安全协议的标准做法（非对称加密密钥交换+对称加密数据传输）。5.对称加密vs非对称加密对比：| 维度 | 对称加密 | 非对称加密 | |---|---|---| | 密钥 | 一个共享密钥 | 公钥/私钥对 | | 速度 | 快（适合大量数据） | 慢（不适合大量数据） | | 密钥分发 | 困难（需安全信道） | 简单（公钥公开） | | 功能 | 仅加密 | 加密+签名+密钥交换 | | 密钥长度 | 短（AES 256位） | 长（RSA 2048位） | | 常见算法 | AES、DES、3DES、SM4 | RSA、ECC、DSA、SM2 | 6.应用场景：a.非对称加密：数字签名（证书、代码签名、电子合同）、密钥交换（TLS/IPSec）、身份认证（802.1X EAP-TLS）、小数据加密（如加密对称密钥）。b.对称加密：大量数据加密（HTTPS数据传输、IPSec数据加密、文件加密、磁盘加密）。c.混合加密：几乎所有实际安全协议（HTTPS/TLS、IPSec、SSH、PGP、S/MIME）。非对称加密是华为ICT大赛安全赛道的高频考点，需掌握非对称加密原理（公钥/私钥对、加密/签名）、常见算法（RSA/ECC/SM2）、特点（速度慢不适合大量数据、密钥管理简单）、混合加密（非对称交换密钥+对称加密数据）、与对称加密对比等。注意：非对称加密速度慢，不适合加密大量数据，这是常见易错点。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IE',
   },
   {
     id: 'dcn-m001', type: 'single',
@@ -3490,7 +3471,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['多归接入指一台服务器/CE同时连接到多台PE/Leaf，提高可靠性', 'ESI（Ethernet Segment Identifier）标识一个多归接入的以太网段', 'DF（Designated Forwarder，指定转发器）负责转发BUM流量，避免重复', '多归接入时所有PE都同时转发单播流量，导致环路'],
     answer: '多归接入时所有PE都同时转发单播流量，导致环路',
     explanation: 'EVPN多归接入（Multi-homing，也叫多宿主接入）：1.定义：一台服务器/CE（客户边缘设备）同时连接到多台PE/Leaf（提供商边缘设备），提高可靠性（一台PE故障时，其他PE继续转发，业务不中断）和带宽（多链路负载分担）。多归接入是EVPN的重要特性，解决了传统VPLS/VXLAN多归接入的环路和重复流量问题。2.ESI（Ethernet Segment Identifier，以太网段标识符）：a.10字节（80位）的唯一标识符，标识一个多归接入的以太网段（即同一台CE连接到多台PE的那组接口）。b.同一多归接入段的所有PE上，连接到同一CE的接口配置相同的ESI（手动配置或自动生成，自动生成基于CE的MAC+VLAN或LACP系统MAC）。c.ESI为0表示单归接入（Single-homing，CE只连接一台PE），非0表示多归接入。d.ESI在EVPN Type 1/2/4路由中携带，用于标识多归接入段，实现多归接入的协同（别名、DF选举、快速收敛）。3.EVPN多归接入路由类型：a.Type 1（Ethernet Auto-Discovery Route，ES自动发现路由）：多归接入段的PE互相发现（知道哪些PE属于同一ESI），携带ESI、EVPN实例标签、以太网标签（Ethernet Tag，VLAN）。用于快速收敛（成员PE故障时，其他PE快速切换）和别名（Aliasing，负载分担）。b.Type 2（MAC/IP Advertisement Route，MAC/IP地址通告路由）：携带ESI（如果是多归接入的MAC），标识该MAC属于哪个多归接入段，其他PE根据ESI和别名实现负载分担（流量可发送到同一ESI的任意PE，因为它们都能到达该MAC）。c.Type 4（Ethernet Segment Route，以太网段路由）：用于DF（Designated Forwarder，指定转发器）选举，携带ESI、VTEP IP、DF选举算法（默认算法，基于IP地址哈希）。同一ESI的PE通过Type 4路由互相发现，选举DF。4.DF（Designated Forwarder，指定转发器）选举：a.作用：在多归接入场景中，BUM流量（Broadcast广播、Unknown unicast未知单播、Multicast组播）如果所有PE都转发，会导致重复流量（CE收到多份相同BUM流量）和环路。DF负责转发BUM流量到CE（只有DF转发，其他PE不转发BUM到CE），避免重复和环路。b.选举：同一ESI的PE通过Type 4路由选举DF，默认基于VLAN（以太网标签）和PE IP地址哈希，每个VLAN选举一个DF（不同VLAN的DF可以不同，实现负载分担，即DF负载分担）。c.DF故障：DF故障时，其他PE通过Type 1路由快速检测，重新选举DF（秒级收敛），业务不中断。5.单播流量负载分担（别名Aliasing）：a.别名（Aliasing）：同一ESI的PE都发布Type 2路由（携带相同MAC和ESI），远端PE看到多个PE都能到达同一MAC（同一ESI），可通过ECMP将单播流量负载分担到多台PE（多链路利用，提高带宽），因为它们都能到达CE。b.这解决了传统多归接入的问题（传统方式只能用主备，不能负载分担，或用LACP但需要CE支持）。c.单播流量不会环路（因为远端PE通过ECMP选择一条路径，CE收到后不会再转发回其他PE，因为CE的接口是接入接口，不会转发BUM，单播有明确目的）。6.多归接入模式：a.单活（Single-Active，也叫主备）：同一时间只有一台PE转发流量（主PE转发，备PE不转发，主PE故障时备PE切换），类似VRRP主备。b.双活（All-Active，也叫负载分担）：所有PE同时转发单播流量（通过别名和ECMP负载分担），BUM流量由DF转发（避免重复），提高带宽和利用率，是EVPN多归接入的推荐模式。c.单活配置简单，双活性能更好（需要CE支持LACP或多链路，且PE支持别名）。7.EVPN多归接入优势：a.高可靠：PE故障时快速收敛（秒级），业务不中断。b.高带宽：双活模式下多链路负载分担，充分利用带宽。c.无环路：通过DF选举避免BUM重复和环路，通过别名实现单播负载分担。d.标准化：EVPN多归接入是IETF标准（RFC 7432等），不同厂商设备可互通。EVPN多归接入是华为ICT大赛DCN赛道的高级考点，需掌握多归接入定义、ESI作用、Type 1/2/4路由作用、DF选举（避免BUM重复）、别名（单播负载分担）、单活/双活模式等。注意：多归接入时单播流量可负载分担（不会环路），BUM流量由DF转发（避免重复），不是所有PE都同时转发导致环路，这是常见易错点。',
-    knowledgeId: 'dcn-evpn', direction: 'dcn',
+    knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
 
 
@@ -3501,7 +3482,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['虚链路用于连接非骨干区域到骨干区域，或修复不连续的骨干区域', '虚链路穿越的传输区域不能是Stub/Totally Stub/NSSA区域', '虚链路两端必须是ABR，虚链路属于骨干区域Area 0', '虚链路可以长期使用，是推荐的网络设计方式'],
     answer: '虚链路可以长期使用，是推荐的网络设计方式',
     explanation: 'OSPF虚链路（Virtual Link）：在两台ABR之间建立逻辑链路，穿越一个传输区域（Transit Area），将非骨干区域逻辑连接到骨干区域Area 0，或修复不连续的骨干区域。限制：1.传输区域不能是Stub/Totally Stub/NSSA（这些区域过滤Type 5，虚链路需要传递路由）。2.两端必须是ABR（至少有一个接口在Area 0或通过虚链路连接到Area 0）。3.虚链路属于骨干区域（逻辑上属于Area 0）。虚链路是临时修复方案，不推荐长期使用（不稳定，依赖传输区域拓扑，增加配置复杂度），最终应重新设计网络使所有区域直接连接Area 0。配置：area <transit-area> virtual-link <peer-router-id>。虚链路是OSPF考点，需掌握作用、适用场景、限制（传输区域不能是末梢区域）、配置等。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-n002', type: 'single',
@@ -3509,14 +3490,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['RR从客户端学到的路由反射给所有客户端和非客户端', 'RR从非客户端学到的路由仅反射给客户端', 'RR的Cluster_List和Originator_ID用于防环', 'RR会修改路由的AS_Path，在AS_Path中添加自己的AS号'],
     answer: 'RR会修改路由的AS_Path，在AS_Path中添加自己的AS号',
     explanation: 'BGP路由反射器（RR，Route Reflector）：打破IBGP水平分割（从IBGP学到的路由不再传给其他IBGP），减少IBGP全互联数量。反射规则：1.从客户端学到的路由→反射给所有客户端和非客户端。2.从非客户端学到的路由→仅反射给客户端（不反射给其他非客户端）。3.从EBGP学到的路由→发给所有客户端和非客户端（正常BGP行为）。防环机制：1.Originator_ID（发起者ID）：RR反射路由时添加原始发起者的Router ID，原始发起者收到含自己ID的路由则丢弃。2.Cluster_List（簇列表）：RR反射路由时添加自己的Cluster ID，RR收到含自己Cluster ID的路由则丢弃。RR不会修改AS_Path（AS_Path在EBGP邻居之间才会添加AS号，IBGP和RR反射都不修改AS_Path），因为RR在同一个AS内，AS_Path不变。RR是BGP扩展性核心技术，是高频考点，需掌握反射规则、防环属性、客户端/非客户端、与联盟（Confederation）区别等。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-n003', type: 'judge',
     question: 'IS-IS中，L1路由器访问其他区域时，通过本区域L1/2路由器生成的默认路由转发，类似OSPF的Stub区域。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IS-IS L1路由器（Level-1）只维护L1链路状态数据库，只知道本区域内拓扑，不知道其他区域具体路由。L1/2路由器（Level-1-2）在L1 LSP中设置ATT位（Attachment Bit，附着位），通知L1路由器"我连接到L2骨干"。L1路由器收到ATT位后，生成指向最近L1/2路由器的默认路由，将访问其他区域的流量发给L1/2路由器。这与OSPF Stub区域类似（ABR向Stub区域发布默认路由Type 3，Stub区域路由器通过ABR访问外部）。IS-IS的ATT位机制更简单（只需在LSP中设置一位，不需要额外LSA）。路由渗透（Route Leakage）：L1/2可将L2具体路由发布到L1区域，解决次优路径问题（L1路由器可能选择不是最优的L1/2）。IS-IS分层路由是高频考点，需掌握L1/L2/L1-2路由器类型、ATT位、默认路由、路由渗透、与OSPF区域对比等。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-n004', type: 'single',
@@ -3524,7 +3505,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['选举根桥', '实现点到点链路上端口快速进入Forwarding，无需等待30秒', '选举DR/BDR', '加密BPDU'],
     answer: '实现点到点链路上端口快速进入Forwarding，无需等待30秒',
     explanation: 'RSTP（802.1w）P/A（Proposal/Agreement，提议/同意）协商机制：实现快速收敛的核心。1.指定端口（Designated Port）发送Proposal BPDU（提议自己成为指定端口，请求快速进入Forwarding）。2.对端收到Proposal后进行同步（Sync）：阻塞所有其他非边缘端口（确保无环路），然后回复Agreement BPDU（同意）。3.指定端口收到Agreement后立即进入Forwarding（无需等待Listening+Learning的30秒Forward Delay）。4.对端端口（根端口/替代端口）也同步进入Forwarding。P/A机制在点到点链路（全双工）上有效，实现秒级快速收敛。RSTP其他快速收敛机制：边缘端口（Edge Port，连接终端直接Forwarding）、替代/备份端口（故障快速切换）、更短BPDU超时（6秒vs STP的20秒）。RSTP兼容STP（与STP设备互联时退化为STP速度）。P/A协商是RSTP核心，是高频考点，需掌握协商过程、同步机制、快速收敛原理、与STP收敛对比等。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IA',
   },
   {
     id: 'sec-n001', type: 'single',
@@ -3532,7 +3513,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['安全策略按顺序匹配（从上到下），匹配到第一条即执行，不再继续匹配', '安全策略可匹配源/目的区域、源/目的IP、端口、协议、应用、用户、时间等', '同区域内流量默认允许，不同区域间流量默认拒绝', '安全策略的动作只有允许（Permit）和拒绝（Deny）两种'],
     answer: '安全策略的动作只有允许（Permit）和拒绝（Deny）两种',
     explanation: '防火墙安全策略（Security Policy）：控制不同区域间流量的访问权限。1.匹配条件：源/目的安全区域、源/目的IP地址（地址对象/地址组）、源/目的端口、协议（TCP/UDP/ICMP等）、应用（Application，通过DPI识别，如HTTP/FTP/微信等）、用户（User，通过认证识别，如用户/用户组）、时间段（Time Range）、服务（Service，端口+协议组合）等。2.动作（Action）：a.允许（Permit）：允许流量通过，可引用UTM配置文件（IPS/AV/URL过滤等）、流量统计、日志记录。b.拒绝（Deny）：静默丢弃流量，不回复（对端超时），可记录日志。c.拒绝并回复（Reject）：丢弃流量并回复（TCP发送RST，ICMP发送不可达），对端立即知道被拒绝，减少等待时间。所以动作不止Permit和Deny两种，还有Reject。3.匹配顺序：按策略ID顺序从上到下匹配，匹配到第一条即执行该策略动作，不再继续匹配后续策略（所以精确策略放上面，宽泛策略放下面，最后默认拒绝）。4.默认行为：同区域内流量默认允许（不需要安全策略），不同区域间流量默认拒绝（需要配置允许策略）。5.安全策略与ACL区别：ACL是匹配条件的集合（permit/deny规则），本身不生效，需被其他功能引用（流量过滤/QoS/NAT等）；安全策略是防火墙的访问控制功能，直接生效，可匹配更丰富的条件（应用、用户、时间等），动作更丰富（Permit/Deny/Reject+UTM）。安全策略是防火墙核心功能，是高频考点，需掌握匹配条件、动作（Permit/Deny/Reject三种）、匹配顺序、默认行为、与ACL区别等。注意：动作有Reject（拒绝并回复），不是只有Permit和Deny，这是常见易错点。',
-    knowledgeId: 'security-firewall-basic', direction: 'security',
+    knowledgeId: 'security-firewall-basic', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'sec-n002', type: 'single',
@@ -3540,7 +3521,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['主模式6条消息，野蛮模式3条消息', '主模式保护身份信息（身份加密传输），野蛮模式身份明文传输', '野蛮模式协商更快，适合对端IP不固定或NAT场景', '主模式比野蛮模式更不安全，因为消息更多'],
     answer: '主模式比野蛮模式更不安全，因为消息更多',
     explanation: 'IKEv1阶段一模式：1.主模式（Main Mode）：6条消息。a.消息1-2：协商IKE策略（加密算法、认证算法、认证方式、DH组、生命周期）。b.消息3-4：DH密钥交换（交换Diffie-Hellman公钥，生成共享密钥）和随机数（Nonce）。c.消息5-6：身份认证（交换身份信息和预共享密钥/证书签名，身份在消息5-6中加密传输，因为此时已生成共享密钥）。主模式保护身份信息（身份加密，窃听者无法看到对端身份），更安全，但协商慢（6条消息）。2.野蛮模式（Aggressive Mode）：3条消息。a.消息1：发起方发送IKE策略+DH公钥+身份+随机数（所有信息一次发送，身份明文传输，因为还没生成共享密钥）。b.消息2：响应方确认+DH公钥+身份+随机数+认证（身份明文）。c.消息3：发起方认证确认。野蛮模式协商快（3条消息），但身份明文传输（不安全，窃听者可看到对端身份，可针对特定身份发起攻击），适合对端IP不固定（拨号用户、远程接入VPN）或NAT场景（需要快速协商）。3.对比：| 维度 | 主模式 | 野蛮模式 | |---|---|---| | 消息数 | 6条 | 3条 | | 身份保护 | 加密（安全） | 明文（不安全） | | 协商速度 | 慢 | 快 | | 适用场景 | 站点到站点VPN（对端固定） | 远程接入VPN（对端不固定/NAT） | 主模式比野蛮模式更安全（身份加密），不是更不安全。IKEv2简化为4条消息（IKE_SA_INIT 2条+IKE_AUTH 2条），同时建立IKE SA和第一个IPSec SA，更安全（抵抗DoS）、更快、支持MOBIKE（移动性），推荐使用。IKE协商是IPSec核心，是高频考点，需掌握主模式/野蛮模式区别、消息数、身份保护、适用场景、IKEv2优势等。注意：主模式更安全（身份加密），野蛮模式更快但身份明文，这是常见易错点。',
-    knowledgeId: 'security-ipsec', direction: 'security',
+    knowledgeId: 'security-ipsec', direction: 'security', difficulty: 'IP',
   },
   {
     id: 'wlan-n001', type: 'single',
@@ -3548,7 +3529,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['OFDMA将信道划分为多个子信道（RU），同时与多个用户通信', 'OFDMA提高多用户效率，降低延迟，适合高密度场景', 'OFDMA是Wi-Fi 6独有的，Wi-Fi 5（802.11ac）不支持OFDMA', 'OFDMA只能在2.4GHz使用，5GHz不支持OFDMA'],
     answer: 'OFDMA只能在2.4GHz使用，5GHz不支持OFDMA',
     explanation: 'OFDMA（Orthogonal Frequency Division Multiple Access，正交频分多址）：Wi-Fi 6（802.11ax）核心技术，从4G/5G移动通信引入。1.原理：将信道（如20MHz）划分为多个更小的子信道（RU，Resource Unit，资源单元，如26/52/106/242/484/996子载波等不同大小），同时与多个用户通信（不同用户用不同RU），而不是传统Wi-Fi的轮流传输（TDMA，一个用户占满整个信道，其他用户等待）。2.优势：a.提高多用户效率：多用户同时传输，减少等待，提高信道利用率，尤其高密度场景（多用户、小包业务如语音/游戏）。b.降低延迟：小数据包可分配小RU快速传输，不需要等待整个信道空闲，降低接入延迟和抖动。c.灵活分配：根据用户数据量和QoS需求分配不同大小RU（大数据用户分配大RU，小数据用户分配小RU）。3.与MU-MIMO区别：a.OFDMA：频域多用户（不同用户用不同子信道/RU），适合多用户小包、低延迟场景。b.MU-MIMO：空间域多用户（不同用户用不同空间流/天线），适合多用户大数据包、高吞吐量场景。c.Wi-Fi 6同时支持OFDMA和上下行MU-MIMO，两者结合性能最优。4.适用频段：OFDMA在2.4GHz和5GHz都支持（802.11ax是MAC层技术，与频段无关），不是只能在2.4GHz使用。Wi-Fi 6E扩展到6GHz，也支持OFDMA。5.Wi-Fi 5（802.11ac）不支持OFDMA（只支持下行MU-MIMO，不支持OFDMA和上行MU-MIMO），OFDMA是Wi-Fi 6新增的标志性技术。OFDMA是Wi-Fi 6核心，是高频考点，需掌握原理（RU划分、多用户同时通信）、优势（多用户效率、低延迟）、与MU-MIMO区别、适用频段（2.4G和5G都支持）、Wi-Fi 5不支持等。注意：OFDMA在2.4GHz和5GHz都支持，不是只能在2.4GHz，这是常见易错点。',
-    knowledgeId: 'wlan-wifi6', direction: 'wlan',
+    knowledgeId: 'wlan-wifi6', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-n001', type: 'single',
@@ -3556,7 +3537,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['underlay是底层物理网络（IP Fabric），提供IP连通性和ECMP多路径', 'overlay是在underlay之上构建的虚拟网络（VXLAN），提供大二层和多租户隔离', 'VTEP是underlay和overlay的边界点，负责VXLAN封装和解封装', 'underlay网络需要启用STP来防止环路，overlay网络不需要STP'],
     answer: 'underlay网络需要启用STP来防止环路，overlay网络不需要STP',
     explanation: '数据中心underlay/overlay架构：1.underlay（底层网络）：物理网络基础设施，由Spine/Leaf交换机组成，运行三层路由协议（OSPF/IS-IS/eBGP），提供IP连通性和ECMP等价多路径负载分担。underlay特点：a.三层网络（所有链路都是三层路由，没有二层环路，因为三层路由协议天然防环，通过AS_Path/SPF计算无环路径）。b.不需要STP（underlay是三层网络，没有二层环路，STP是二层防环协议，三层网络不需要STP；传统二层网络用STP防环但会阻塞冗余链路，underlay用ECMP利用所有链路，不阻塞）。c.通常不启用组播（VXLAN BUM流量用头端复制HER替代组播，简化underlay）。d.简单、稳定、高性能、可扩展（Spine-Leaf架构，水平扩展）。2.overlay（叠加网络）：在underlay之上构建的虚拟网络，通过隧道封装（VXLAN，MAC-in-UDP）将原始二层帧封装在IP报文中，在underlay三层网络上传输，构建大二层虚拟网络。overlay特点：a.大二层扩展（虚拟机迁移IP不变，业务不中断）。b.多租户隔离（不同VNI隔离，满足云计算多租户需求）。c.与物理网络解耦（虚拟机迁移不影响物理网络拓扑）。d.软件定义（可通过控制器自动化配置）。3.VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）：underlay和overlay的边界点，负责VXLAN封装（overlay→underlay，将原始帧封装为VXLAN UDP/IP报文）和解封装（underlay→overlay，剥离VXLAN头恢复原始帧）。VTEP可在物理交换机（硬件VTEP，Leaf）、虚拟交换机（软件VTEP，OVS）、智能网卡（SmartNIC，卸载封装）上实现。4.常见组合：IP Fabric（OSPF/IS-IS/eBGP）underlay + EVPN/VXLAN overlay，是当前数据中心网络标准架构。5.underlay路由协议选择：a.eBGP（外部BGP，每台设备一个AS号，AS_PATH防环，ECMP天然支持，最稳定，云厂商首选，如AWS/Azure/Google都用eBGP）。b.OSPF（IGP，配置简单，适合中小规模，但OSPF区域设计和LSA泛洪在大规模下复杂）。c.IS-IS（IGP，高效，适合大规模，但配置和维护比OSPF复杂）。underlay/overlay是数据中心网络核心概念，是高频考点，需掌握两者定义、关系、VTEP作用、underlay路由协议、underlay不需要STP（三层网络无环路，用ECMP）等。注意：underlay是三层网络，不需要STP（STP是二层防环协议），用ECMP利用所有链路，这是常见易错点。',
-    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
 
 
@@ -3567,7 +3548,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['Stub区域不接收Type 5外部路由，但接收Type 3区域间路由', 'Totally Stub区域不接收Type 3（除默认路由）、Type 4、Type 5', 'NSSA区域允许引入外部路由（Type 7），Stub区域不允许', 'Stub区域可以有ASBR（引入外部路由），也可以有虚链路穿越'],
     answer: 'Stub区域可以有ASBR（引入外部路由），也可以有虚链路穿越',
     explanation: 'OSPF末梢区域对比：1.Stub区域：不接收Type 4（ASBR位置）和Type 5（外部路由），接收Type 3（区域间路由）和Type 1/2（本区域）。不能有ASBR（不能引入外部路由，因为Type 5无法在Stub区域泛洪），不能有虚链路穿越（虚链路需要Type 5传递）。ABR向Stub区域发布默认路由（Type 3，0.0.0.0/0）。2.Totally Stub（完全末梢）：不接收Type 3（除默认路由）、Type 4、Type 5，只接收Type 1/2和默认Type 3，最严格，路由表最小。3.NSSA（Not-So-Stubby Area，非纯末梢）：不接收Type 4和Type 5，接收Type 3，允许本区域有ASBR引入外部路由（生成Type 7 LSA，仅在NSSA内泛洪，到ABR转换为Type 5）。NSSA解决了Stub不能引入外部路由的限制。4.Totally NSSA：不接收Type 3（除默认）、Type 4、Type 5，允许Type 7。末梢区域共同限制：不能有ASBR（NSSA除外）、不能有虚链路穿越、所有路由器必须一致配置末梢区域（Hello报文中的E位/N位必须一致，否则邻居建立失败）。末梢区域作用：减少LSA数量和路由表规模，提高稳定性，降低路由器资源消耗，适用于只有一个出口的末节区域。OSPF区域类型是高频考点，需掌握每种区域允许/不允许的LSA类型、是否允许ASBR、是否有默认路由、配置命令（stub/nssa/stub no-summary/nssa no-summary）等。注意：Stub区域不能有ASBR和虚链路，这是常见易错点。',
-    knowledgeId: 'datacom-ospf', direction: 'datacom',
+    knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'dc-o002', type: 'single',
@@ -3575,14 +3556,14 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['AS_Path是公认必遵属性，记录路由经过的AS列表', 'AS_Path用于防环（收到包含自己AS号的路由则丢弃）和路由优选（AS_Path短的优先）', 'AS_Path前置（Prepend）可在路由前添加多次自己的AS号，使AS_Path变长，降低优先级', '联盟（Confederation）内部的子AS号会计入AS_Path长度，影响路由优选'],
     answer: '联盟（Confederation）内部的子AS号会计入AS_Path长度，影响路由优选',
     explanation: 'BGP AS_Path属性：1.公认必遵属性（Well-known Mandatory），所有BGP更新必须包含，记录路由经过的AS列表（从始发AS到当前AS的顺序）。2.作用：a.防环：BGP路由器收到包含自己AS号的AS_Path的路由时，丢弃该路由（防止AS间环路）。b.路由优选：AS_Path越短越优先（BGP优选规则第5条，在Weight、Local_Pref、本地始发之后比较）。c.路径信息：记录路由经过的AS，可用于策略控制（如根据AS_Path过滤或设置属性）。3.AS_Path类型：a.AS_SEQUENCE（有序AS列表，最常见，按经过顺序排列）。b.AS_SET（无序AS集合，聚合路由时使用，将所有明细AS合并为集合，防止环路，不计入长度比较的有序部分）。c.AS_CONFED_SEQUENCE/AS_CONFED_SET（联盟内部AS号，联盟子AS之间的路径，不计入AS_Path长度比较，仅用于联盟内部防环，对外不可见）。4.AS_Path前置（Prepend）：在发布路由时，在AS_Path前添加多次自己的AS号（如ip route-static ... description，或route-policy中apply as-path），使AS_Path变长，降低该路由的优先级（对端看到AS_Path更长，优选其他路径），用于控制入站流量（如希望对端从其他入口进入，在某个入口发布的路由前添加多次AS号，使其优先级降低）。5.联盟（Confederation）：将一个大AS划分为多个子AS，子AS之间使用EBGP关系，但对外表现为一个联盟AS号。子AS号放在AS_Path的AS_CONFED_SEQUENCE/AS_CONFED_SET段，不计入AS_Path长度比较（不影响路由优选的AS_Path长度），仅用于联盟内部防环。对外发布路由时，剥离联盟内部AS号，只保留联盟AS号。所以联盟内部子AS号不会影响AS_Path长度比较。BGP属性是高频考点，需掌握AS_Path的作用（防环+优选）、类型（SEQUENCE/SET/CONFED）、AS_Path前置（控制入站流量）、联盟AS号不计入长度等。注意：联盟内部子AS号不计入AS_Path长度，这是常见易错点。',
-    knowledgeId: 'datacom-bgp', direction: 'datacom',
+    knowledgeId: 'datacom-bgp', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-o003', type: 'judge',
     question: 'IS-IS中，DIS（指定中间系统）选举是可抢占的，且没有备份DIS（BDR），这与OSPF的DR选举不同。',
     options: ['正确', '错误'], answer: '正确',
     explanation: 'IS-IS DIS vs OSPF DR对比：1.IS-IS DIS（Designated IS，指定中间系统）：a.选举依据：接口优先级（0-127，默认64，值大优先，优先级0也参与选举），优先级相同时System ID大的优先。b.可抢占（Preemptive）：新加入的高优先级路由器立即抢占成为DIS，不需要等待当前DIS故障。c.没有备份DIS（没有BDR）：DIS故障后需要重新选举新DIS，期间有短暂中断。d.DIS职责：生成伪节点（Pseudonode）LSP（简化广播网络链路状态描述）、周期性发送CSNP（完全序列号报文，10秒一次，用于数据库同步）。2.OSPF DR（Designated Router，指定路由器）：a.选举依据：接口优先级（0-255，默认1，值大优先，优先级0不参与选举，成为DROther），优先级相同时Router ID大的优先。b.不可抢占（Non-preemptive）：一旦DR选举完成，即使新加入更高优先级路由器，也不会抢占当前DR，只有DR故障时BDR才成为DR，然后重新选举BDR。c.有BDR（Backup Designated Router，备份指定路由器）：BDR监听DR的LSA，DR故障后BDR立即成为DR（无中断），然后重新选举新BDR。d.DR职责：生成Type 2 Network LSA（描述广播网络所有路由器）、泛洪LSA（DROther只与DR/BDR建立邻接，LSA发给DR，DR泛洪给所有DROther）。3.对比总结：| 维度 | IS-IS DIS | OSPF DR | |---|---|---| | 优先级范围 | 0-127（0也参与） | 0-255（0不参与） | | 抢占性 | 可抢占 | 不可抢占 | | 备份 | 无备份DIS | 有BDR备份 | | 网络LSA | 伪节点LSP | Type 2 Network LSA | | 数据库同步 | DIS周期性发CSNP | DR/BDR与DROther建立邻接 | 两者都在广播网络（Broadcast）和NBMA网络中选举，点到点（P2P）和点到多点（P2MP）网络不选举。IS-IS DIS和OSPF DR是高频考点，需掌握选举规则、抢占性、备份机制、职责、与OSPF DR的区别等。注意：IS-IS DIS可抢占且无备份，OSPF DR不可抢占且有BDR，这是常见易错点。',
-    knowledgeId: 'datacom-isis', direction: 'datacom',
+    knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IP',
   },
   {
     id: 'dc-o004', type: 'single',
@@ -3590,7 +3571,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['MST域由域名、修订级别、VLAN-实例映射关系三个条件判定', 'MSTI（多生成树实例）仅在MST域内有效，不跨域', '不同MST域之间通过CST（公共生成树）互通，MST域对外表现为一个虚拟桥', 'MST域内所有交换机的MAC地址必须相同，否则不属于同一域'],
     answer: 'MST域内所有交换机的MAC地址必须相同，否则不属于同一域',
     explanation: 'MSTP（Multiple Spanning Tree Protocol，802.1s）MST域：1.MST域判定条件（三个条件必须完全相同，才属于同一个MST域）：a.域名（Configuration Name，配置名称，32字节）：MST域的名称，标识一个MST域。b.修订级别（Revision Level，修订级别，2字节）：MST域配置的版本号，修改配置后可递增。c.VLAN-实例映射关系（VLAN-to-instance Mapping，VLAN与MSTI的映射关系）：哪些VLAN映射到哪个MSTI实例。这三个条件完全相同的交换机才属于同一个MST域，不同则属于不同MST域。MAC地址不需要相同（每台交换机MAC地址都不同，这是正常的），MAC地址不影响MST域判定。2.MSTI（Multiple Spanning Tree Instance，多生成树实例）：a.每个MSTI独立计算生成树（基于RSTP算法），有自己的根桥、根端口、指定端口。b.不同VLAN映射到不同MSTI，实现VLAN流量负载分担（不同VLAN走不同路径，提高链路利用率）。c.MSTI仅在MST域内有效，不跨域（不同MST域的MSTI不能直接互通，域间通过CST互通）。d.MSTI 0（IST，Internal Spanning Tree，内部生成树）：默认实例，所有未显式映射的VLAN都属于MSTI 0，MSTI 0在域内运行，域间表现为CST的一部分，是MSTP的基础实例（其他MSTI的拓扑基于IST计算）。用户自定义实例为MSTI 1-4094（实际支持数量取决于设备，通常16-64个）。3.CST（Common Spanning Tree，公共生成树）：a.在整个交换网络（不同MST域和STP/RSTP域）中形成的一棵公共生成树，将每个MST域视为一个虚拟桥，域间运行CST，确保域间无环路。b.CIST（Common and Internal Spanning Tree，公共和内部生成树）：CIST = CST（域间公共生成树）+ IST（域内MSTI 0内部生成树），是整个网络的总生成树，确保整个网络无环路。4.MSTP兼容STP/RSTP：MST域与STP/RSTP设备互联时，MSTP端口发送STP/RSTP BPDU（或MSTP BPDU，STP设备将MSTP BPDU视为RSTP BPDU），实现互通。5.MSTP配置：a.配置MST域：stp region-configuration进入域配置视图，region-name配置域名，revision-level配置修订级别，instance <id> vlan <vlan-range>配置VLAN-实例映射，active激活配置。b.配置MSTI根桥：stp instance <id> root primary/secondary，或stp instance <id> priority <priority>。c.配置端口参数：stp instance <id> cost <cost>，stp instance <id> port priority <priority>。MSTP是企业网络主流生成树协议，是高频考点，需掌握MST域判定条件（域名/修订级别/VLAN映射，不是MAC地址）、MSTI特点（独立计算、域内有效、负载分担）、CST/CIST概念、与STP/RSTP互通、配置命令等。注意：MST域判定不包括MAC地址，MAC地址每台设备都不同，这是常见易错点。',
-    knowledgeId: 'datacom-stp', direction: 'datacom',
+    knowledgeId: 'datacom-stp', direction: 'datacom', difficulty: 'IE',
   },
   {
     id: 'sec-o001', type: 'single',
@@ -3598,7 +3579,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['源NAT（NAT Outbound）转换源IP，用于内网用户访问外网，PAT是多对一端口地址转换', '目的NAT（NAT Server）转换目的IP，用于外网访问内网服务器，生成Server-Map表', '静态NAT是一对一固定映射，既支持内网主动访问外网，也支持外网主动访问内网', 'NAT可以解决IPv4地址不足问题，也可以提高网络安全性，因为NAT加密了数据'],
     answer: 'NAT可以解决IPv4地址不足问题，也可以提高网络安全性，因为NAT加密了数据',
     explanation: '防火墙NAT（Network Address Translation，网络地址转换）：1.源NAT（Source NAT，NAT Outbound，出方向NAT）：a.转换报文的源IP地址（和端口），用于内网用户访问外网（内网私有IP→公网IP）。b.类型：No-PAT（不转换端口，多对多，从公网地址池动态分配）、PAT（Port Address Translation，端口地址转换，多对一，多个内网主机共享一个公网IP，通过不同源端口区分，最常用，大幅节省公网IP）、Smart NAT（No-PAT+PAT，No-PAT用完后自动用PAT）、Easy IP（直接使用出接口IP作为公网IP，适合拨号/动态IP场景）。c.源NAT只允许内网主动访问外网（外网不能主动访问内网，因为没有公网到私网的映射，外网发起的连接无法到达内网主机）。2.目的NAT（Destination NAT，NAT Inbound，入方向NAT，华为叫NAT Server服务器映射）：a.转换报文的目的IP地址（和端口），用于外网用户主动访问内网服务器（公网IP→内网服务器私网IP）。b.配置：nat server protocol tcp global <公网IP> <公网端口> inside <私网IP> <私网端口>。c.生成Server-Map表（服务器映射表），记录公网IP+端口→私网IP+端口的映射，允许外网主动访问（普通源NAT不允许外网主动访问）。d.内网服务器回复时，源地址（私网IP+端口）被转换为公网IP+端口（反向NAT，No-PAT，因为NAT Server生成的Server-Map包含反向映射）。3.静态NAT（Static NAT）：a.一对一固定映射，内网IP与公网IP一一对应，不转换端口。b.既支持内网主动访问外网（源NAT），也支持外网主动访问内网（目的NAT，因为映射是双向的、固定的）。c.不节省公网IP（需要与内网主机相同数量的公网IP），主要用于需要外网主动访问的服务器（但NAT Server更灵活，可端口映射，一个公网IP映射多个服务器不同端口）。4.NAT作用：a.解决IPv4地址不足（内网用私有IP，通过NAT访问公网，PAT多对一，大幅节省公网IP）。b.隐藏内网拓扑（外网看不到内网私有IP和拓扑，提高安全性，因为外网无法直接访问内网主机）。c.网络迁移时保持内部地址不变（更换公网IP时，内网地址不需要改变）。5.NAT不加密数据：NAT只是转换IP地址（和端口），不加密数据内容，数据加密需要IPSec/SSL/TLS等加密技术。NAT提高安全性是因为隐藏内网拓扑和地址（外网无法直接访问内网），不是因为加密。6.NAT限制：a.破坏端到端模型（外网无法主动访问内网主机，需静态NAT/NAT Server）。b.部分应用不兼容（如FTP/SIP等在载荷中携带IP/端口的应用，需ALG应用层网关）。c.影响IPSec（AH不兼容NAT，ESP可用NAT-T穿越）。d.增加延迟和单点故障。NAT是防火墙核心功能，是高频考点，需掌握源NAT/目的NAT/静态NAT区别、PAT原理、Server-Map表、NAT作用（地址不足+隐藏拓扑，不加密）、NAT限制等。注意：NAT不加密数据，只是转换地址，这是常见易错点。',
-    knowledgeId: 'security-nat', direction: 'security',
+    knowledgeId: 'security-nat', direction: 'security', difficulty: 'IA',
   },
   {
     id: 'sec-o002', type: 'single',
@@ -3606,7 +3587,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['对称加密使用相同密钥加密解密，速度快，适合大量数据，如AES、SM4', '非对称加密使用公钥/私钥对，速度慢，适合密钥交换和数字签名，如RSA、ECC、SM2', '哈希算法是单向不可逆的，用于完整性校验和数字签名，如MD5、SHA-256、SM3', 'MD5和SHA-1仍然是安全的，可以用于数字签名和密码存储'],
     answer: 'MD5和SHA-1仍然是安全的，可以用于数字签名和密码存储',
     explanation: '加密算法分类：1.对称加密（Symmetric Encryption）：a.加密和解密使用相同密钥，速度快（适合大量数据加密），密钥分发困难（需要安全信道传输密钥）。b.常见算法：AES（128/192/256位，当前主流，安全）、DES（56位，已破解，不安全）、3DES（三重DES，112/168位，已逐渐被AES替代）、SM4（中国国密，128位，安全，国内合规）、Blowfish、RC4（已不安全）、ChaCha20（安全，高性能，适合移动设备）。2.非对称加密（Asymmetric Encryption，公钥加密）：a.使用公钥/私钥对，公钥加密私钥解密（机密性），私钥签名公钥验证（身份认证/不可否认），速度慢（不适合大量数据），密钥管理简单（公钥公开，私钥保密）。b.常见算法：RSA（1024位已不安全，2048位当前安全，4096位更安全，基于大整数分解）、ECC（椭圆曲线，256位≈3072位RSA安全性，密钥短性能高，基于椭圆曲线离散对数）、DSA（仅签名，基于离散对数，已逐渐被RSA/ECC替代）、SM2（中国国密椭圆曲线，256位，安全，国内合规）、DH（Diffie-Hellman，密钥交换算法，不是加密算法，基于离散对数）。3.哈希算法（Hash Algorithm，散列算法）：a.单向不可逆（从输入计算哈希容易，从哈希反推输入计算上不可行），固定长度输出，抗碰撞（难以找到两个不同输入产生相同哈希），用于完整性校验、数字签名（签名摘要，不直接签名原始消息）、密码存储（加盐+慢哈希）。b.已不安全（已破解碰撞攻击）：MD5（128位，2004年王小云团队证明碰撞攻击，2008年实际碰撞伪造SSL证书，已不安全，不推荐用于安全场景，可用于非安全场景如文件校验/UUID）、SHA-1（160位，2017年Google证明实际碰撞SHAttered，已不安全，不推荐用于数字签名/证书，NIST已弃用）。c.仍安全：SHA-2（SHA-224/256/384/512，当前主流，未发现有效碰撞）、SHA-3（Keccak，最新标准，基于海绵结构，安全性更高）、SM3（中国国密，256位，安全，国内合规）、BLAKE2/3（高性能安全哈希）。4.密码存储注意：不能直接用MD5/SHA等快速哈希存储密码（易被彩虹表/暴力破解），应使用加盐（Salt）+慢哈希算法（bcrypt、scrypt、Argon2、PBKDF2），这些算法计算慢（可配置迭代次数/内存/并行度），增加暴力破解成本。5.混合加密（Hybrid Encryption）：实际应用中结合非对称加密和对称加密：用非对称加密交换对称密钥（如RSA加密AES密钥，或DH/ECDH协商AES密钥），用对称密钥加密大量数据（AES加密实际数据，速度快）。这是HTTPS/TLS、IPSec IKE、SSH、PGP等几乎所有安全协议的标准做法。加密算法是安全基础，是高频考点，需掌握对称/非对称/哈希算法区别、常见算法、安全性（MD5/SHA-1已破解，AES/SHA-2/SM2/SM3安全）、混合加密、密码存储（加盐+慢哈希）等。注意：MD5和SHA-1已不安全，不能用于数字签名和密码存储，这是常见易错点。',
-    knowledgeId: 'security-crypto', direction: 'security',
+    knowledgeId: 'security-crypto', direction: 'security', difficulty: 'IE',
   },
   {
     id: 'wlan-o001', type: 'single',
@@ -3614,7 +3595,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['WPA3使用SAE（对等同时认证）替代PSK四次握手，抵抗离线字典攻击', 'WPA3强制启用管理帧保护（PMF），防止欺骗解除认证攻击', 'WPA3-Enterprise提供192位安全模式，满足高安全要求', 'WPA3只能在5GHz使用，2.4GHz不支持WPA3'],
     answer: 'WPA3只能在5GHz使用，2.4GHz不支持WPA3',
     explanation: 'WPA3（Wi-Fi Protected Access 3，2018年发布）：当前最新Wi-Fi安全标准，相比WPA2的主要改进：1.SAE（Simultaneous Authentication of Equals，对等同时认证，基于Dragonfly密钥交换算法）：a.替代WPA2-PSK的四次握手（4-Way Handshake）。b.抵抗离线字典攻击（Offline Dictionary Attack）：WPA2-PSK中，攻击者捕获四次握手后可离线暴力破解PSK（弱密码容易被破解）；WPA3-SAE中，每次认证使用不同随机数，攻击者无法离线破解，必须在线尝试（在线尝试会被检测和限制），大大提高安全性。c.前向保密（Forward Secrecy，PFS）：即使长期密钥（PSK）泄露，之前的会话密钥也不会被破解（每次会话使用独立临时密钥）。WPA2不强制前向保密。2.管理帧保护（PMF，Protected Management Frames，802.11w）：a.WPA3强制启用PMF（WPA2中PMF是可选的）。b.保护管理帧（解除认证Deauthentication、解除关联Disassociation、信标Beacon等），防止欺骗解除认证攻击（攻击者发送伪造的解除认证帧让用户掉线，然后进行邪恶双子攻击或密码破解）。c.管理帧加密和认证，防止伪造和篡改。3.192位安全模式（WPA3-Enterprise 192-bit）：a.WPA3企业级提供192位安全套件（CNSA，Commercial National Security Algorithm Suite）。b.使用AES-256-GCMP加密、SHA-384哈希、ECDH P-384密钥交换、ECDSA P-384签名。c.满足政府、金融、军事等高安全要求。4.易连接（Easy Connect，DPP，Device Provisioning Protocol）：a.简化IoT设备的Wi-Fi配置（通过NFC或二维码配置，不需要输入密码）。b.提高IoT设备安全性（IoT设备通常没有输入界面，配置困难，易被攻击）。5.WPA3版本：a.WPA3-Personal（个人级，SAE）：替代WPA2-PSK，适合家庭和小型企业。b.WPA3-Enterprise（企业级，802.1X+SAE/EAP）：替代WPA2-Enterprise，适合中大型企业，支持192位安全模式。6.兼容性：a.WPA3向下兼容WPA2（支持WPA3的AP可同时支持WPA2，允许老设备连接）。b.WPA3功能需要AP和终端都支持才能生效（大多数2019年后的智能手机和笔记本支持WPA3，老设备可能不支持）。7.适用频段：WPA3在2.4GHz和5GHz都支持（WPA3是MAC层安全协议，与频段无关），不是只能在5GHz使用。Wi-Fi 6E扩展到6GHz，6GHz频段强制要求WPA3（6GHz设备必须支持WPA3，不允许WPA2，提高安全性）。WLAN安全是高频考点，需掌握WEP/WPA/WPA2/WPA3各代安全标准、加密算法（WEP RC4/TKIP/AES-CCMP/AES-GCMP）、认证方式（PSK/802.1X/SAE）、WPA3新特性（SAE/PMF/192位/易连接）、适用频段（2.4G和5G都支持）等。注意：WPA3在2.4GHz和5GHz都支持，不是只能在5GHz，这是常见易错点。',
-    knowledgeId: 'wlan-security', direction: 'wlan',
+    knowledgeId: 'wlan-security', direction: 'wlan', difficulty: 'IP',
   },
   {
     id: 'dcn-o001', type: 'single',
@@ -3622,7 +3603,10 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     options: ['分布式网关每台Leaf都是所有VNI的三层网关，虚拟机默认网关在本地Leaf', '跨子网流量在源Leaf直接路由，无需绕行集中网关，延迟低无瓶颈', '分布式网关通过EVPN Type 2路由（携带主机IP）同步主机路由', '分布式网关配置更简单，安全性更高，因为所有流量都经过集中网关'],
     answer: '分布式网关配置更简单，安全性更高，因为所有流量都经过集中网关',
     explanation: 'VXLAN/EVPN三层网关模式：1.集中式网关（Centralized Gateway）：a.所有VNI的三层网关都在一台设备上（通常是Spine或专用网关设备，如华为CE12800/防火墙），虚拟机的默认网关指向集中网关。b.跨子网流量路径：源虚拟机→源Leaf（二层封装VXLAN）→集中网关（解封装，三层路由，重新封装VXLAN）→目的Leaf→目的虚拟机。c.优点：网关集中管理，配置简单，便于集中安全策略控制（所有跨子网流量经过网关，可统一防火墙/IPS/审计）。d.缺点：集中网关是性能瓶颈（所有跨子网流量都经过，东西向流量大时网关带宽和转发能力不足）、单点故障（网关故障所有跨子网通信中断）、延迟高（流量绕行网关，多经过几跳）、东西向流量效率低。2.分布式网关（Distributed Gateway）：a.每台Leaf都是所有VNI的三层网关，虚拟机的默认网关在本地Leaf上（Anycast Gateway，任播网关，所有Leaf的网关IP和MAC相同）。b.跨子网流量路径：源虚拟机→源Leaf（本地三层路由，直接封装VXLAN到目的Leaf）→目的Leaf→目的虚拟机。流量在源Leaf直接路由，无需绕行集中网关。c.优点：延迟低（2跳，与同子网相同）、无瓶颈（分布式转发，每台Leaf只处理本地流量，水平扩展）、无单点故障（Leaf故障只影响本地服务器）、东西向流量效率高（适合数据中心东西向流量为主的场景）。d.缺点：配置复杂（每台Leaf都要配置所有VNI网关和EVPN）、安全策略分散（跨子网流量不经过集中设备，安全控制需在Leaf上分布式部署或引入服务链Service Chain）。3.Anycast Gateway（任播网关）：a.所有Leaf的三层网关IP和MAC地址相同（任播地址）。b.虚拟机无论迁移到哪台Leaf，默认网关都不变，无需重新配置，实现无缝迁移。c.虚拟机发送到网关的流量，由本地Leaf响应（因为本地Leaf有相同的网关IP/MAC），不需要跨网络。4.EVPN分布式网关路由：a.Type 2路由（MAC/IP Advertisement）：携带主机的MAC地址和IP地址（IP可选，分布式网关需要IP字段），每台Leaf学习到所有虚拟机的IP-VTEP映射。b.跨子网路由：源Leaf收到虚拟机发送到其他子网的流量，查路由表（主机路由/32位，通过Type 2学习到目的IP对应的VTEP），直接封装VXLAN到目的Leaf，目的Leaf解封装后转发给目的虚拟机。c.Type 5路由（IP Prefix Route）：通告IP前缀路由（如外部路由、汇总路由、默认路由），用于分布式网关场景下访问外部网络（通过边界Leaf/防火墙引入外部路由）。5.对比总结：| 维度 | 集中式网关 | 分布式网关 | |---|---|---| | 网关位置 | 集中设备（Spine/专用网关） | 每台Leaf | | 跨子网路径 | 绕行集中网关（3-4跳） | 源Leaf直接路由（2跳） | | 性能 | 集中网关瓶颈 | 分布式，无瓶颈 | | 可靠性 | 单点故障 | 无单点故障 | | 配置 | 简单 | 复杂 | | 安全控制 | 集中（所有流量经过网关） | 分散（需分布式安全/服务链） | | 适用场景 | 小型数据中心/集中安全 | 中大型数据中心/东西向流量大 | 分布式网关是当前数据中心VXLAN/EVPN的主流方案（中大型数据中心、东西向流量为主），集中式网关适合小型数据中心或需要集中安全控制的场景。EVPN支持两种网关模式，可根据需求选择。VXLAN网关是高频考点，需掌握集中式/分布式网关区别、Anycast Gateway、EVPN Type 2/5路由、流量路径、适用场景等。注意：分布式网关配置更复杂，安全策略分散（不是更简单更安全），这是常见易错点。',
-    knowledgeId: 'dcn-vxlan-gateway', direction: 'dcn',
+    knowledgeId: 'dcn-vxlan-gateway', direction: 'dcn', difficulty: 'IE',
   },
 
+  // ==================== 扩展题库（多选专项 + DCN 扩容） ====================
+  ...EXTRA_QUIZZES_A,
+  ...EXTRA_QUIZZES_B,
 ];

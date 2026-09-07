@@ -68,6 +68,21 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // 注意：manualChunks 的 id.includes('react') 会把所有含 react 的包
+        // (react-router/radix 等) 塞进 react-vendor，与 vendor 中的 framer-motion
+        // 等形成 React 双实例，导致 createContext undefined 白屏。
+        // 只对 echarts 单独分包，其余交给 Vite 默认处理，保证 React 单实例。
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('echarts') || id.includes('zrender')) return 'echarts';
+          }
+        },
+      },
+    },
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,

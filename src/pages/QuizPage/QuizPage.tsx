@@ -37,6 +37,16 @@ import { cn } from '@/lib/utils';
 
 type QuizMode = 'select' | 'random' | 'wrong' | null;
 
+/** Fisher-Yates 洗牌：返回新数组，不改原数组，保证会话内题目顺序稳定 */
+function shuffleList<T>(list: T[]): T[] {
+  const arr = [...list];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export default function QuizPage() {
   const { records, recordAnswer } = useQuizRecords();
   const [mode, setMode] = useState<QuizMode>(null);
@@ -47,25 +57,16 @@ export default function QuizPage() {
   const [submittedMap, setSubmittedMap] = useState<Record<string, boolean>>({});
   const [showWrongBook, setShowWrongBook] = useState(false);
   const [selectedDirection, setSelectedDirection] = useState<string>('all');
+  // 开局快照：进入模式那一刻锁定题目列表，答题过程中不再变化
+  // （修复：原先用 useMemo + sort(random)，每次 recordAnswer 都会重新洗牌导致跳题）
+  const [sessionQuestions, setSessionQuestions] = useState<IQuizQuestion[]>([]);
+  const [choosingDirection, setChoosingDirection] = useState(false);
 
-  const totalCount = MOCK_QUIZZES.length;
-
-  // 当前模式的题目列表
-  const questions = useMemo(() => {
-    if (mode === 'random') {
-      return [...MOCK_QUIZZES].sort(() => Math.random() - 0.5);
-    }
-    if (mode === 'wrong') {
-      return MOCK_QUIZZES.filter((q) => records.wrongIds.includes(q.id));
-    }
-    if (mode === 'select') {
-      if (selectedDirection === 'all') return MOCK_QUIZZES;
-      return MOCK_QUIZZES.filter((q) => q.direction === selectedDirection);
-    }
-    return [];
-  }, [mode, records.wrongIds, selectedDirection, MOCK_QUIZZES]);
-
-  const currentQuestion = questions[currentIndex];
+  const questions = sessionQuestions;
+  // 防越界钳制：错题被 SRS 移出等原因导致列表收缩时，索引自动回落到末尾
+  // （修复：原先错题重做到最后一题答对被移出后 currentIndex 越界白屏）
+  const safeIndex = Math.min(currentIndex, Math.max(0, questions.length - 1));
+  const currentQuestion = questions[safeIndex];
   const isSubmitted = currentQuestion
     ? submittedMap[currentQuestion.id]
     : false;
@@ -125,27 +126,42 @@ export default function QuizPage() {
   };
 
   const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if (safeIndex < questions.length - 1) {
+      setCurrentIndex(safeIndex + 1);
     }
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+    if (safeIndex > 0) {
+      setCurrentIndex(safeIndex - 1);
     }
   };
 
   const handleStartMode = (m: QuizMode) => {
+    let list: IQuizQuestion[] = [];
+    if (m === 'random') {
+      list = shuffleList(MOCK_QUIZZES);
+    } else if (m === 'wrong') {
+      list = MOCK_QUIZZES.filter((q) => records.wrongIds.includes(q.id));
+    } else {
+      list =
+        selectedDirection === 'all'
+          ? MOCK_QUIZZES
+          : MOCK_QUIZZES.filter((q) => q.direction === selectedDirection);
+    }
     setMode(m);
+    setSessionQuestions(list);
     setCurrentIndex(0);
     setSelectedAnswers({});
     setSubmittedMap({});
+    setChoosingDirection(false);
   };
 
   const handleBack = () => {
     setMode(null);
     setCurrentIndex(0);
+    setSessionQuestions([]);
+    setChoosingDirection(false);
   };
 
   // 错题集
@@ -306,7 +322,7 @@ export default function QuizPage() {
           <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
             <Card
               className="cursor-pointer h-full hover:border-cyan-500/40 transition-all border-cyan-500/10 group relative overflow-hidden"
-              onClick={() => handleStartMode('select')}
+              onClick={() => setChoosingDirection(true)}
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               <CardContent className="py-8 text-center relative">
@@ -382,8 +398,8 @@ export default function QuizPage() {
           </motion.div>
         </div>
 
-        {/* 方向筛选（仅知识点刷题模式下显示） */}
-        {mode === 'select' && (
+        {/* 方向选择（点「按知识点刷题」后出现）——修复：原判断 mode==='select' 永不成立，筛选从未生效 */}
+        {choosingDirection && (
           <Card className="border-cyan-500/10">
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
@@ -418,6 +434,19 @@ export default function QuizPage() {
                     </Button>
                   );
                 })}
+              </div>
+              <div className="flex gap-2 mt-4">
+                <Button
+                  className="flex-1 shadow-[0_0_16px_rgba(0_229_255_0.2)]"
+                  onClick={() => handleStartMode('select')}
+                >
+                  开始练习（{selectedDirection === 'all'
+                    ? MOCK_QUIZZES.length
+                    : MOCK_QUIZZES.filter((q) => q.direction === selectedDirection).length} 题）
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setChoosingDirection(false)}>
+                  取消
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -503,6 +532,24 @@ export default function QuizPage() {
                   <Badge variant="outline" className="border-cyan-500/30 text-cyan-400">
                     {typeLabel}
                   </Badge>
+                  {currentQuestion.type === 'judge' && (
+                    <Badge variant="outline" className="border-amber-500/40 text-amber-400">
+                      省赛不考判断题
+                    </Badge>
+                  )}
+                  {currentQuestion.difficulty && (
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        'border-transparent',
+                        currentQuestion.difficulty === 'IE' && 'bg-rose-500/15 text-rose-300',
+                        currentQuestion.difficulty === 'IP' && 'bg-amber-500/15 text-amber-300',
+                        currentQuestion.difficulty === 'IA' && 'bg-emerald-500/15 text-emerald-300'
+                      )}
+                    >
+                      {currentQuestion.difficulty}
+                    </Badge>
+                  )}
                   <Badge
                     className={
                       DIRECTION_COLORS[currentQuestion.direction].bg +
@@ -658,12 +705,12 @@ export default function QuizPage() {
                         variant="outline"
                         size="sm"
                         onClick={handlePrev}
-                        disabled={currentIndex === 0}
+                        disabled={safeIndex === 0}
                       >
                         <ChevronLeft className="size-4 mr-1" />
                         上一题
                       </Button>
-                      {currentIndex < questions.length - 1 ? (
+                      {safeIndex < questions.length - 1 ? (
                         <Button onClick={handleNext} className="shadow-[0_0_16px_rgba(0_229_255_0.25)]">
                           下一题
                           <ChevronRight className="size-4 ml-1" />

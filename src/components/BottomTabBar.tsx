@@ -1,20 +1,21 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
-  BookOpen,
-  Terminal,
+  Timer,
   CalendarCheck,
   PenTool,
+  BookOpen,
   BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// 省赛只考理论，实验速查优先级下调，改为「设置 → 实验速查」入口
 const TAB_ITEMS = [
   { path: '/', label: '总览', icon: LayoutDashboard },
-  { path: '/knowledge', label: '知识', icon: BookOpen },
-  { path: '/lab-config', label: '实验', icon: Terminal },
-  { path: '/study-plan', label: '计划', icon: CalendarCheck },
+  { path: '/exam', label: '模考', icon: Timer },
   { path: '/quiz', label: '刷题', icon: PenTool },
+  { path: '/knowledge', label: '知识', icon: BookOpen },
+  { path: '/study-plan', label: '计划', icon: CalendarCheck },
   { path: '/statistics', label: '统计', icon: BarChart3 },
 ];
 

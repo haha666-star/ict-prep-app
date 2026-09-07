@@ -1,4 +1,6 @@
 // EXPORTS: IKnowledge, MOCK_KNOWLEDGE
+import { EXTRA_KNOWLEDGE } from './knowledge-extra'
+
 export interface IKnowledge {
   id: string
   name: string
@@ -988,4 +990,7 @@ export const MOCK_KNOWLEDGE: IKnowledge[] = [
     ],
     tips: 'SDN重点掌握核心特征（控制转发分离/集中控制/开放接口/可编程）、OpenFlow流表和工作流程、SD-WAN概念、NETCONF/Telemetry'
   },
+
+  // ==================== 补齐题库引用但未定义的知识点 ====================
+  ...EXTRA_KNOWLEDGE,
 ];
