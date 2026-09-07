@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1170 2532" width="1170" height="2532">
+  <rect width="1170" height="2532" fill="#050914"/>
+  <g transform="translate(585,1150)">
+    <g stroke="#22D3EE" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.9">
+      <line x1="0" y1="-130" x2="-125" y2="30"/>
+      <line x1="0" y1="-130" x2="125" y2="30"/>
+      <line x1="-125" y1="30" x2="0" y2="165"/>
+      <line x1="125" y1="30" x2="0" y2="165"/>
+      <line x1="-125" y1="30" x2="125" y2="30"/>
+    </g>
+    <g fill="#22D3EE">
+      <circle cx="0" cy="-130" r="52"/>
+      <circle cx="-125" cy="30" r="52"/>
+      <circle cx="125" cy="30" r="52"/>
+      <circle cx="0" cy="165" r="52"/>
+    </g>
+  </g>
+  <text x="585" y="1500" text-anchor="middle" fill="#22D3EE" font-size="76"
+        font-family="-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,sans-serif"
+        font-weight="600" letter-spacing="8">ICT 网络备考助手</text>
+  <text x="585" y="1600" text-anchor="middle" fill="#5B6B85" font-size="44"
+        font-family="-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,sans-serif"
+        letter-spacing="4">华为ICT大赛 · 网络赛道</text>
+</svg>

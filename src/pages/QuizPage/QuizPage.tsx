@@ -61,6 +61,8 @@ export default function QuizPage() {
   // （修复：原先用 useMemo + sort(random)，每次 recordAnswer 都会重新洗牌导致跳题）
   const [sessionQuestions, setSessionQuestions] = useState<IQuizQuestion[]>([]);
   const [choosingDirection, setChoosingDirection] = useState(false);
+  // 仅考试题型：省初赛/省复赛只考单选+多选，默认把判断题挡在练习外（错题本不受影响）
+  const [examOnly, setExamOnly] = useState(true);
 
   const questions = sessionQuestions;
   // 防越界钳制：错题被 SRS 移出等原因导致列表收缩时，索引自动回落到末尾
@@ -142,12 +144,17 @@ export default function QuizPage() {
     if (m === 'random') {
       list = shuffleList(MOCK_QUIZZES);
     } else if (m === 'wrong') {
+      // 错题本保留全部题型：判断题错了一样要复习
       list = MOCK_QUIZZES.filter((q) => records.wrongIds.includes(q.id));
     } else {
       list =
         selectedDirection === 'all'
           ? MOCK_QUIZZES
           : MOCK_QUIZZES.filter((q) => q.direction === selectedDirection);
+    }
+    // 「仅考试题型」：随机/方向练习默认排除判断题（省赛只考单选+多选）
+    if (examOnly && m !== 'wrong') {
+      list = list.filter((q) => q.type !== 'judge');
     }
     setMode(m);
     setSessionQuestions(list);
@@ -191,7 +198,23 @@ export default function QuizPage() {
           <span className="text-xs text-muted-foreground font-mono-data">
             选择练习模式
           </span>
-          <Dialog open={showWrongBook} onOpenChange={setShowWrongBook}>
+          <div className="flex items-center gap-2">
+            <Button
+              variant={examOnly ? 'default' : 'outline'}
+              size="sm"
+              className={cn(
+                'h-8',
+                examOnly
+                  ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/25'
+                  : 'border-border/50 text-muted-foreground hover:border-cyan-500/30'
+              )}
+              onClick={() => setExamOnly((v) => !v)}
+              title="省初赛/省复赛只考单选+多选；关闭后练习会包含判断题"
+            >
+              <Filter className="size-3.5 mr-1" />
+              仅考试题型{examOnly ? '开' : '关'}
+            </Button>
+            <Dialog open={showWrongBook} onOpenChange={setShowWrongBook}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="h-8 border-rose-500/30 text-rose-400 hover:bg-rose-500/10">
                 <BookX className="size-3.5 mr-1" />
@@ -279,6 +302,7 @@ export default function QuizPage() {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* 刷题数据概览 */}

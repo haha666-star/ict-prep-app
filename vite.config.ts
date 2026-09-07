@@ -71,14 +71,15 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // 注意：manualChunks 的 id.includes('react') 会把所有含 react 的包
-        // (react-router/radix 等) 塞进 react-vendor，与 vendor 中的 framer-motion
-        // 等形成 React 双实例，导致 createContext undefined 白屏。
-        // 只对 echarts 单独分包，其余交给 Vite 默认处理，保证 React 单实例。
+        // 只对 echarts/zrender 单独分包（图表库体积大且独立）。
+        // 注意：不可把 react 相关包拆进 react-vendor——vendor chunk 内依赖 React 的
+        // 模块（framer-motion、radix 等）会因 chunk 加载时序取到 undefined，触发
+        // "Cannot read properties of undefined (reading 'createContext')" 白屏。
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('echarts') || id.includes('zrender')) return 'echarts';
           }
+          if (id.includes('/src/data/')) return 'quiz-data';
         },
       },
     },

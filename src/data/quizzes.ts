@@ -2540,7 +2540,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     direction: 'datacom', difficulty: 'IE',
   },
 
-
   // ==================== 扩充题库 Batch B ====================
   {
     id: 'dc-b001',
@@ -2763,7 +2762,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     direction: 'dcn', difficulty: 'IE',
   },
 
-
   // ==================== 扩充题库 Batch C ====================
   {
     id: 'dc-c001', type: 'single',
@@ -2880,7 +2878,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: 'VRRP（Virtual Router Redundancy Protocol，虚拟路由冗余协议，RFC 5798，华为默认VRRPv3支持IPv4/IPv6）：将多台路由器组成一个虚拟路由器（Virtual Router），对外提供一个虚拟IP（VIP）和虚拟MAC（VMAC，00-00-5E-00-01-{VRID}），局域网内主机的默认网关指向虚拟IP。VRRP路由器角色：1.Master（主路由器）：优先级最高的路由器成为Master，负责转发以虚拟MAC为目的的流量，响应ARP请求（回复虚拟MAC），周期性发送VRRP通告报文（Advertisement，默认1秒，组播224.0.0.18）。2.Backup（备份路由器）：其他路由器为Backup，不转发流量，不响应ARP，只监听Master的通告报文。如果在Master_Down_Interval（默认3倍通告间隔+偏移时间，约3.6秒）内未收到Master通告，则认为Master故障，优先级最高的Backup抢占成为新Master，接管虚拟IP和MAC，继续转发流量，实现网关冗余。VRRP优先级：1-254，默认100，值越大越优先。优先级255保留给虚拟IP所有者（IP Address Owner，物理接口IP=虚拟IP的路由器，自动成为Master且不可被抢占）。优先级0用于Master主动放弃（发送优先级0的通告，Backup立即接管）。VRRP抢占模式：默认开启，高优先级Backup发现自己优先级高于Master时，抢占成为Master。可配置抢占延迟（避免网络震荡时频繁切换）。VRRP跟踪（Track）：1.跟踪接口/链路：Master上行接口故障时，降低优先级，让Backup接管，避免黑洞。2.跟踪BFD：BFD快速检测故障，联动VRRP快速切换（亚秒级）。3.跟踪路由：路由消失时降低优先级。VRRP与HSRP（Cisco私有）、GLBP（Cisco私有，支持负载分担）类似，VRRP是IETF标准，华为支持。VRRP只能实现主备冗余（同一时间只有Master转发），不能负载分担（可通过多VRRP组+不同VLAN网关指向不同VRRP实现负载分担，即VRRP负载分担模式）。VRRPv2仅支持IPv4，VRRPv3支持IPv4和IPv6。',
     knowledgeId: 'datacom-vrrp', direction: 'datacom', difficulty: 'IP',
   },
-
 
   // ==================== 扩充题库 Batch D（高频考点） ====================
   {
@@ -2999,8 +2996,9 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     knowledgeId: 'datacom-ipv6-basic', direction: 'datacom', difficulty: 'IA',
   },
 
+  // ==================== 扩充题库 Batch E ====================
 
-    {
+  {
     id: 'dc-e003', type: 'judge',
     question: 'IS-IS中，DIS（指定中间系统）选举是可抢占的，新加入的高优先级路由器会立即成为DIS。',
     options: ['正确', '错误'], answer: '正确',
@@ -3085,7 +3083,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
 
-
   // ==================== 扩充题库 Batch F ====================
   {
     id: 'dc-f001', type: 'single',
@@ -3110,6 +3107,7 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: 'IS-IS中ATT位（Attachment Bit，附着位）：1.由L1/2路由器（Level-1-2）在发送的L1 LSP（链路状态PDU）中设置ATT位为1，表示"我连接到Level-2骨干区域，可以通过我访问其他区域"。2.L1路由器（Level-1）收到设置了ATT位的L1 LSP后，知道本区域有L1/2路由器连接到骨干，会生成一条指向最近的L1/2路由器的默认路由（类似OSPF Stub区域的默认路由），将访问其他区域的流量发给L1/2路由器。3.L1/2路由器如果只有L1邻居（没有L2邻居或L2链路down），则不设置ATT位（因为无法访问其他区域）。4.ATT位只在L1 LSP中有效，L2 LSP中没有ATT位。ATT位的作用：实现L1区域访问其他区域的默认路由，简化L1路由器的路由表（L1路由器只需要本区域路由+默认路由，不需要知道其他区域的具体路由）。这与OSPF的Stub区域类似：Stub区域的ABR向Stub区域发布默认路由（Type 3 LSA），Stub区域内路由器通过ABR访问外部。IS-IS的ATT位机制更简单（不需要额外的LSA，只需在LSP中设置一位）。路由渗透（Route Leakage）：L1/2路由器可以将Level-2的具体路由（而非仅默认路由）发布到L1区域（通过设置ATT位和发布具体路由），解决次优路径问题（L1路由器可能选择不是最优的L1/2路由器，因为只根据最近默认路由，而不知道其他区域的具体路由通过哪个L1/2更优）。ATT位是IS-IS分层路由的重要机制，是华为ICT大赛网络赛道的考点，需掌握ATT位的设置者、作用、L1路由器的行为、与OSPF默认路由的对比等。',
     knowledgeId: 'datacom-isis', direction: 'datacom', difficulty: 'IE',
   },
+
   {
     id: 'dc-f005', type: 'single',
     question: '以下关于链路聚合（Eth-Trunk）的说法，错误的是？',
@@ -3179,7 +3177,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: 'EVPN（Ethernet VPN）路由类型（RFC 7432及扩展）：1.Type 1（Ethernet Auto-Discovery Route，ES自动发现路由）：多归接入（Multi-homing）场景下发现以太网段（ES，Ethernet Segment）成员，用于快速收敛和别名（Aliasing，负载分担）。携带ESI（Ethernet Segment Identifier，以太网段标识）、EVPN实例标签等。2.Type 2（MAC/IP Advertisement Route，MAC/IP地址通告路由）：同步主机的MAC地址和IP地址（IP可选），实现控制面MAC学习（无需数据面泛洪）、ARP代理/抑制、分布式网关主机路由同步。携带MAC地址、IP地址、VNI、VTEP IP、MPLS标签、ESI等。3.Type 3（Inclusive Multicast Ethernet Tag Route，包含组播以太网标签路由）：发现同VNI的VTEP，构建头端复制（HER）列表，用于BUM流量转发。携带VNI（以太网标签）、VTEP IP、组播地址（如用组播）等。4.Type 4（Ethernet Segment Route，以太网段路由）：多归接入场景下选举DF（Designated Forwarder，指定转发器），避免BUM流量重复转发。携带ESI、VTEP IP、DF选举算法等。5.Type 5（IP Prefix Route，IP前缀路由）：通告IP前缀路由（如外部路由、汇聚路由、默认路由），用于：a.分布式网关场景下通告外部路由（数据中心访问外部网络的路由，通过边界Leaf/防火墙引入）。b.通告汇聚路由（汇总路由，减少主机路由数量）。c.通告默认路由（0.0.0.0/0，引导外部流量）。d.跨子网路由（某些实现中用Type 5而非Type 2的IP字段）。携带IP前缀、前缀长度、VNI、VTEP IP、MPLS标签、ESI（可选）、网关IP（可选）等。Type 5路由是EVPN的重要扩展（RFC 7916），使EVPN不仅能处理二层（MAC），还能处理三层（IP前缀），实现纯EVPN的三层网络（不需要额外的路由协议），是分布式网关和数据中心互联（DCI）的关键。EVPN路由类型是华为ICT大赛DCN赛道的高频考点，需掌握每种类型的作用、携带信息、应用场景，尤其是Type 2（MAC/IP同步）、Type 3（VTEP发现/头端复制）、Type 5（IP前缀/外部路由）。注意：Type 2的IP地址字段是主机IP（/32或/128），用于主机路由；Type 5是任意前缀长度，用于网段路由/外部路由/汇总路由。',
     knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
-
 
   // ==================== 扩充题库 Batch G ====================
   {
@@ -3253,7 +3250,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     knowledgeId: 'security-pki', direction: 'security', difficulty: 'IP',
   },
 
-
   // ==================== 扩充题库 Batch H ====================
   {
     id: 'wlan-h001', type: 'single',
@@ -3301,7 +3297,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     knowledgeId: 'datacom-ospf', direction: 'datacom', difficulty: 'IE',
   },
 
-
   // ==================== 扩充题库 Batch I ====================
   {
     id: 'dc-i001', type: 'single',
@@ -3334,7 +3329,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: '802.1X（IEEE 802.1X，端口-based网络访问控制）是一种基于端口的网络访问控制协议，用于企业网络的用户认证和准入控制。802.1X体系结构：1.客户端（Supplicant，请求者）：用户终端（PC、手机、笔记本等），运行802.1X客户端软件（Windows自带、iNode、AnyConnect等），发起认证请求，发送EAPoL报文。2.认证系统（Authenticator，认证者）：交换机、AP、AC等网络接入设备，控制端口的访问权限。在用户认证通过前，端口处于未授权状态（Unauthorized），只允许EAPoL（EAP over LAN，802.1X认证报文，目的MAC 01-80-C2-00-00-03，类型0x888E）通过，其他所有流量（HTTP、DHCP、TCP/IP数据等）都被阻塞，用户无法访问网络资源。认证通过后，端口变为授权状态（Authorized），允许正常流量通过。3.认证服务器（Authentication Server）：RADIUS服务器（Remote Authentication Dial-In User Service，远程认证拨号用户服务），存储用户账号密码和策略，验证客户端身份，返回认证结果（接受/拒绝）和授权信息（VLAN、ACL、超时时间等）。认证系统与认证服务器之间使用RADIUS协议（UDP 1812认证、1813计费）。802.1X认证流程（EAP中继方式，最常用）：1.客户端发起认证：客户端发送EAPoL-Start（EAPOL开始）报文，或认证系统检测到端口up后主动发起认证（发送EAP-Request/Identity请求身份）。2.身份请求：认证系统发送EAP-Request/Identity（EAP请求/身份）给客户端，请求用户名。3.身份响应：客户端回复EAP-Response/Identity（EAP响应/身份），携带用户名。4.封装RADIUS：认证系统将EAP-Response/Identity封装为RADIUS Access-Request（访问请求）报文，发送给RADIUS服务器。5.RADIUS挑战：RADIUS服务器验证用户名，选择认证方法（如EAP-PEAP、EAP-TLS、EAP-MSCHAPv2等），发送RADIUS Access-Challenge（访问挑战，携带EAP-Request）给认证系统。6.转发EAP：认证系统解封装，将EAP-Request转发给客户端。7.客户端响应：客户端根据EAP方法进行响应（如输入密码、证书验证），发送EAP-Response给认证系统。8.封装转发：认证系统封装为RADIUS Access-Request转发给RADIUS服务器。9.认证结果：RADIUS服务器验证通过后，发送RADIUS Access-Accept（访问接受，携带授权信息如VLAN、ACL、Session-Timeout等）；验证失败发送Access-Reject（访问拒绝）。10.授权端口：认证系统收到Access-Accept后，发送EAP-Success（EAP成功）给客户端，端口变为授权状态，允许正常流量通过，应用授权信息（动态VLAN、动态ACL等）。收到Access-Reject则发送EAP-Failure，端口保持未授权。802.1X端口控制模式（Port Control）：1.自动模式（Auto，默认）：端口自动发起802.1X认证，认证通过后开放。2.强制授权（Force Authorized）：不进行认证，端口始终允许所有流量通过（相当于关闭802.1X）。3.强制非授权（Force Unauthorized）：端口始终拒绝所有流量（始终关闭）。802.1X扩展功能：1.Guest VLAN（访客VLAN）：认证失败或无客户端的用户可访问Guest VLAN（有限资源，如Internet、自助注册），是802.1X的扩展功能。2.Critical VLAN（关键VLAN/故障VLAN）：RADIUS服务器不可达时，用户可访问Critical VLAN，保证基本网络访问（如内网资源）。3.Restart VLAN（重认证VLAN）：重认证失败时用户进入的VLAN。4.动态VLAN（Dynamic VLAN）：RADIUS返回Tunnel-Private-Group-ID属性，动态将用户端口加入指定VLAN，不同用户认证后进入不同VLAN。5.动态ACL（Dynamic ACL）：RADIUS返回Filter-ID属性，动态应用ACL，控制用户访问权限。6.双因素认证（2FA）：结合密码+证书/短信/令牌，提高安全性。7.MAC旁路（MAC Authentication Bypass，MAB）：不支持802.1X的设备（如打印机、IP电话、摄像头等IoT设备），通过MAC地址认证（认证系统学习MAC地址，作为用户名/密码发送给RADIUS验证），不需要客户端软件。8.Web认证（Portal认证）：不支持802.1X的设备，通过Web页面输入账号密码认证，常用于访客网络。802.1X是华为ICT大赛安全赛道的高频考点，需掌握体系结构（Supplicant/Authenticator/Server）、EAPoL、认证流程、端口控制模式、RADIUS、Guest VLAN/Critical VLAN、动态VLAN/ACL、MAB、与Portal认证区别等。注意：认证通过前只允许EAPoL通过，其他流量阻塞；EAPoL目的MAC是组播01-80-C2-00-00-03，不会被交换机转发（只在本地端口处理）。',
     knowledgeId: 'security-8021x', direction: 'security', difficulty: 'IP',
   },
-
 
   // ==================== 扩充题库 Batch J ====================
   {
@@ -3370,7 +3364,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     knowledgeId: 'dcn-arch', direction: 'dcn', difficulty: 'IE',
   },
 
-
   // ==================== 扩充题库 Batch K ====================
   {
     id: 'dc-k001', type: 'single',
@@ -3405,7 +3398,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     knowledgeId: 'wlan-qos', direction: 'wlan', difficulty: 'IP',
   },
 
-
   // ==================== 扩充题库 Batch L ====================
   {
     id: 'dc-l001', type: 'single',
@@ -3438,7 +3430,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: 'CAPWAP（Control And Provisioning of Wireless Access Points，无线接入点控制与供应协议，RFC 5415）：FIT AP架构中AP与AC之间的通信协议，基于UDP。1.CAPWAP隧道类型：a.控制隧道（Control Tunnel）：UDP 5246端口，使用DTLS（Datagram Transport Layer Security，数据报传输层安全）加密，传输AP与AC之间的控制报文（配置下发、状态上报、固件升级、漫游管理、统计信息、事件通知等）。控制隧道必须建立（AP上线的必要条件）。b.数据隧道（Data Tunnel）：UDP 5247端口，可选DTLS加密，传输用户数据报文（隧道转发模式下，用户数据通过CAPWAP数据隧道封装到AC转发）。数据隧道仅在隧道转发模式下建立，直接转发模式下不建立。2.数据转发模式：a.直接转发（Direct Forwarding，本地转发Local Switching）：用户数据由AP直接转发到有线网络（根据VLAN标签转发），不经过AC，不建立CAPWAP数据隧道（只建立控制隧道）。优点：性能好（数据不经过AC，AC无瓶颈）、网络拓扑简单、AC故障不影响已有用户数据。缺点：安全策略分散（用户数据不经过AC，AC上的安全策略/内容过滤无法直接应用）。b.隧道转发（Tunnel Forwarding，集中转发Central Switching）：用户数据通过CAPWAP数据隧道封装到AC，由AC统一解封装和转发，建立CAPWAP数据隧道。优点：集中控制（所有用户数据经过AC，可统一应用安全策略、QoS、内容过滤、流量统计）、便于集中管理审计。缺点：AC可能成为性能瓶颈、延迟稍高、AC故障影响所有用户数据。3.CAPWAP跨三层网络：a.CAPWAP隧道可以跨三层网络建立（AP和AC可以在不同网段，通过三层路由可达），这是企业WLAN的常见部署方式（AC在核心机房，AP在各个楼层/园区，跨三层网络）。b.AP发现AC的方式支持跨三层：DHCP Option43（携带AC IP，跨三层最常用）、DNS（解析域名获取AC IP，跨三层）、静态配置（手动配置AC IP，跨三层）。c.广播方式只支持同二层（广播报文不跨三层），跨三层网络不能用广播发现AC。d.CAPWAP隧道本身是UDP报文（IP网络可路由），只要AP和AC之间IP可达，就能建立CAPWAP隧道，不受物理距离和网络层次限制。4.CAPWAP DTLS加密：a.控制隧道默认使用DTLS加密（可配置关闭，默认开启），保证控制报文安全（防止窃听、篡改、伪造）。b.数据隧道可选DTLS加密（默认关闭，因为用户数据通常已通过WPA2/WPA3加密，再加密会增加开销，可根据安全需求开启）。c.DTLS基于PSK（预共享密钥）或证书认证，AC和AP之间协商加密参数（加密算法、认证算法、密钥）。5.AP上线流程（CAPWAP状态机）：a.发现（Discovery）：AP发送CAPWAP Discover报文（广播/单播），AC回应Discover Response（携带AC优先级、负载等信息）。b.加入（Join）：AP选择最优AC（优先级高、负载低），发送Join Request，AC回应Join Response（配置参数、DTLS参数），建立CAPWAP控制隧道。c.配置（Configure）：AC向AP下发配置（固件版本、射频配置、VAP配置、安全配置等），AP确认。d.数据检查（Data Check）：协商数据隧道参数（如使用隧道转发，建立数据隧道）。e.运行（Run）：AP正常工作，提供无线接入，周期性发送Keepalive（默认30秒）维持CAPWAP隧道，AC周期性发送配置更新和收集统计。6.CAPWAP隧道维护：a.Keepalive（保活）：AP周期性发送Keepalive报文（默认30秒），AC回应，维持隧道状态。如果连续3个Keepalive无回应（默认90秒），则认为AC故障，AP重新发现AC。b.隧道切换：AP发现更优AC（优先级更高）或当前AC故障时，可切换到其他AC（双AC热备/冷备场景）。c.CAPWAP分片：CAPWAP报文可能超过MTU（加上CAPWAP头和外层IP头），需要分片或调整MTU（建议AC和AP之间链路MTU≥1500，或启用PMTU发现）。CAPWAP是华为ICT大赛WLAN赛道的高频考点，需掌握CAPWAP控制/数据隧道端口（5246/5247）、直接/隧道转发区别、DTLS加密、AP上线流程、跨三层部署（CAPWAP可跨三层，不是只能同二层）等。注意：CAPWAP隧道可以跨三层网络建立（通过DHCP Option43/DNS/静态配置发现AC），不是只能在同二层，这是常见易错点。',
     knowledgeId: 'wlan-arch', direction: 'wlan', difficulty: 'IP',
   },
-
 
   // ==================== 扩充题库 Batch M ====================
   {
@@ -3473,7 +3464,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: 'EVPN多归接入（Multi-homing，也叫多宿主接入）：1.定义：一台服务器/CE（客户边缘设备）同时连接到多台PE/Leaf（提供商边缘设备），提高可靠性（一台PE故障时，其他PE继续转发，业务不中断）和带宽（多链路负载分担）。多归接入是EVPN的重要特性，解决了传统VPLS/VXLAN多归接入的环路和重复流量问题。2.ESI（Ethernet Segment Identifier，以太网段标识符）：a.10字节（80位）的唯一标识符，标识一个多归接入的以太网段（即同一台CE连接到多台PE的那组接口）。b.同一多归接入段的所有PE上，连接到同一CE的接口配置相同的ESI（手动配置或自动生成，自动生成基于CE的MAC+VLAN或LACP系统MAC）。c.ESI为0表示单归接入（Single-homing，CE只连接一台PE），非0表示多归接入。d.ESI在EVPN Type 1/2/4路由中携带，用于标识多归接入段，实现多归接入的协同（别名、DF选举、快速收敛）。3.EVPN多归接入路由类型：a.Type 1（Ethernet Auto-Discovery Route，ES自动发现路由）：多归接入段的PE互相发现（知道哪些PE属于同一ESI），携带ESI、EVPN实例标签、以太网标签（Ethernet Tag，VLAN）。用于快速收敛（成员PE故障时，其他PE快速切换）和别名（Aliasing，负载分担）。b.Type 2（MAC/IP Advertisement Route，MAC/IP地址通告路由）：携带ESI（如果是多归接入的MAC），标识该MAC属于哪个多归接入段，其他PE根据ESI和别名实现负载分担（流量可发送到同一ESI的任意PE，因为它们都能到达该MAC）。c.Type 4（Ethernet Segment Route，以太网段路由）：用于DF（Designated Forwarder，指定转发器）选举，携带ESI、VTEP IP、DF选举算法（默认算法，基于IP地址哈希）。同一ESI的PE通过Type 4路由互相发现，选举DF。4.DF（Designated Forwarder，指定转发器）选举：a.作用：在多归接入场景中，BUM流量（Broadcast广播、Unknown unicast未知单播、Multicast组播）如果所有PE都转发，会导致重复流量（CE收到多份相同BUM流量）和环路。DF负责转发BUM流量到CE（只有DF转发，其他PE不转发BUM到CE），避免重复和环路。b.选举：同一ESI的PE通过Type 4路由选举DF，默认基于VLAN（以太网标签）和PE IP地址哈希，每个VLAN选举一个DF（不同VLAN的DF可以不同，实现负载分担，即DF负载分担）。c.DF故障：DF故障时，其他PE通过Type 1路由快速检测，重新选举DF（秒级收敛），业务不中断。5.单播流量负载分担（别名Aliasing）：a.别名（Aliasing）：同一ESI的PE都发布Type 2路由（携带相同MAC和ESI），远端PE看到多个PE都能到达同一MAC（同一ESI），可通过ECMP将单播流量负载分担到多台PE（多链路利用，提高带宽），因为它们都能到达CE。b.这解决了传统多归接入的问题（传统方式只能用主备，不能负载分担，或用LACP但需要CE支持）。c.单播流量不会环路（因为远端PE通过ECMP选择一条路径，CE收到后不会再转发回其他PE，因为CE的接口是接入接口，不会转发BUM，单播有明确目的）。6.多归接入模式：a.单活（Single-Active，也叫主备）：同一时间只有一台PE转发流量（主PE转发，备PE不转发，主PE故障时备PE切换），类似VRRP主备。b.双活（All-Active，也叫负载分担）：所有PE同时转发单播流量（通过别名和ECMP负载分担），BUM流量由DF转发（避免重复），提高带宽和利用率，是EVPN多归接入的推荐模式。c.单活配置简单，双活性能更好（需要CE支持LACP或多链路，且PE支持别名）。7.EVPN多归接入优势：a.高可靠：PE故障时快速收敛（秒级），业务不中断。b.高带宽：双活模式下多链路负载分担，充分利用带宽。c.无环路：通过DF选举避免BUM重复和环路，通过别名实现单播负载分担。d.标准化：EVPN多归接入是IETF标准（RFC 7432等），不同厂商设备可互通。EVPN多归接入是华为ICT大赛DCN赛道的高级考点，需掌握多归接入定义、ESI作用、Type 1/2/4路由作用、DF选举（避免BUM重复）、别名（单播负载分担）、单活/双活模式等。注意：多归接入时单播流量可负载分担（不会环路），BUM流量由DF转发（避免重复），不是所有PE都同时转发导致环路，这是常见易错点。',
     knowledgeId: 'dcn-evpn', direction: 'dcn', difficulty: 'IE',
   },
-
 
   // ==================== 扩充题库 Batch N ====================
   {
@@ -3539,7 +3529,6 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
     explanation: '数据中心underlay/overlay架构：1.underlay（底层网络）：物理网络基础设施，由Spine/Leaf交换机组成，运行三层路由协议（OSPF/IS-IS/eBGP），提供IP连通性和ECMP等价多路径负载分担。underlay特点：a.三层网络（所有链路都是三层路由，没有二层环路，因为三层路由协议天然防环，通过AS_Path/SPF计算无环路径）。b.不需要STP（underlay是三层网络，没有二层环路，STP是二层防环协议，三层网络不需要STP；传统二层网络用STP防环但会阻塞冗余链路，underlay用ECMP利用所有链路，不阻塞）。c.通常不启用组播（VXLAN BUM流量用头端复制HER替代组播，简化underlay）。d.简单、稳定、高性能、可扩展（Spine-Leaf架构，水平扩展）。2.overlay（叠加网络）：在underlay之上构建的虚拟网络，通过隧道封装（VXLAN，MAC-in-UDP）将原始二层帧封装在IP报文中，在underlay三层网络上传输，构建大二层虚拟网络。overlay特点：a.大二层扩展（虚拟机迁移IP不变，业务不中断）。b.多租户隔离（不同VNI隔离，满足云计算多租户需求）。c.与物理网络解耦（虚拟机迁移不影响物理网络拓扑）。d.软件定义（可通过控制器自动化配置）。3.VTEP（VXLAN Tunnel End Point，VXLAN隧道端点）：underlay和overlay的边界点，负责VXLAN封装（overlay→underlay，将原始帧封装为VXLAN UDP/IP报文）和解封装（underlay→overlay，剥离VXLAN头恢复原始帧）。VTEP可在物理交换机（硬件VTEP，Leaf）、虚拟交换机（软件VTEP，OVS）、智能网卡（SmartNIC，卸载封装）上实现。4.常见组合：IP Fabric（OSPF/IS-IS/eBGP）underlay + EVPN/VXLAN overlay，是当前数据中心网络标准架构。5.underlay路由协议选择：a.eBGP（外部BGP，每台设备一个AS号，AS_PATH防环，ECMP天然支持，最稳定，云厂商首选，如AWS/Azure/Google都用eBGP）。b.OSPF（IGP，配置简单，适合中小规模，但OSPF区域设计和LSA泛洪在大规模下复杂）。c.IS-IS（IGP，高效，适合大规模，但配置和维护比OSPF复杂）。underlay/overlay是数据中心网络核心概念，是高频考点，需掌握两者定义、关系、VTEP作用、underlay路由协议、underlay不需要STP（三层网络无环路，用ECMP）等。注意：underlay是三层网络，不需要STP（STP是二层防环协议），用ECMP利用所有链路，这是常见易错点。',
     knowledgeId: 'dcn-vxlan-basic', direction: 'dcn', difficulty: 'IE',
   },
-
 
   // ==================== 扩充题库 Batch O ====================
   {
