@@ -23,7 +23,7 @@ export default function BottomTabBar() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] z-50 border-t border-cyan-500/20 bg-background/85 backdrop-blur-2xl pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] z-50 border-t border-cyan-500/20 bg-background/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
       {/* 顶部发光线 */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
 

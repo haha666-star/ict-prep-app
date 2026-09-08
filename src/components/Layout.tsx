@@ -1,5 +1,6 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Suspense } from 'react';
+import { useLocation, useOutlet } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Toaster } from '@/components/ui/sonner';
 import BottomTabBar from '@/components/BottomTabBar';
 import SplashScreen from '@/components/SplashScreen';
@@ -22,17 +23,20 @@ export function Layout() {
   const location = useLocation();
   const pathname = location.pathname;
   const title = PAGE_TITLES[pathname] ?? 'ICT 备考';
+  // 冻结当前路由元素快照：避免 AnimatePresence 退场动画期间
+  // <Outlet /> 已切换到新页面，导致「新内容淡出+淡入」闪两次
+  const outlet = useOutlet();
 
   return (
     <div className="relative h-screen w-full bg-[#050914] cyber-grid-dense overflow-hidden">
       {/* 启动画面 */}
       <SplashScreen />
-      {/* 背景光晕装饰 */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
+      {/* 背景光晕装饰：改用 radial-gradient 代替 blur filter，避免整屏实时模糊重绘 */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none bg-[radial-gradient(ellipse_at_center,hsl(185_100%_55%/0.07)_0%,transparent_70%)]" />
+      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[500px] h-[300px] pointer-events-none bg-[radial-gradient(ellipse_at_center,hsl(270_90%_70%/0.07)_0%,transparent_70%)]" />
 
-      {/* 手机外壳容器 */}
-      <div className="relative mx-auto w-full max-w-[420px] h-screen bg-background/60 backdrop-blur-sm flex flex-col overflow-hidden">
+      {/* 手机外壳容器：用高不透明度替代 backdrop-blur，保留网格透出感且免去全屏实时模糊 */}
+      <div className="relative mx-auto w-full max-w-[420px] h-screen bg-background/85 flex flex-col overflow-hidden">
         {/* App标题栏 */}
         <header className="sticky top-0 z-40 h-12 flex items-center px-4 bg-background/70 backdrop-blur-xl border-b border-cyan-500/10">
           <h1 className="text-sm font-semibold text-foreground font-tech tracking-wider flex items-center gap-2">
@@ -50,17 +54,21 @@ export function Layout() {
 
         {/* 主内容区 - 独立滚动 */}
         <main className="flex-1 w-full overflow-y-auto px-2 py-2 pb-16 cyber-scroll">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          {/*
+            路由切换动画：用 keyed motion.div 实现「入场淡入」，不做 AnimatePresence 退场。
+            实测 AnimatePresence mode="wait" + useOutlet 快照在懒加载页面下会卡死：
+            路由已切换（标题/URL 更新）但内容区永久停留在旧页面。
+            移除退场动画后切换即时、无闪屏，入场 0.12s 淡入保留手感。
+          */}
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.12, ease: 'easeOut' }}
+            style={{ willChange: 'opacity' }}
+          >
+            <Suspense fallback={<PageLoading />}>{outlet}</Suspense>
+          </motion.div>
         </main>
 
         {/* 底部Tab栏 */}
@@ -81,6 +89,23 @@ export function Layout() {
             },
           }}
         />
+      </div>
+    </div>
+  );
+}
+
+/** 路由懒加载时的占位（不用毛玻璃，避免切换时重绘抖动） */
+function PageLoading() {
+  return (
+    <div className="flex min-h-[240px] items-center justify-center">
+      <div className="flex items-center gap-1.5">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="size-1.5 rounded-full bg-cyan-400"
+            style={{ animation: `splash-pulse 1.2s ease-in-out ${i * 0.15}s infinite` }}
+          />
+        ))}
       </div>
     </div>
   );

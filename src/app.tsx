@@ -1,14 +1,17 @@
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import DashboardPage from "@/pages/DashboardPage/DashboardPage";
-import KnowledgePage from "@/pages/KnowledgePage/KnowledgePage";
-import LabConfigPage from "@/pages/LabConfigPage/LabConfigPage";
-import StudyPlanPage from "@/pages/StudyPlanPage/StudyPlanPage";
-import QuizPage from "@/pages/QuizPage/QuizPage";
-import ExamPage from "@/pages/ExamPage/ExamPage";
-import StatisticsPage from "@/pages/StatisticsPage/StatisticsPage";
-import SettingsPage from "@/pages/SettingsPage/SettingsPage";
-import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
+
+// 其余页面按需加载：首屏不再打包 1MB ECharts 等非必要代码
+const KnowledgePage = lazy(() => import("@/pages/KnowledgePage/KnowledgePage"));
+const LabConfigPage = lazy(() => import("@/pages/LabConfigPage/LabConfigPage"));
+const StudyPlanPage = lazy(() => import("@/pages/StudyPlanPage/StudyPlanPage"));
+const QuizPage = lazy(() => import("@/pages/QuizPage/QuizPage"));
+const ExamPage = lazy(() => import("@/pages/ExamPage/ExamPage"));
+const StatisticsPage = lazy(() => import("@/pages/StatisticsPage/StatisticsPage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage/SettingsPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage/NotFoundPage"));
 
 export default function App() {
   return (

@@ -74,7 +74,7 @@ export default defineConfig({
         // 只对 echarts/zrender 单独分包（图表库体积大且独立）。
         // 注意：不可把 react 相关包拆进 react-vendor——vendor chunk 内依赖 React 的
         // 模块（framer-motion、radix 等）会因 chunk 加载时序取到 undefined，触发
-        // "Cannot read properties of undefined (reading 'createContext')" 白屏。
+        // "Cannot read properties of undefined (reading 'createContext')" 白屏（已实测确认）。
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('echarts') || id.includes('zrender')) return 'echarts';
