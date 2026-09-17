@@ -45,6 +45,8 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // 新版本部署后自动清理旧版本预缓存，避免旧客户端请求已被替换的 hash chunk
+        cleanupOutdatedCaches: true,
         maximumFileSizeToCacheInBytes: 10485760,
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
         runtimeCaching: [
