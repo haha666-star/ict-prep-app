@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -422,16 +423,19 @@ export default function QuizPage() {
           </motion.div>
         </div>
 
-        {/* 方向选择（点「按知识点刷题」后出现）——修复：原判断 mode==='select' 永不成立，筛选从未生效 */}
-        {choosingDirection && (
-          <Card className="border-cyan-500/10">
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
+        {/* 方向选择：底部弹出面板（Portal 挂到 body，避免被路由动画的层叠上下文压住） */}
+        {choosingDirection && createPortal(
+          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-sm"
+               onClick={() => setChoosingDirection(false)}>
+            <div
+              className="w-full max-w-lg rounded-t-2xl border-t border-cyan-500/20 bg-[#0a1128] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-h-[85vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-12 h-1.5 mx-auto mb-4 rounded-full bg-white/20" />
+              <div className="flex items-center gap-2 mb-4">
                 <Filter className="size-4 text-cyan-400" />
-                选择练习方向
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+                <h3 className="text-base font-semibold text-foreground">选择练习方向</h3>
+              </div>
               <div className="flex flex-wrap gap-2">
                 <Button
                   variant={selectedDirection === 'all' ? 'default' : 'outline'}
@@ -442,7 +446,6 @@ export default function QuizPage() {
                   全部方向
                 </Button>
                 {(['datacom', 'dcn', 'security', 'wlan'] as const).map((d) => {
-                  const colors = DIRECTION_COLORS[d];
                   const count = MOCK_QUIZZES.filter((q) => q.direction === d).length;
                   return (
                     <Button
@@ -460,6 +463,9 @@ export default function QuizPage() {
                 })}
               </div>
               <div className="flex gap-2 mt-4">
+                <Button variant="ghost" size="sm" onClick={() => setChoosingDirection(false)}>
+                  取消
+                </Button>
                 <Button
                   className="flex-1 shadow-[0_0_16px_rgba(0_229_255_0.2)]"
                   onClick={() => handleStartMode('select')}
@@ -468,12 +474,10 @@ export default function QuizPage() {
                     ? MOCK_QUIZZES.length
                     : MOCK_QUIZZES.filter((q) => q.direction === selectedDirection).length} 题）
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => setChoosingDirection(false)}>
-                  取消
-                </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>,
+          document.body
         )}
       </div>
     );
