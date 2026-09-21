@@ -184,4 +184,186 @@ export const EXTRA_KNOWLEDGE: IKnowledge[] = [
     ],
     tips: 'OFDMA 与 MU-MIMO 的区别是高频考点：OFDMA 解决多用户小包并发效率，MU-MIMO 解决多用户空间流并行'
   },
+
+  // ============ 第十届大纲缺口补齐（深圳赛区细则 + 国赛权重重排）============
+  {
+    id: 'datacom-mstp',
+    name: 'MSTP 多生成树',
+    direction: 'datacom',
+    parentId: 'datacom-lan',
+    level: 3,
+    keyPoints: [
+      'MSTP（IEEE 802.1s）在 RSTP 基础上引入实例（Instance）与域（Region），不同 VLAN 可映射不同生成树实例',
+      'MST 域需 Region 名称、修订级别、VLAN-实例映射三者完全一致才能属于同一域',
+      'IST（内部生成树）连接所有 MST 域，CST（公共生成树）连接所有 STP 域，CIST 为二者总和',
+      'MSTP 既防环又实现 VLAN 级负载分担，优于单棵 STP/RSTP',
+      '关键命令：stp mode mstp、stp region-configuration、instance vlan'
+    ],
+    tips: 'MSTP 域三要素一致性与"实例-VLAN 映射"是必考，注意 MSTP 兼容 RSTP/STP'
+  },
+  {
+    id: 'datacom-vlan-aggregate',
+    name: 'VLAN 聚合（Super-VLAN）',
+    direction: 'datacom',
+    parentId: 'datacom-vlan',
+    level: 3,
+    keyPoints: [
+      'Super-VLAN（VLAN 聚合）用一个三层 VLANIF 接口为多个 Sub-VLAN 提供网关，节省 IP 地址',
+      'Sub-VLAN 之间二层隔离，借助 Super-VLAN 的 VLANIF 实现三层互通',
+      'ARP 代理（arp-proxy intra-sub-vlan-proxy）使 Sub-VLAN 间可经 Super-VLAN 网关互访',
+      'Super-VLAN 不能包含物理端口，端口只能加入 Sub-VLAN',
+      '典型场景：园区大量隔离用户共享同一网段网关'
+    ],
+    tips: '易错点：Sub-VLAN 间二层不通，必须开启 VLAN 间 ARP 代理才能三层互通'
+  },
+  {
+    id: 'datacom-policy-route',
+    name: '策略路由 PBR',
+    direction: 'datacom',
+    parentId: 'datacom-routing',
+    level: 3,
+    keyPoints: [
+      'PBR 按管理员策略（源/目的 IP、协议、端口等）转发，优先级高于普通路由表',
+      '通过流分类（traffic classifier）、流行为（traffic behavior）、流策略（traffic policy）重定向下一跳或出接口',
+      '与路由策略（route-policy）区别：route-policy 过滤/修改路由，PBR 控制数据转发',
+      'PBR 常用于引流、负载分担、出口选路、旁挂设备引流',
+      '本地 PBR 作用于本机发出的报文，接口 PBR 作用于过境报文'
+    ],
+    tips: '高频易混：route-policy 管"路由"，PBR 管"报文转发"，二者作用层次不同'
+  },
+  {
+    id: 'datacom-nms',
+    name: '网络管理与运维',
+    direction: 'datacom',
+    parentId: 'datacom-service',
+    level: 3,
+    keyPoints: [
+      'SNMP：网管协议，v1/v2c 基于团体字（明文），v3 支持认证与加密；代理 Agent 161/162',
+      'LLDP：链路层发现协议，用于邻居设备信息发现，与厂商无关的二层邻居发现',
+      'NQA：网络质量分析，探测时延/抖动/丢包（ICMP/TCP/HTTP 等），可与静态路由、PBR 联动实现探测联动',
+      'NetStream/sFlow：流量采样与统计分析',
+      'telemetry：实时采集设备数据，相比 SNMP 轮询更实时'
+    ],
+    tips: 'SNMP 版本安全差异与 NQA 联动是易考点，注意 SNMP v3 才具备加密'
+  },
+  {
+    id: 'security-dhcp-snooping',
+    name: 'DHCP Snooping 与 IPSG',
+    direction: 'security',
+    parentId: 'security-basic',
+    level: 3,
+    keyPoints: [
+      'DHCP Snooping 建立合法 DHCP 绑定表（MAC-IP-端口-VLAN），区分信任/非信任端口',
+      '非信任端口收到的 DHCP Offer/Ack 被丢弃，防止私接 DHCP 服务器（DHCP 欺骗）',
+      'IP Source Guard（IPSG）基于绑定表校验 IP+MAC，非法报文丢弃',
+      '动态 ARP 检测（DAI）基于绑定表校验 ARP 报文，防 ARP 欺骗',
+      '配置：dhcp snooping enable、trust 接口、ip source check user-bind'
+    ],
+    tips: '三者联动是二层防攻击标准方案：Snooping 建表，IPSG 防 IP 欺骗，DAI 防 ARP 欺骗'
+  },
+  {
+    id: 'security-port-security',
+    name: '端口安全与 MAC 安全',
+    direction: 'security',
+    parentId: 'security-basic',
+    level: 3,
+    keyPoints: [
+      '端口安全（Port Security）限制端口学习 MAC 数量，超阈可 protect/restrict/error-down',
+      '端口安全可绑定合法 MAC（sticky 或手工），实现接入准入',
+      'MAC 地址漂移检测：同一 MAC 在不同端口间跳变触发告警或阻塞，防环路与攻击',
+      '端口隔离（port-isolate）：同隔离组端口二层不互通，节省 VLAN',
+      'MACsec：基于 802.1AE 的链路层加密，保护点对点链路数据机密性与完整性'
+    ],
+    tips: '端口安全三种违规动作差异常考：protect 静默丢弃、restrict 丢弃并告警、error-down 关闭端口'
+  },
+  {
+    id: 'security-portal',
+    name: 'Portal 认证',
+    direction: 'security',
+    parentId: 'security-auth',
+    level: 3,
+    keyPoints: [
+      'Portal 认证（Web 认证）：用户先免认证访问 Portal 页面，输入账号后上线',
+      '三层 Portal（直接转发）与二层 Portal（VLAN 内），需 Portal 服务器与 RADIUS 配合',
+      '常与 802.1X、MAC 认证组成统一准入，按场景组合（如 802.1X 失败降级 Portal）',
+      '典型应用：访客接入、校园/园区 Web 自助认证',
+      '相比 802.1X 无需客户端，用户体验友好但安全性略低'
+    ],
+    tips: '三种准入（802.1X/MAC/Portal）的适用场景对比是高频题，Portal 胜在无客户端'
+  },
+  {
+    id: 'security-fw-advance',
+    name: '防火墙虚拟系统与智能选路',
+    direction: 'security',
+    parentId: 'security-firewall',
+    level: 3,
+    keyPoints: [
+      '虚拟系统（Vsys）：一台物理防火墙虚拟为多台逻辑防火墙，资源与配置隔离，节约成本',
+      'Vsys 通过根系统分配资源（会话/策略/带宽），互不影响',
+      '智能选路：基于链路质量（时延/丢包/带宽）自动选择最优出口，支持策略路由与链路负载均衡',
+      '流量管理（带宽管理）：基于应用/用户/时间段做带宽限速与保障',
+      '双链路热备、N+1 备份提升可靠性'
+    ],
+    tips: 'Vsys 与 VRF 概念不同：Vsys 是防火墙虚拟化，VRF 是路由虚拟化；智能选路核心是链路质量探测'
+  },
+  {
+    id: 'wlan-sta-online',
+    name: 'CAPWAP 与 STA 上线',
+    direction: 'wlan',
+    parentId: 'wlan-arch',
+    level: 3,
+    keyPoints: [
+      'CAPWAP 隧道：控制隧道（UDP 5246）与数据隧道（UDP 5247）分离',
+      'Fit AP 上线流程：DHCP 获取 IP → 发现 AC（广播/单播/Option 43/DNS）→ 建立 CAPWAP → 下载配置 → 运行',
+      'STA 关联上线：扫描→认证→关联→DHCP→IP 获取→上网',
+      'AC 发现方式：二层广播、三层单播、DHCP Option 43、DNS 域名',
+      'AP 工作模式：Fit（受 AC 管理）、Fat（独立）、云管理'
+    ],
+    tips: 'CAPWAP 两端口（5246 控制/5247 数据）与 AP 发现 AC 的四种方式是高频考点'
+  },
+  {
+    id: 'wlan-planning',
+    name: '无线规划与部署',
+    direction: 'wlan',
+    parentId: 'wlan-basic',
+    level: 3,
+    keyPoints: [
+      '信道规划：2.4G 用 1/6/11 互不重叠，5G 自动/手动选无干扰信道',
+      '功率调整：避免过覆盖导致同频干扰与漫游粘滞，也要避免覆盖盲区',
+      '频谱导航（Band Steer）：引导双频终端优先 5G，分流 2.4G 拥塞',
+      '容量规划：单 AP 并发用户数、吞吐与覆盖半径的平衡',
+      '高密场景：降低功率、缩小蜂窝、启用负载均衡'
+    ],
+    tips: '规划核心矛盾：功率过大→干扰与粘滞；功率过小→盲区；需折中'
+  },
+  {
+    id: 'dcn-clos',
+    name: 'Spine-Leaf 架构',
+    direction: 'dcn',
+    parentId: 'dcn-arch',
+    level: 3,
+    keyPoints: [
+      'Clos/Spine-Leaf（胖树）是数据中心主流架构，Spine 与 Leaf 全互联',
+      '东西向流量为主，任意 Leaf 间经过一跳 Spine，延迟可预测',
+      'Leaf 连接服务器/防火墙，Spine 只做高速转发，无三层网关（Underlay）',
+      'Overlay（VXLAN）在 Leaf 上提供二层扩展与租户隔离',
+      '相比传统三层架构，Spine-Leaf 带宽利用率高、易横向扩展'
+    ],
+    tips: 'Spine-Leaf 的"任意 Leaf 间一跳 Spine"与东西向流量优化是核心卖点'
+  },
+  {
+    id: 'dcn-sdn-controller',
+    name: 'SDN 控制器与编排',
+    direction: 'dcn',
+    parentId: 'dcn-sdn',
+    level: 3,
+    keyPoints: [
+      'SDN 核心思想：控制平面与转发平面分离，集中控制，开放可编程',
+      '华为 SDN 控制器（如 iMaster NCE）负责网络自动化、策略下发与可视化',
+      '南向接口：OpenFlow、NETCONF、OVSDB、BGP-EVPN；北向接口：RESTful API',
+      'Underlay 提供 IP 互通，Overlay（VXLAN/EVPN）提供租户二层/三层网络',
+      '控制器集群提升可靠性，避免单点故障'
+    ],
+    tips: 'SDN 三要素（转控分离/集中控制/开放接口）与南北向接口区分是必考'
+  },
 ];

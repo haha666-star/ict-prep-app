@@ -1,6 +1,6 @@
 import { MOCK_QUIZZES, type IQuizQuestion, type QuizDifficulty } from '@/data/quizzes';
 
-export type ExamPresetId = 'province-prelim' | 'province-final' | 'sprint';
+export type ExamPresetId = 'province-prelim' | 'province-final' | 'sprint' | 'national-final';
 
 export interface IExamPreset {
   id: ExamPresetId;
@@ -22,7 +22,7 @@ export const EXAM_PRESETS: IExamPreset[] = [
     questionCount: 60,
     minutes: 60,
     difficultyMix: ['IA', 'IP'],
-    weights: { datacom: 0.4, security: 0.25, wlan: 0.2, dcn: 0.15 },
+    weights: { datacom: 0.4, dcn: 0.2, security: 0.2, wlan: 0.2 },
     tip: '对应省初赛规格：平均 60 秒/题，以 HCIA 为主、少量 HCIP。',
   },
   {
@@ -32,7 +32,7 @@ export const EXAM_PRESETS: IExamPreset[] = [
     questionCount: 150,
     minutes: 120,
     difficultyMix: ['IP', 'IE'],
-    weights: { datacom: 0.4, security: 0.25, wlan: 0.2, dcn: 0.15 },
+    weights: { datacom: 0.4, dcn: 0.2, security: 0.2, wlan: 0.2 },
     tip: '对应省复赛规格：平均 48 秒/题，HCIP 为主，含 HCIE 高阶题。节奏是最大失分点。',
   },
   {
@@ -42,8 +42,18 @@ export const EXAM_PRESETS: IExamPreset[] = [
     questionCount: 20,
     minutes: 20,
     difficultyMix: ['IA', 'IP', 'IE'],
-    weights: { datacom: 0.4, security: 0.25, wlan: 0.2, dcn: 0.15 },
+    weights: { datacom: 0.4, dcn: 0.2, security: 0.2, wlan: 0.2 },
     tip: '碎片时间自测，全难度混合抽题。',
+  },
+  {
+    id: 'national-final',
+    name: '国家总决赛模考',
+    sub: '90 题 / 90 分钟',
+    questionCount: 90,
+    minutes: 90,
+    difficultyMix: ['IP', 'IE'],
+    weights: { datacom: 0.5, security: 0.25, wlan: 0.25, dcn: 0 },
+    tip: '对应国家总决赛规格：HCIP/HCIE 为主，数通半壁江山，DCN 不考。命中率决定国一。',
   },
 ];
 

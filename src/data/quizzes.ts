@@ -2,6 +2,11 @@
 import { EXTRA_QUIZZES_A } from './quizzes-extra-a'
 import { EXTRA_QUIZZES_B } from './quizzes-extra-b'
 import { EXTRA_QUIZZES_C } from './quizzes-extra-c'
+import { EXTRA_QUIZZES_D } from './quizzes-extra-d'
+import { EXTRA_QUIZZES_E } from './quizzes-extra-e'
+import { EXTRA_QUIZZES_F } from './quizzes-extra-f'
+import { EXTRA_QUIZZES_REAL } from './quizzes-real'
+import { stableShuffleOptions } from '../lib/options'
 
 export type QuizDifficulty = 'IA' | 'IP' | 'IE'
 
@@ -17,9 +22,11 @@ export interface IQuizQuestion {
   batch?: number // 批次号，无此字段表示基础题库立即可用；batch 1 起始日后2天解锁，batch 2 4天后，以此类推
   /** 难度分级：IA=HCIA（省初赛为主）、IP=HCIP（省复赛）、IE=HCIE（全国赛实验储备）。缺省视为 IA */
   difficulty?: QuizDifficulty
+  /** 题源标注：real=真题同源（公开回忆/高频真题模式），hot=高频预测考点。用于冲刺阶段重点筛选 */
+  tag?: 'real' | 'hot'
 }
 
-export const MOCK_QUIZZES: IQuizQuestion[] = [
+const RAW_QUIZZES: IQuizQuestion[] = [
   // ==================== 数通方向（80题） ====================
 
   // --- 网络基础 ---
@@ -687,10 +694,10 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
   },
   {
     id: 'dc-066',
-    type: 'multiple',
-    question: '以下哪些队列调度算法可能导致低优先级流量饿死？（多选）',
+    type: 'single',
+    question: '以下哪种队列调度算法可能导致低优先级流量饿死？',
     options: ['FIFO', 'PQ（优先队列）', 'WRR（加权轮询）', 'WFQ（加权公平队列）'],
-    answer: ['PQ（优先队列）'],
+    answer: 'PQ（优先队列）',
     explanation: 'PQ（Priority Queue，优先队列）严格按优先级从高到低调度，高优先级队列始终优先转发，如果高优先级流量持续存在，低优先级队列可能永远得不到服务，导致"饿死"。WRR和WFQ通过加权轮询保证每个队列都能获得服务，FIFO先入先出不区分优先级。实际部署常用PQ+WFQ组合，既保证关键业务又避免饿死。',
     knowledgeId: 'datacom-qos-basic',
     direction: 'datacom', difficulty: 'IP',
@@ -3612,4 +3619,19 @@ export const MOCK_QUIZZES: IQuizQuestion[] = [
   ...EXTRA_QUIZZES_A,
   ...EXTRA_QUIZZES_B,
   ...EXTRA_QUIZZES_C,
+
+  // ==================== 第十届国一专项扩容（对齐官方考纲权重） ====================
+  ...EXTRA_QUIZZES_D,
+
+  // ==================== 全国总决赛 + 省赛 公开真题 ====================
+  ...EXTRA_QUIZZES_REAL,
+
+  // ==================== v7 国一冲刺扩容（补 WLAN 权重缺口 + IE 深水区） ====================
+  ...EXTRA_QUIZZES_E,
+
+  // ==================== v7b 省赛专项（DCN 补齐省赛 20% 权重） ====================
+  ...EXTRA_QUIZZES_F,
 ];
+
+// 选项顺序稳定打乱：消除"正确答案集中在 A/B"的位置偏斜（按题号定种子，顺序稳定）
+export const MOCK_QUIZZES: IQuizQuestion[] = RAW_QUIZZES.map(stableShuffleOptions);
