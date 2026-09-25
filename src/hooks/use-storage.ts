@@ -418,6 +418,56 @@ export function useExamDate(defaultDate = '') {
   return { examDate, setExamDate };
 }
 
+// ========== 题目笔记 ==========
+export interface IQuestionNote {
+  text: string;
+  updatedAt: number;
+}
+
+export type QuizNotesMap = Record<string, IQuestionNote>;
+
+const KEY_QUIZ_NOTES = 'quiz_notes';
+
+export function useQuizNotes() {
+  const [notes, setNotes] = useState<QuizNotesMap>({});
+
+  useEffect(() => {
+    const raw = scopedStorage.getItem(KEY_QUIZ_NOTES);
+    if (raw) {
+      try {
+        setNotes(JSON.parse(raw));
+      } catch {
+        setNotes({});
+      }
+    }
+  }, []);
+
+  const getNote = useCallback(
+    (id: string): IQuestionNote | undefined => notes[id],
+    [notes]
+  );
+
+  const saveNote = useCallback((id: string, text: string) => {
+    setNotes((prev) => {
+      const next: QuizNotesMap = { ...prev };
+      if (text.trim()) {
+        next[id] = { text, updatedAt: Date.now() };
+      } else {
+        delete next[id];
+      }
+      scopedStorage.setItem(KEY_QUIZ_NOTES, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const clearNote = useCallback(
+    (id: string) => saveNote(id, ''),
+    [saveNote]
+  );
+
+  return { notes, getNote, saveNote, clearNote };
+}
+
 // ========== 备份导出 / 导入 ==========
 export const BACKUP_KEYS: Record<string, string> = {
   knowledge_status: KEY_KNOWLEDGE_STATUS,
@@ -427,6 +477,7 @@ export const BACKUP_KEYS: Record<string, string> = {
   exam_date: KEY_EXAM_DATE,
   exam_sessions: KEY_EXAM_SESSIONS,
   favorites: KEY_FAVORITES,
+  quiz_notes: KEY_QUIZ_NOTES,
 };
 
 export interface IBackup {

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,10 +29,12 @@ import {
   Trash2,
   BookOpen,
   Zap,
+  NotebookPen,
+  Save,
 } from 'lucide-react';
 import { MOCK_QUIZZES, type IQuizQuestion } from '@/data/quizzes';
 import { MOCK_KNOWLEDGE } from '@/data/knowledge';
-import { useQuizRecords } from '@/hooks/use-storage';
+import { useQuizRecords, useQuizNotes } from '@/hooks/use-storage';
 import { DIRECTION_LABELS, DIRECTION_COLORS, formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -75,6 +77,30 @@ export default function QuizPage() {
   const isSubmitted = currentQuestion
     ? submittedMap[currentQuestion.id]
     : false;
+
+  // 题目笔记：随题保存，帮助快速记忆知识（默认收起，点击按钮才显示，避免刷题时提前看到笔记内容）
+  const { getNote, saveNote } = useQuizNotes();
+  const [noteDraft, setNoteDraft] = useState('');
+  const [noteSaved, setNoteSaved] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+
+  // 切题时载入该题已有笔记，并默认收起
+  useEffect(() => {
+    setNoteDraft(getNote(currentQuestion?.id ?? '')?.text ?? '');
+    setNoteSaved(false);
+    setNoteOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestion?.id]);
+
+  const hasNote = Boolean(getNote(currentQuestion?.id ?? '')?.text?.trim());
+
+  const handleSaveNote = () => {
+    if (!currentQuestion) return;
+    saveNote(currentQuestion.id, noteDraft);
+    setNoteSaved(true);
+    toast.success('笔记已保存');
+    setTimeout(() => setNoteSaved(false), 1600);
+  };
 
   const isCorrect = useMemo(() => {
     if (!currentQuestion || !isSubmitted) return false;
@@ -848,6 +874,105 @@ export default function QuizPage() {
                     </div>
                   </motion.div>
                 )}
+
+                {/* 我的笔记：默认收起，点击按钮才显示，避免刷题时提前看到笔记内容 */}
+                <div className="pt-3 mt-4 border-t border-border/40">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <NotebookPen className="size-4 text-violet-400" />
+                      <span className="text-sm font-semibold text-violet-300">
+                        我的笔记
+                      </span>
+                      {hasNote && !noteOpen && (
+                        <span className="text-[11px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 font-medium">
+                          已记 {noteDraft.length} 字
+                        </span>
+                      )}
+                      {noteSaved && (
+                        <span className="text-[11px] text-emerald-400 font-medium">
+                          ✓ 已保存
+                        </span>
+                      )}
+                    </div>
+                    <Button
+                      variant={noteOpen ? 'default' : 'outline'}
+                      size="sm"
+                      className={cn(
+                        'h-7 text-xs',
+                        noteOpen
+                          ? 'bg-violet-500/20 text-violet-200 border border-violet-500/40 hover:bg-violet-500/30'
+                          : hasNote
+                          ? 'border-violet-500/40 text-violet-300 hover:bg-violet-500/10'
+                          : 'border-border/50 text-muted-foreground hover:border-violet-500/30'
+                      )}
+                      onClick={() => setNoteOpen((v) => !v)}
+                    >
+                      {noteOpen ? (
+                        <>
+                          <ChevronLeft className="size-3.5 mr-1 rotate-90" />
+                          收起笔记
+                        </>
+                      ) : (
+                        <>
+                          <NotebookPen className="size-3.5 mr-1" />
+                          {hasNote ? '查看笔记' : '写笔记'}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {noteOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      transition={{ duration: 0.25 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3">
+                        <textarea
+                          value={noteDraft}
+                          onChange={(e) => {
+                            setNoteDraft(e.target.value);
+                            setNoteSaved(false);
+                          }}
+                          placeholder="记录这道题的记忆要点，如：OSPF 邻居靠 Hello 报文建立…"
+                          className="w-full min-h-[76px] rounded-lg border border-violet-500/20 bg-card/40 p-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-violet-500/50 resize-y"
+                        />
+                        <div className="mt-1.5 flex items-center justify-between">
+                          <span className="text-[11px] text-muted-foreground/50">
+                            笔记随题保存，刷题时默认隐藏
+                          </span>
+                          <div className="flex items-center gap-2">
+                            {noteDraft.trim() && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 text-[11px] text-muted-foreground hover:text-rose-400"
+                                onClick={() => {
+                                  setNoteDraft('');
+                                  saveNote(currentQuestion.id, '');
+                                  setNoteSaved(false);
+                                }}
+                              >
+                                <Trash2 className="size-3 mr-1" />
+                                清空
+                              </Button>
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                              onClick={handleSaveNote}
+                            >
+                              <Save className="size-3.5 mr-1" />
+                              保存笔记
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </motion.div>
