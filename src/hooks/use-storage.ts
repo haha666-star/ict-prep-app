@@ -468,6 +468,55 @@ export function useQuizNotes() {
   return { notes, getNote, saveNote, clearNote };
 }
 
+// ========== 刷题进度记忆 ==========
+export interface IQuizProgressEntry {
+  ids: string[];
+  index: number;
+  updatedAt: number;
+}
+
+export type QuizProgressMap = Record<string, IQuizProgressEntry>;
+
+const KEY_QUIZ_PROGRESS = 'quiz_progress';
+
+export function useQuizProgress() {
+  const getProgress = useCallback((key: string): IQuizProgressEntry | undefined => {
+    try {
+      const raw = scopedStorage.getItem(KEY_QUIZ_PROGRESS);
+      if (!raw) return undefined;
+      const map = JSON.parse(raw) as QuizProgressMap;
+      return map[key];
+    } catch {
+      return undefined;
+    }
+  }, []);
+
+  const saveProgress = useCallback((key: string, entry: IQuizProgressEntry) => {
+    try {
+      const raw = scopedStorage.getItem(KEY_QUIZ_PROGRESS);
+      const map: QuizProgressMap = raw ? (JSON.parse(raw) as QuizProgressMap) : {};
+      map[key] = entry;
+      scopedStorage.setItem(KEY_QUIZ_PROGRESS, JSON.stringify(map));
+    } catch {
+      // 忽略损坏的进度缓存
+    }
+  }, []);
+
+  const clearProgress = useCallback((key: string) => {
+    try {
+      const raw = scopedStorage.getItem(KEY_QUIZ_PROGRESS);
+      if (!raw) return;
+      const map = JSON.parse(raw) as QuizProgressMap;
+      delete map[key];
+      scopedStorage.setItem(KEY_QUIZ_PROGRESS, JSON.stringify(map));
+    } catch {
+      // 忽略
+    }
+  }, []);
+
+  return { getProgress, saveProgress, clearProgress };
+}
+
 // ========== 备份导出 / 导入 ==========
 export const BACKUP_KEYS: Record<string, string> = {
   knowledge_status: KEY_KNOWLEDGE_STATUS,
@@ -478,6 +527,7 @@ export const BACKUP_KEYS: Record<string, string> = {
   exam_sessions: KEY_EXAM_SESSIONS,
   favorites: KEY_FAVORITES,
   quiz_notes: KEY_QUIZ_NOTES,
+  quiz_progress: KEY_QUIZ_PROGRESS,
 };
 
 export interface IBackup {

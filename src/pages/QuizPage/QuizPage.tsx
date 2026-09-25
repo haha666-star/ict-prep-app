@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { MOCK_QUIZZES, type IQuizQuestion } from '@/data/quizzes';
 import { MOCK_KNOWLEDGE } from '@/data/knowledge';
-import { useQuizRecords, useQuizNotes } from '@/hooks/use-storage';
+import { useQuizRecords, useQuizNotes, useQuizProgress } from '@/hooks/use-storage';
 import { DIRECTION_LABELS, DIRECTION_COLORS, formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -52,6 +52,8 @@ function shuffleList<T>(list: T[]): T[] {
 
 export default function QuizPage() {
   const { records, recordAnswer } = useQuizRecords();
+  // 刷题进度记忆：同会话（模式+方向+标签+考试题型）记住刷到第几题，下次继续
+  const { getProgress, saveProgress, clearProgress } = useQuizProgress();
   const [mode, setMode] = useState<QuizMode>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<
@@ -156,15 +158,32 @@ export default function QuizPage() {
     recordAnswer(currentQuestion.id, currentQuestion.direction, correct, formatDate(new Date()));
   };
 
+  // 会话标识：模式|方向|标签|考试题型 —— 同一组合共享一份进度
+  const sessionKey = (m: QuizMode) =>
+    `${m}|${selectedDirection}|${tagFilter}|${examOnly ? 'exam' : 'all'}`;
+
+  const persistIndex = (idx: number) => {
+    if (!mode) return;
+    saveProgress(sessionKey(mode), {
+      ids: questions.map((q) => q.id),
+      index: idx,
+      updatedAt: Date.now(),
+    });
+  };
+
   const handleNext = () => {
     if (safeIndex < questions.length - 1) {
-      setCurrentIndex(safeIndex + 1);
+      const next = safeIndex + 1;
+      setCurrentIndex(next);
+      persistIndex(next);
     }
   };
 
   const handlePrev = () => {
     if (safeIndex > 0) {
-      setCurrentIndex(safeIndex - 1);
+      const prev = safeIndex - 1;
+      setCurrentIndex(prev);
+      persistIndex(prev);
     }
   };
 
@@ -189,15 +208,43 @@ export default function QuizPage() {
     if (tagFilter !== 'all' && m !== 'wrong') {
       list = list.filter((q) => q.tag === tagFilter);
     }
+    // 进度记忆：同一会话且题库未变化时，恢复上次的题目顺序与位置，从上次位置继续
+    const key = sessionKey(m);
+    const prog = getProgress(key);
+    let restored = false;
+    let restoreIndex = 0;
+    if (prog && prog.ids && prog.ids.length === list.length) {
+      const progSet = new Set(prog.ids);
+      const currentIds = list.map((q) => q.id);
+      if (currentIds.every((id) => progSet.has(id))) {
+        const idToQ = new Map(list.map((q) => [q.id, q] as const));
+        const ordered = prog.ids
+          .map((id) => idToQ.get(id))
+          .filter((q): q is IQuizQuestion => Boolean(q));
+        if (ordered.length === list.length) {
+          list = ordered;
+          restoreIndex = Math.min(prog.index, Math.max(0, list.length - 1));
+          restored = true;
+        }
+      }
+    }
     setMode(m);
     setSessionQuestions(list);
-    setCurrentIndex(0);
+    setCurrentIndex(restoreIndex);
     setSelectedAnswers({});
     setSubmittedMap({});
     setChoosingDirection(false);
+    if (restored) {
+      toast.success(`已恢复上次进度：第 ${restoreIndex + 1}/${list.length} 题`);
+    } else {
+      saveProgress(key, { ids: list.map((q) => q.id), index: 0, updatedAt: Date.now() });
+    }
   };
 
   const handleBack = () => {
+    if (mode && questions.length > 0) {
+      persistIndex(safeIndex);
+    }
     setMode(null);
     setCurrentIndex(0);
     setSessionQuestions([]);
@@ -642,6 +689,17 @@ export default function QuizPage() {
                 ? '错题重做'
                 : '知识点刷题'}
             </span>
+            <button
+              type="button"
+              onClick={() => {
+                clearProgress(sessionKey(mode));
+                handleStartMode(mode);
+              }}
+              className="text-[11px] px-1.5 py-0.5 rounded border border-border/50 text-muted-foreground hover:text-cyan-300 hover:border-cyan-500/40 transition-colors"
+              title="清空本组进度，从头重新开始"
+            >
+              从头开始
+            </button>
           </div>
           <div className="relative h-1.5 rounded-full bg-muted/40 overflow-hidden">
             <div
