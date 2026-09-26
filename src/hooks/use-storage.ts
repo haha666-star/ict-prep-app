@@ -530,11 +530,19 @@ const KEY_ACTIVE_USER = 'active_user';
 function readProfiles(): IUserProfile[] {
   try {
     const raw = localStorage.getItem(STORAGE_PREFIX + KEY_USER_PROFILES);
-    if (!raw) return [];
-    const list = JSON.parse(raw) as IUserProfile[];
-    return Array.isArray(list) ? list : [];
+    let list: IUserProfile[] = [];
+    if (raw) {
+      const parsed = JSON.parse(raw) as IUserProfile[];
+      if (Array.isArray(parsed)) list = parsed;
+    }
+    // 保证 default 档案永远存在：其承载了旧数据迁移后的默认数据
+    if (!list.some((p) => p.id === 'default')) {
+      list = [{ id: 'default', name: '默认用户', createdAt: 0 }, ...list];
+      writeProfiles(list);
+    }
+    return list;
   } catch {
-    return [];
+    return [{ id: 'default', name: '默认用户', createdAt: 0 }];
   }
 }
 
