@@ -232,7 +232,14 @@ export default function SettingsPage() {
                   toast.error('请输入新用户姓名');
                   return;
                 }
-                createProfile(newProfileName);
+                const name = newProfileName.trim();
+                if (
+                  window.confirm(
+                    `新建档案「${name}」后将自动切换过去，新档案从零开始刷题；\n当前档案（${activeProfile?.name ?? '默认用户'}）的数据会完整保留，可随时切回。`
+                  )
+                ) {
+                  createProfile(name);
+                }
               }}
             >
               <Plus className="size-4 mr-1" />
@@ -240,7 +247,9 @@ export default function SettingsPage() {
             </Button>
           </div>
           <p className="text-[11px] text-muted-foreground/60">
-            切换用户后页面自动刷新，新用户从零开始独立刷题；备份导出/导入只作用于当前用户。
+            切换用户后页面自动刷新，各用户数据<b className="text-cyan-400">完全隔离</b>。
+            一直用「默认用户」也完全没问题——它就是你的常规档案，数据稳定累积，不影响其他档案；
+            多人共用一台设备时建议各自新建档案，避免进度混在一起。备份导出/导入只作用于当前用户。
           </p>
         </CardContent>
       </Card>
@@ -306,6 +315,9 @@ export default function SettingsPage() {
           />
           <p className="text-[11px] text-muted-foreground leading-relaxed">
             数据只存在本机浏览器。换手机、换浏览器、清理缓存都会丢失，<b className="text-amber-400">建议每周导出一次</b>。
+            点「导出备份」后，文件会下载到本机<b>下载目录</b>（手机浏览器一般在「下载」或「文件」应用里），
+            文件名如 <span className="font-mono-data text-cyan-400/80">ict-backup-2026-09-26.json</span>，
+            可通过微信 / 邮件发给队友用于导入。
           </p>
         </CardContent>
       </Card>
