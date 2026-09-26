@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import BottomTabBar from '@/components/BottomTabBar';
 import SplashScreen from '@/components/SplashScreen';
 import { useStudyTimer } from '@/hooks/use-study-timer';
+import { useUserProfiles } from '@/hooks/use-storage';
 import { Settings } from 'lucide-react';
 
 const PAGE_TITLES: Record<string, string> = {
@@ -20,6 +21,7 @@ const PAGE_TITLES: Record<string, string> = {
 
 export function Layout() {
   useStudyTimer();
+  const { activeProfile } = useUserProfiles();
   const location = useLocation();
   const pathname = location.pathname;
   const title = PAGE_TITLES[pathname] ?? 'ICT 备考';
@@ -43,12 +45,17 @@ export function Layout() {
             <span className="text-cyan-400 text-glow-cyan">▌</span>
             {title}
           </h1>
-          <div className="ml-auto flex items-center gap-1 text-[10px] font-mono-data text-emerald-400/80">
-            <span className="relative flex size-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+          <div className="ml-auto flex items-center gap-2 text-[10px] font-mono-data">
+            <span className="text-cyan-400/90 max-w-[72px] truncate">
+              {activeProfile?.name ?? '默认用户'}
             </span>
-            ONLINE
+            <span className="flex items-center gap-1 text-emerald-400/80">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+              </span>
+              ONLINE
+            </span>
           </div>
         </header>
 

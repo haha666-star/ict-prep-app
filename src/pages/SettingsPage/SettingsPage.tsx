@@ -14,12 +14,15 @@ import {
   ShieldAlert,
   WifiOff,
   CheckCircle2,
+  UserRound,
+  Plus,
 } from 'lucide-react';
 import {
   exportBackup,
   importBackup,
   directionAccuracyFromBackup,
   useQuizRecords,
+  useUserProfiles,
   type IBackup,
 } from '@/hooks/use-storage';
 import { DIRECTION_LABELS, DIRECTION_COLORS, cn } from '@/lib/utils';
@@ -35,6 +38,10 @@ const TEAM_TARGET = 80; // 团队弱项阈值：低于该正确率视为短板
 
 export default function SettingsPage() {
   const { records } = useQuizRecords();
+  // 多用户档案：切换用户后各人数据（进度/笔记/错题/记录）完全隔离
+  const { profiles, activeId, activeProfile, switchTo, createProfile, deleteProfile } =
+    useUserProfiles();
+  const [newProfileName, setNewProfileName] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
   const teamFileRef = useRef<HTMLInputElement>(null);
   const [owner, setOwner] = useState('');
@@ -140,6 +147,104 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-3">
+
+      {/* 用户档案：同一设备多用户数据隔离 */}
+      <Card className="border-cyan-500/15">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <UserRound className="size-4 text-cyan-400" />
+            用户档案
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="rounded-lg bg-muted/20 p-3 flex items-center justify-between">
+            <div>
+              <div className="text-xs text-muted-foreground">当前用户</div>
+              <div className="text-sm font-semibold text-cyan-300">
+                {activeProfile?.name ?? '默认用户'}
+              </div>
+            </div>
+            <Badge variant="outline" className="text-[10px] text-cyan-400 border-cyan-500/30">
+              数据独立隔离
+            </Badge>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">
+              切换用户（刷题进度 / 笔记 / 错题 / 记录互不影响）
+            </Label>
+            {profiles.map((p) => (
+              <div key={p.id} className="flex items-center gap-2">
+                <Button
+                  variant={p.id === activeId ? 'default' : 'outline'}
+                  size="sm"
+                  className="flex-1 justify-start h-8 text-xs"
+                  onClick={() => p.id !== activeId && switchTo(p.id)}
+                >
+                  <UserRound className="size-3.5 mr-1.5" />
+                  {p.name}
+                  {p.id === 'default' && (
+                    <span className="ml-1 text-[10px] text-muted-foreground/60">默认</span>
+                  )}
+                  {p.id === activeId && (
+                    <span className="ml-auto text-[10px] text-cyan-300">当前</span>
+                  )}
+                </Button>
+                {p.id !== 'default' && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 shrink-0 text-muted-foreground hover:text-rose-400"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          `删除档案「${p.name}」？该用户的全部数据（进度/笔记/错题/记录/计划）将一并删除，且不可恢复。`
+                        )
+                      ) {
+                        deleteProfile(p.id);
+                      }
+                    }}
+                    title="删除该档案及全部数据"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            {profiles.length === 0 && (
+              <div className="text-xs text-muted-foreground/60 py-1">
+                暂无其他用户，可在下方新建
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <Input
+              value={newProfileName}
+              onChange={(e) => setNewProfileName(e.target.value)}
+              placeholder="新用户姓名，如：李四"
+              className="h-9"
+            />
+            <Button
+              className="h-9 shrink-0"
+              onClick={() => {
+                if (!newProfileName.trim()) {
+                  toast.error('请输入新用户姓名');
+                  return;
+                }
+                createProfile(newProfileName);
+              }}
+            >
+              <Plus className="size-4 mr-1" />
+              新建
+            </Button>
+          </div>
+          <p className="text-[11px] text-muted-foreground/60">
+            切换用户后页面自动刷新，新用户从零开始独立刷题；备份导出/导入只作用于当前用户。
+          </p>
+        </CardContent>
+      </Card>
+
       {/* 数据备份 */}
       <Card className="border-cyan-500/15">
         <CardHeader className="pb-2">

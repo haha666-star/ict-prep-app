@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { scopedStorage } from '@/lib/storage';
+import { scopedStorage, STORAGE_PREFIX, getActiveUserId } from '@/lib/storage';
 import type { KnowledgeStatus } from '@/lib/utils';
 
 // 存储 key 前缀
@@ -515,6 +515,125 @@ export function useQuizProgress() {
   }, []);
 
   return { getProgress, saveProgress, clearProgress };
+}
+
+// ========== 多用户档案 ==========
+export interface IUserProfile {
+  id: string;
+  name: string;
+  createdAt: number;
+}
+
+const KEY_USER_PROFILES = 'user_profiles';
+const KEY_ACTIVE_USER = 'active_user';
+
+function readProfiles(): IUserProfile[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_PREFIX + KEY_USER_PROFILES);
+    if (!raw) return [];
+    const list = JSON.parse(raw) as IUserProfile[];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeProfiles(list: IUserProfile[]) {
+  try {
+    localStorage.setItem(STORAGE_PREFIX + KEY_USER_PROFILES, JSON.stringify(list));
+  } catch {
+    // 忽略
+  }
+}
+
+export function useUserProfiles() {
+  const [profiles, setProfiles] = useState<IUserProfile[]>(() => readProfiles());
+  const [activeId, setActiveId] = useState<string>(() => getActiveUserId());
+
+  const switchTo = useCallback((id: string) => {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + KEY_ACTIVE_USER, id);
+    } catch {
+      // 忽略
+    }
+    window.location.reload();
+  }, []);
+
+  const createProfile = useCallback((name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const p: IUserProfile = {
+      id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name: trimmed,
+      createdAt: Date.now(),
+    };
+    setProfiles((prev) => {
+      const next = [...prev, p];
+      writeProfiles(next);
+      return next;
+    });
+    try {
+      localStorage.setItem(STORAGE_PREFIX + KEY_ACTIVE_USER, p.id);
+    } catch {
+      // 忽略
+    }
+    window.location.reload();
+  }, []);
+
+  const renameProfile = useCallback((id: string, name: string) => {
+    setProfiles((prev) => {
+      const next = prev.map((p) =>
+        p.id === id ? { ...p, name: name.trim() || p.name } : p
+      );
+      writeProfiles(next);
+      return next;
+    });
+  }, []);
+
+  const deleteProfile = useCallback(
+    (id: string) => {
+      // 删除该用户命名空间下的全部数据（刷题进度/笔记/错题/记录/计划等）
+      const prefix = STORAGE_PREFIX + 'u_' + id + '_';
+      const toRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(prefix)) toRemove.push(k);
+      }
+      toRemove.forEach((k) => {
+        try {
+          localStorage.removeItem(k);
+        } catch {
+          // 忽略
+        }
+      });
+      setProfiles((prev) => {
+        const next = prev.filter((p) => p.id !== id);
+        writeProfiles(next);
+        return next;
+      });
+      if (id === activeId) {
+        try {
+          localStorage.setItem(STORAGE_PREFIX + KEY_ACTIVE_USER, 'default');
+        } catch {
+          // 忽略
+        }
+        window.location.reload();
+      }
+    },
+    [activeId]
+  );
+
+  const activeProfile = profiles.find((p) => p.id === activeId) ?? null;
+
+  return {
+    profiles,
+    activeId,
+    activeProfile,
+    switchTo,
+    createProfile,
+    renameProfile,
+    deleteProfile,
+  };
 }
 
 // ========== 备份导出 / 导入 ==========
